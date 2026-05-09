@@ -75,14 +75,13 @@ $$
 p(\mathbf{u}) = \mathcal{N}(\mathbf{u} \| \mathbf{0}, \mathbf{K}\_\mathbf{uu}).
 $$
 
-{{% callout note %}}
-#### Gaussian process notation
-We can express the prior over the inducing variable $u(\mathbf{z})$ at 
-inducing input $\mathbf{z}$ as
-$$
-p(u(\mathbf{z})) = \mathcal{GP}(0, k\_{\theta}(\mathbf{z}, \mathbf{z}')).
-$$
-{{% /callout %}}
+> [!NOTE]
+> #### Gaussian process notation
+> We can express the prior over the inducing variable $u(\mathbf{z})$ at 
+> inducing input $\mathbf{z}$ as
+> $$
+> p(u(\mathbf{z})) = \mathcal{GP}(0, k\_{\theta}(\mathbf{z}, \mathbf{z}')).
+> $$
 
 ### Conditional prior
 
@@ -117,23 +116,22 @@ $$
 \mathbf{S} = \mathbf{K}\_\mathbf{ff} - \boldsymbol{\Psi}^{\top} \mathbf{K}\_\mathbf{uu} \boldsymbol{\Psi}.
 $$
 
-{{% callout note %}}
-#### Gaussian process notation
-We can express the distribution over the function value $f(\mathbf{x})$ at 
-input $\mathbf{x}$, given $\mathbf{u}$, that is, the conditional 
-$p(f(\mathbf{x}) \| \mathbf{u})$, as a Gaussian process:
-$$
-p(f(\mathbf{x}) \| \mathbf{u}) = \mathcal{GP}(m(\mathbf{x}), s(\mathbf{x}, \mathbf{x}')),
-$$
-with mean and covariance functions,
-$$
-m(\mathbf{x}) = \boldsymbol{\psi}\_\mathbf{u}^\top(\mathbf{x}) \mathbf{u},
-\quad
-\text{and}
-\quad
-s(\mathbf{x}, \mathbf{x}') = k\_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\psi}\_\mathbf{u}^\top(\mathbf{x}) \mathbf{K}\_\mathbf{uu} \boldsymbol{\psi}\_\mathbf{u}(\mathbf{x}').
-$$
-{{% /callout %}}
+> [!NOTE]
+> #### Gaussian process notation
+> We can express the distribution over the function value $f(\mathbf{x})$ at 
+> input $\mathbf{x}$, given $\mathbf{u}$, that is, the conditional 
+> $p(f(\mathbf{x}) \| \mathbf{u})$, as a Gaussian process:
+> $$
+> p(f(\mathbf{x}) \| \mathbf{u}) = \mathcal{GP}(m(\mathbf{x}), s(\mathbf{x}, \mathbf{x}')),
+> $$
+> with mean and covariance functions,
+> $$
+> m(\mathbf{x}) = \boldsymbol{\psi}\_\mathbf{u}^\top(\mathbf{x}) \mathbf{u},
+> \quad
+> \text{and}
+> \quad
+> s(\mathbf{x}, \mathbf{x}') = k\_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\psi}\_\mathbf{u}^\top(\mathbf{x}) \mathbf{K}\_\mathbf{uu} \boldsymbol{\psi}\_\mathbf{u}(\mathbf{x}').
+> $$
 
 Before moving on, we briefly highlight the important 
 quantity,
@@ -174,23 +172,22 @@ $$
 \mathbf{\Sigma} = \mathbf{K}\_\mathbf{ff} - \boldsymbol{\Psi}^\top (\mathbf{K}\_\mathbf{uu} - \mathbf{W}\mathbf{W}^{\top}) \boldsymbol{\Psi}.
 $$
 
-{{% callout note %}}
-#### Gaussian process notation
-We can express the variational distribution over the function value $f(\mathbf{x})$ at 
-input $\mathbf{x}$, that is, the marginal $q\_{\boldsymbol{\phi}}(f(\mathbf{x}))$, 
-as a Gaussian process:
-$$
-q\_{\boldsymbol{\phi}}(f(\mathbf{x})) = \mathcal{GP}(\mu(\mathbf{x}), \sigma(\mathbf{x}, \mathbf{x}')),
-$$
-with mean and covariance functions,
-$$
-\mu(\mathbf{x}) = \boldsymbol{\psi}\_\mathbf{u}^\top(\mathbf{x}) \mathbf{b},
-\quad
-\text{and}
-\quad
-\sigma(\mathbf{x}, \mathbf{x}') = \kappa\_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\psi}\_\mathbf{u}^\top(\mathbf{x}) (\mathbf{K}\_\mathbf{uu} - \mathbf{W}\mathbf{W}^{\top}) \boldsymbol{\psi}\_\mathbf{u}(\mathbf{x}').
-$$
-{{% /callout %}}
+> [!NOTE]
+> #### Gaussian process notation
+> We can express the variational distribution over the function value $f(\mathbf{x})$ at 
+> input $\mathbf{x}$, that is, the marginal $q\_{\boldsymbol{\phi}}(f(\mathbf{x}))$, 
+> as a Gaussian process:
+> $$
+> q\_{\boldsymbol{\phi}}(f(\mathbf{x})) = \mathcal{GP}(\mu(\mathbf{x}), \sigma(\mathbf{x}, \mathbf{x}')),
+> $$
+> with mean and covariance functions,
+> $$
+> \mu(\mathbf{x}) = \boldsymbol{\psi}\_\mathbf{u}^\top(\mathbf{x}) \mathbf{b},
+> \quad
+> \text{and}
+> \quad
+> \sigma(\mathbf{x}, \mathbf{x}') = \kappa\_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\psi}\_\mathbf{u}^\top(\mathbf{x}) (\mathbf{K}\_\mathbf{uu} - \mathbf{W}\mathbf{W}^{\top}) \boldsymbol{\psi}\_\mathbf{u}(\mathbf{x}').
+> $$
 
 ### Whitened parameterization
 
@@ -221,21 +218,20 @@ $$
 $$
 Refer to [Appendix I]({{< relref "#i" >}}) for derivations.
 
-{{% callout note %}}
-#### Gaussian process notation
-The mean and covariance functions are now
-$$
-\mu(\mathbf{x}) = \boldsymbol{\lambda}^\top(\mathbf{x}) \mathbf{b}',
-\quad
-\text{and}
-\quad
-\sigma(\mathbf{x}, \mathbf{x}') = k\_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\lambda}^\top(\mathbf{x}) (\mathbf{I}\_M - \mathbf{W}' {\mathbf{W}'}^{\top}) \boldsymbol{\lambda}(\mathbf{x}'),
-$$
-where
-$$
-\boldsymbol{\lambda}(\mathbf{x}) \triangleq \mathbf{L}^{\top} \boldsymbol{\psi}\_\mathbf{u}(\mathbf{x}) = \mathbf{L}^{-1} \mathbf{k}\_\mathbf{u}(\mathbf{x}).
-$$
-{{% /callout %}}
+> [!NOTE]
+> #### Gaussian process notation
+> The mean and covariance functions are now
+> $$
+> \mu(\mathbf{x}) = \boldsymbol{\lambda}^\top(\mathbf{x}) \mathbf{b}',
+> \quad
+> \text{and}
+> \quad
+> \sigma(\mathbf{x}, \mathbf{x}') = k\_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\lambda}^\top(\mathbf{x}) (\mathbf{I}\_M - \mathbf{W}' {\mathbf{W}'}^{\top}) \boldsymbol{\lambda}(\mathbf{x}'),
+> $$
+> where
+> $$
+> \boldsymbol{\lambda}(\mathbf{x}) \triangleq \mathbf{L}^{\top} \boldsymbol{\psi}\_\mathbf{u}(\mathbf{x}) = \mathbf{L}^{-1} \mathbf{k}\_\mathbf{u}(\mathbf{x}).
+> $$
 
 For an efficient and numerically stable way to compute and evaluate the 
 variational distribution $q\_{\boldsymbol{\phi}}(\mathbf{f})$ at an arbitrary 
@@ -421,9 +417,8 @@ where we set $\boldsymbol{\mu}\_0 = \mathbf{b}, \boldsymbol{\Sigma}_0 = \mathbf{
 
 ### Large-Scale Data with Stochastic Optimization 
 
-{{% callout warning %}}
-Coming soon.
-{{% /callout %}}
+> [!WARNING]
+> Coming soon.
 
 <!-- \int \left ( \int \log{p(\mathbf{y} \| \mathbf{f})} p(\mathbf{f} \| \mathbf{u}) \\,\mathrm{d}\mathbf{f} + \log{\frac{p(\mathbf{u})}{q\_{\boldsymbol{\phi}}(\mathbf{u})}} \right ) q\_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \newline & = -->
 <!-- \int \left ( \log{\Phi(\mathbf{y}, \mathbf{u})} + \log{\frac{p(\mathbf{u})}{q\_{\boldsymbol{\phi}}(\mathbf{u})}} \right ) q\_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \newline & =  -->

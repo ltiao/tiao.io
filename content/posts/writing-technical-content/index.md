@@ -354,9 +354,8 @@ A Markdown aside is useful for displaying notices, hints, or definitions to your
 
 renders as
 
-{{% callout note %}}
-A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
-{{% /callout %}}
+> [!NOTE]
+> A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
 
 ### Spoilers
 

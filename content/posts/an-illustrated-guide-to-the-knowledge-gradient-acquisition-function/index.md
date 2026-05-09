@@ -38,9 +38,8 @@ image:
 projects: []
 ---
 
-{{% callout note %}}
-Draft -- work in progress.
-{{% /callout %}}
+> [!NOTE]
+> Draft -- work in progress.
 
 We provide a short guide to the knowledge-gradient (KG) acquisition
 function (Frazier et al., 2009)[^frazier2009knowledge] for Bayesian 

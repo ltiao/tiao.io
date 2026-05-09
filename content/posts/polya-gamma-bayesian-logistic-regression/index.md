@@ -196,18 +196,17 @@ p(\omega\_n) = \mathrm{PG}(\omega\_n | 1, 0),
 $$
 defined as an infinite [convolution](https://en.wikipedia.org/wiki/Convolution_of_probability_distributions#See_also) of gamma distributions :
 
-{{% callout note %}}
-#### Pólya-gamma density (Polson et al. 2013)
-
-A random variable $\omega$ has a Pólya-gamma distribution with parameters $b > 0$ 
-and $c \in \mathbb{R}$, denoted $\omega \sim \mathrm{PG}(b, c)$, if
-$$
-\omega \overset{D}{=} \frac{1}{2 \pi^2} \sum\_{k=1}^{\infty} 
-\frac{g\_k}{\left (k - \frac{1}{2} \right )^2 + \left ( \frac{c}{2\pi} \right )^2}
-$$
-where the $g\_k \sim \mathrm{Ga}(b, 1)$ are independent gamma random variables 
-(and where $\overset{D}{=}$ denotes equality in distribution).
-{{% /callout %}}
+> [!NOTE]
+> #### Pólya-gamma density (Polson et al. 2013)
+>
+> A random variable $\omega$ has a Pólya-gamma distribution with parameters $b > 0$ 
+> and $c \in \mathbb{R}$, denoted $\omega \sim \mathrm{PG}(b, c)$, if
+> $$
+> \omega \overset{D}{=} \frac{1}{2 \pi^2} \sum\_{k=1}^{\infty} 
+> \frac{g\_k}{\left (k - \frac{1}{2} \right )^2 + \left ( \frac{c}{2\pi} \right )^2}
+> $$
+> where the $g\_k \sim \mathrm{Ga}(b, 1)$ are independent gamma random variables 
+> (and where $\overset{D}{=}$ denotes equality in distribution).
 
 #### Property I: Recovering the original model
 
@@ -221,19 +220,18 @@ $$
 Refer to [Appendix I]({{< relref "#i" >}}) for derivations.
 Next, note the following property of Pólya-gamma variables:
 
-{{% callout note %}}
-#### Laplace transform of the Pólya-gamma density (Polson et al. 2013)
-
-Based on the [Laplace transform](https://mathworld.wolfram.com/LaplaceTransform.html) 
-of the Pólya-gamma density function, we can derive the following relationship:
-$$
-\frac{\left (e^{u} \right )^a}{\left (1 + e^{u} \right )^b} = 
-\frac{1}{2^b} \exp{(\kappa u)} \
-\int\_0^\infty \exp{\left ( - \frac{u^2}{2} \omega \right )} 
-p(\omega) d\omega,
-$$
-where $\kappa = a - \frac{b}{2}$ and $p(\omega) = \mathrm{PG}(\omega | b, 0)$.
-{{% /callout %}}
+> [!NOTE]
+> #### Laplace transform of the Pólya-gamma density (Polson et al. 2013)
+>
+> Based on the [Laplace transform](https://mathworld.wolfram.com/LaplaceTransform.html) 
+> of the Pólya-gamma density function, we can derive the following relationship:
+> $$
+> \frac{\left (e^{u} \right )^a}{\left (1 + e^{u} \right )^b} = 
+> \frac{1}{2^b} \exp{(\kappa u)} \
+> \int\_0^\infty \exp{\left ( - \frac{u^2}{2} \omega \right )} 
+> p(\omega) d\omega,
+> $$
+> where $\kappa = a - \frac{b}{2}$ and $p(\omega) = \mathrm{PG}(\omega | b, 0)$.
 
 Therefore, by substituting $\kappa = \kappa\_n, a = y\_n, b = 1$ and $u = f\_n$ 
 we get
@@ -347,37 +345,36 @@ $$
 Thereafter, we can appeal to the following elementary properties of Gaussian 
 conditioning and perform some pattern-matching substitutions:
 
-{{% callout note %}}
-#### Marginal and Conditional Gaussians (Bishop, Section 2.3.3, pg. 93)
-
-Given a marginal Gaussian distribution for $\mathbf{b}$ and a conditional Gaussian 
-distribution for $\mathbf{a}$ given $\mathbf{b}$ in the form
-
-$$
-\begin{align\*}
-p(\mathbf{b}) & = 
-\mathcal{N}(\mathbf{b} | \mathbf{m}, \mathbf{S}^{-1}) \newline
-p(\mathbf{a} | \mathbf{b}) & = 
-\mathcal{N}(\mathbf{a} | \mathbf{W} \mathbf{b}, \boldsymbol{\Psi}^{-1})
-\end{align\*}
-$$
-the marginal distribution of $\mathbf{a}$ and the conditional distribution 
-of $\mathbf{b}$ given $\mathbf{a}$ are given by
-\begin{align\*}
-p(\mathbf{a}) & = 
-\mathcal{N}(\mathbf{a} | \mathbf{W} \mathbf{m}, \boldsymbol{\Psi}^{-1} + \mathbf{W} \mathbf{S}^{-1} \mathbf{W}^{\top}) \newline
-p(\mathbf{b} | \mathbf{a}) & = 
-\mathcal{N}(\mathbf{b} | \boldsymbol{\mu}, \boldsymbol{\Sigma})
-\end{align\*}
-where
-$$
-\boldsymbol{\mu} = \boldsymbol{\Sigma} \left ( \mathbf{W}^{\top} \boldsymbol{\Psi} \mathbf{a} + \mathbf{S} \mathbf{m} \right ),
-\quad
-\text{and}
-\quad
-\boldsymbol{\Sigma} = \left (\mathbf{S} + \mathbf{W}^{\top} \boldsymbol{\Psi} \mathbf{W}\right )^{-1}.
-$$
-{{% /callout %}}
+> [!NOTE]
+> #### Marginal and Conditional Gaussians (Bishop, Section 2.3.3, pg. 93)
+>
+> Given a marginal Gaussian distribution for $\mathbf{b}$ and a conditional Gaussian 
+> distribution for $\mathbf{a}$ given $\mathbf{b}$ in the form
+>
+> $$
+> \begin{align\*}
+> p(\mathbf{b}) & = 
+> \mathcal{N}(\mathbf{b} | \mathbf{m}, \mathbf{S}^{-1}) \newline
+> p(\mathbf{a} | \mathbf{b}) & = 
+> \mathcal{N}(\mathbf{a} | \mathbf{W} \mathbf{b}, \boldsymbol{\Psi}^{-1})
+> \end{align\*}
+> $$
+> the marginal distribution of $\mathbf{a}$ and the conditional distribution 
+> of $\mathbf{b}$ given $\mathbf{a}$ are given by
+> \begin{align\*}
+> p(\mathbf{a}) & = 
+> \mathcal{N}(\mathbf{a} | \mathbf{W} \mathbf{m}, \boldsymbol{\Psi}^{-1} + \mathbf{W} \mathbf{S}^{-1} \mathbf{W}^{\top}) \newline
+> p(\mathbf{b} | \mathbf{a}) & = 
+> \mathcal{N}(\mathbf{b} | \boldsymbol{\mu}, \boldsymbol{\Sigma})
+> \end{align\*}
+> where
+> $$
+> \boldsymbol{\mu} = \boldsymbol{\Sigma} \left ( \mathbf{W}^{\top} \boldsymbol{\Psi} \mathbf{a} + \mathbf{S} \mathbf{m} \right ),
+> \quad
+> \text{and}
+> \quad
+> \boldsymbol{\Sigma} = \left (\mathbf{S} + \mathbf{W}^{\top} \boldsymbol{\Psi} \mathbf{W}\right )^{-1}.
+> $$
 
 Note that we also could have derived this directly without resorting to 
 the formulae above by reducing the product of two exponential-quadratic 
@@ -385,21 +382,20 @@ functions in $p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}) \propto p(\mathbf{
 up to a constant factor. 
 It would, however, have been rather tedious and mundane.
 
-{{% callout note %}}
-#### Example: Gaussian process prior
-
-To make this more concrete, let us revisit the Gaussian process prior we 
-discussed earlier, namely,
-$$
-p(\mathbf{f} | \mathbf{X}) = \mathcal{N}(\mathbf{m}, \mathbf{K}\_X).
-$$
-By substituting $\mathbf{S}^{-1} = \mathbf{K}\_X$ from before, we obtain
-$$
-p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}) = 
-\mathcal{N}(\mathbf{f} | \boldsymbol{\Sigma} \left ( \mathbf{K}\_X^{-1} \mathbf{m} + \boldsymbol{\kappa} \right ), \boldsymbol{\Sigma}),
-$$
-where $\boldsymbol{\Sigma} = \left (\mathbf{K}\_X^{-1} + \boldsymbol{\Omega} \right )^{-1}.$
-{{% /callout %}}
+> [!NOTE]
+> #### Example: Gaussian process prior
+>
+> To make this more concrete, let us revisit the Gaussian process prior we 
+> discussed earlier, namely,
+> $$
+> p(\mathbf{f} | \mathbf{X}) = \mathcal{N}(\mathbf{m}, \mathbf{K}\_X).
+> $$
+> By substituting $\mathbf{S}^{-1} = \mathbf{K}\_X$ from before, we obtain
+> $$
+> p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}) = 
+> \mathcal{N}(\mathbf{f} | \boldsymbol{\Sigma} \left ( \mathbf{K}\_X^{-1} \mathbf{m} + \boldsymbol{\kappa} \right ), \boldsymbol{\Sigma}),
+> $$
+> where $\boldsymbol{\Sigma} = \left (\mathbf{K}\_X^{-1} + \boldsymbol{\Omega} \right )^{-1}.$
 
 #### Posterior over auxiliary variables
 
@@ -973,16 +969,15 @@ out inference using Gibbs sampling.
 However, this is easy to compute, simply by referring to the Laplace transform 
 of the $\mathrm{PG}(1, 0)$ distribution:
 
-{{% callout note %}}
-#### Laplace transform of the $\mathrm{PG}(1, 0)$ distribution (Polson et al. 2013)
-
-The [Laplace transform](https://mathworld.wolfram.com/LaplaceTransform.html) 
-of the $\mathrm{PG}(1, 0)$ distribution is
-$$
-\mathbb{E}\_{\omega \sim \mathrm{PG}(1, 0)}[\exp(-\omega t)] = 
-\frac{1}{\cosh{\left(\sqrt{\frac{t}{2}}\right)}}.
-$$
-{{% /callout %}}
+> [!NOTE]
+> #### Laplace transform of the $\mathrm{PG}(1, 0)$ distribution (Polson et al. 2013)
+>
+> The [Laplace transform](https://mathworld.wolfram.com/LaplaceTransform.html) 
+> of the $\mathrm{PG}(1, 0)$ distribution is
+> $$
+> \mathbb{E}\_{\omega \sim \mathrm{PG}(1, 0)}[\exp(-\omega t)] = 
+> \frac{1}{\cosh{\left(\sqrt{\frac{t}{2}}\right)}}.
+> $$
 
 Hence, by making the substitution $t = \frac{f\_n^2}{2}$, we obtain
 $$

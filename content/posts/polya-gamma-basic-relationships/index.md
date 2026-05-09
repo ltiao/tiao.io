@@ -31,9 +31,8 @@ image:
 projects: []
 ---
 
-{{% callout note %}}
-Draft -- work in progress.
-{{% /callout %}}
+> [!NOTE]
+> Draft -- work in progress.
 
 A classical problem in Bayesian statistics is inference in Bayesian logistic 
 regression, logit link is non-conjugate with a Gaussian prior. 

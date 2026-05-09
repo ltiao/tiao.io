@@ -31,9 +31,8 @@ image:
 projects: []
 ---
 
-{{% callout note %}}
-Draft -- work in progress.
-{{% /callout %}}
+> [!NOTE]
+> Draft -- work in progress.
 
 {{< toc >}}
 

@@ -21,4 +21,4 @@ With thanks...
 
 The full thesis text can be found below:
 
-{{< cite page="/publication/phd-thesis" view=3 >}}
+{{< cite page="/publications/phd-thesis" view="citation" >}}
