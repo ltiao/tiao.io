@@ -50,9 +50,9 @@ education:
       Perspectives for Gaussian Processes, Bayesian Optimization and Beyond.*
       Supervised by Fabio Ramos and Edwin Bonilla.
     button:
-      text: Download thesis
-      url: /resume.pdf
-      icon: hero/arrow-down-tray
+      text: View thesis
+      url: /publications/phd-thesis/
+      icon: hero/arrow-top-right-on-square
   - degree: BSc (Honours Class 1) Computer Science
     institution: University of New South Wales (UNSW) Sydney
     end: 2015

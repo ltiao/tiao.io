@@ -101,10 +101,22 @@ literal text. Use:
 | GitHub | `brands/github` |
 | On-site publication entry | `hero/book-open` |
 | External link (proceedings, blog) | `hero/arrow-top-right-on-square` |
+| Download (PDF, file) | `hero/arrow-down-tray` |
 | PDF | `hero/document-text` |
 
 Heroicons (any name from heroicons.com) work under `hero/`. Brand icons under
 `brands/`. Academic icons (Scholar, ORCID) under `academicons/`.
+
+**Inline icons in body markdown** also work via the `{{< icon >}}` shortcode:
+`{{< icon name="arrow-down-tray" >}}`. Default pack is `hero`, so most
+shortcode usages can omit the prefix. The legacy FontAwesome-style names
+(`name="download"`, `name="github"`) are the common migration trap — they
+produce empty `<span>` output. Always use Hero v2 names (e.g. `download` →
+`arrow-down-tray`).
+
+There's also `{{< button >}}` for call-to-action buttons with icons:
+`{{< button url="..." style="primary" icon="arrow-down-tray" >}}Download{{< /button >}}`.
+Styles: `primary`, `outline`, `ghost`.
 
 ## Asking for external URLs
 

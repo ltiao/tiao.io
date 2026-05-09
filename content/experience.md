@@ -12,7 +12,7 @@ design:
 sections:
   - block: markdown
     content:
-      title: ''
+      title: 'Summary'
       subtitle: ''
       text: |-
         I'm a research scientist at Meta on the [Adaptive
