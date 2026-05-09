@@ -2,86 +2,133 @@ schema: hugoblox/author/v1
 slug: me
 is_owner: true
 name:
-  display: Dr. Alex Johnson
-  given: Alex
-  family: Johnson
-  alternate: ''  # Example: 王伟
+  display: Louis Tiao
+  given: Louis
+  family: Tiao
+  alternate: 刁啟純  # Example: 王伟
   pronunciation: ''  # Example: Wáng Wěi
-  pronouns: he/him
+  pronouns: ''
 postnominals:
   - PhD
-  - MIEEE
 status:
-  icon: "☕️"
-role: Senior AI Research Scientist
+  icon: ''
+role: Research Scientist
 bio: |
-  Alex Johnson is a Senior AI Research Scientist at Meta AI. His research
-  has been published in top conferences like NeurIPS and ICML, with over
-  10,000 citations. Alex is passionate about pushing the boundaries of AI
-  while ensuring ethical development.
+  My name is Louis Tiao, and I graduated from one of Australia's 
+  top engineering schools with really good grades. 
+  Now, I'm using my knowledge to help struggling computer scientists 
+  make it in this competitive world.
 
 affiliations:
-  - name: Meta AI
-    url: https://ai.meta.com/
+  - name: Meta - New York, US
+    url: https://www.meta.com/
 
 links:
   - icon: at-symbol
-    url: mailto:alex.johnson@example.com
+    url: mailto:louis@tiao.io
     label: E-mail Me
   - icon: brands/x
-    url: https://x.com/example
+    url: https://x.com/louistiao
   - icon: brands/github
-    url: https://github.com/example
+    url: https://github.com/ltiao
   - icon: brands/linkedin
-    url: https://www.linkedin.com/in/example/
+    url: https://www.linkedin.com/in/ltiao
   - icon: academicons/google-scholar
-    url: https://scholar.google.com/citations?user=example
-  - icon: academicons/orcid
-    url: https://orcid.org/0000-0002-1825-0097
+    url: https://scholar.google.co.uk/citations?user=5teyYXcAAAAJ
 
 interests:
-  - Large Language Models
-  - Computer Vision
-  - Reinforcement Learning
-  - AI Ethics
+  - Gaussian Processes
+  - Bayesian Optimization
+  - Automated Machine Learning (AutoML)
 
 education:
   - degree: PhD Computer Science
-    institution: Stanford University
-    start: 2015-09-01
-    end: 2019-06-30
+    institution: University of Sydney
+    end: 2024
     summary: |
-      Thesis on scaling laws for neural language models. Published 5 papers in NeurIPS and ICML.
+      Thesis: Probabilistic Machine Learning in the Age of Deep Learning.
+      Supervised by Edwin Bonilla and Fabio Ramos.
+      Research on Gaussian processes, Bayesian optimization, and approximate Bayesian inference.
     button:
-      text: Download dissertation
+      text: Download thesis
       url: /resume.pdf
       icon: hero/arrow-down-tray
-  - degree: MS Computer Science
-    institution: Carnegie Mellon University
-    start: 2013-09-01
-    end: 2015-05-31
-  - degree: BS Computer Science
-    institution: MIT
-    start: 2009-09-01
-    end: 2013-05-31
+  - degree: BSc (Honours Class 1) Computer Science
+    institution: University of New South Wales (UNSW) Sydney
+    end: 2015
 
 experience:
-  - role: Senior AI Research Scientist
-    org: Meta AI
-    start: 2020-01-01
+  - role: Research Scientist
+    org: Meta
+    location: New York, NY, United States
+    start: 2024-08-05
     summary: |
-      Leading research on multimodal AI systems. Contributed to Llama 2 and other open-source models.
+      **Central Applied Science (CAS) - Adaptive Experimentation (AE) Team.**
+      Developing and productionizing sample-efficient Bayesian optimization and 
+      AutoML methods--including early stopping, data truncation, and scaling law 
+      modeling--within the open-source Ax and BoTorch frameworks. 
+      Applying these methods to hyperparameter tuning and capacity management 
+      for large-scale Ads ranking models. 
+      Delivered millions of dollars in projected annual compute cost savings by 
+      productionizing Bayesian optimization with early stopping for capacity 
+      management tuning and launching early stopping for the team's flagship 
+      AutoML platform. 
+      Co-first author on "Ax: A Platform for Adaptive Experimentation", 
+      accepted at AutoML 2025. 
+      Leading cross-functional partnerships across multiple organizations to 
+      drive adoption of optimization methods.
     button:
       text: View portfolio
       url: /
       icon: hero/arrow-down-tray
-  - role: AI Research Intern
-    org: OpenAI
-    start: 2019-06-01
-    end: 2019-12-31
+  - role: Applied Scientist Intern
+    org: Amazon Web Services
+    location: Cambridge, United Kingdom
+    start: 2022-05-30
+    end: 2022-09-16
     summary: |
-      Worked on GPT-3 scaling. Co-authored paper on prompt engineering.
+      As an applied scientist intern at Amazon Web Services (AWS), I led an explorative research project focused on addressing the challenges of hyperparameter optimization for large language models (LLMs). Our primary objective was to gain a comprehensive understanding of the scaling behavior of LLMs and investigate the feasibility of extrapolating optimal hyperparameters from smaller LLMs to their massive counterparts.
 
+      During this internship, I was fortunate to be reunited with Aaron Klein, Matthias Seeger, and Cedric Archambeau, with whom I had previously collaborated during an earlier internship at AWS Berlin.
+  - role: Doctoral Student Researcher
+    org: Secondmind
+    location: Cambridge, United Kingdom
+    start: 2021-09-20
+    end: 2022-04-30
+    summary: |
+      As a student researcher at Secondmind (formerly Prowler.io), a research-intensive AI startup renowned for its innovations in Bayesian optimization and Gaussian processes, I contributed impactful research and open-source code. I developed open-source software to facilitate sampling efficiently from GPs, and led a research initiative to improve the integration of neural networks with GP approximations. These efforts culminated in a research paper selected for an oral presentation at ICML.
+
+      I had the privilege of collaborating closely with Vincent Dutordoir and Victor Picheny during this period.
+  - role: Applied Scientist Intern
+    org: Amazon Web Services
+    location: Berlin, Germany
+    start: 2019-06-01
+    end: 2019-12-01
+    summary: |
+      As an applied scientist intern at Amazon Web Services (AWS), I contributed to the development of the Automatic Model Tuning functionality in AWS SageMaker. My primary focus was on advancing AutoML and hyperparameter optimization, particularly Bayesian optimization methods. I spearheaded a research project aimed at integrating multi-fidelity BO with asynchronous parallelism. This initiative led to the development of a research paper and the release of open-source code within AutoGluon, subsequently forming the basis of the SyneTune library.
+
+      I had the privilege of working closely with Matthias Seeger, Cedric Archambeau, and Aaron Klein during this internship.
+  - role: Software Engineer
+    org: CSIRO's Data61
+    location: Sydney, Australia
+    start: 2016-07-01
+    end: 2019-04-01
+    summary: |
+      As a machine learning software engineer at CSIRO's Data61, the AI research division of Australia's national science agency, I was an integral part of the Inference Systems Engineering Team, specializing in probabilistic ML for diverse problem domains. I led the development of new microservices and contributed to the development of open-source libraries for large-scale Bayesian deep learning. I also had a stint with the Graph Analytics Engineering Team, where my contributions to research on graph representation learning led to a research paper selected for a spotlight presentation at NeurIPS.
+  - role: Software Engineer
+    org: National ICT Australia (NICTA)
+    location: Sydney, Australia
+    start: 2015-05-01
+    end: 2016-06-30
+    summary: |
+      As a machine learning software engineer at NICTA, I was part of an interdisciplinary ML research team contributing to the Big Data Knowledge Discovery initiative. During this time, I led the development and release of numerous open-source libraries for applying Bayesian ML at scale.
+  - role: Research Intern
+    org: Commonwealth Scientific and Industrial Research Organisation (CSIRO)
+    location: Sydney, Australia
+    start: 2013-11-01
+    end: 2014-02-01
+    summary: |
+      As a summer vacation scholar at CSIRO's Language and Social Computing team, I applied cutting-edge machine learning and natural language processing techniques to build a robust text classification system for automated sentiment analysis.
 skills:
   - name: Technical Skills
     items:
@@ -104,7 +151,7 @@ languages:
   - name: English
     level: 5
     label: Native
-  - name: Spanish
+  - name: Chinese (Mandarin)
     level: 4
     label: Fluent
 
