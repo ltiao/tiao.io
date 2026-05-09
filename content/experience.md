@@ -15,19 +15,21 @@ sections:
       title: ''
       subtitle: ''
       text: |-
-        Before pursuing my PhD I obtained a BSc in Computer Science with First Class
-        Honours from the [University of New South Wales](https://www.unsw.edu.au/),
-        majoring in artificial intelligence with a minor in mathematics. I began my
-        career as a software engineer at [National ICT Australia (NICTA)](https://en.wikipedia.org/wiki/NICTA),
-        which later merged into [CSIRO](https://www.csiro.au/)'s
-        [Data61](https://research.csiro.au/data61/) — Australia's national AI
-        research division.
+        I'm a research scientist at Meta on the Adaptive Experimentation team in
+        New York City, where I work on Bayesian optimization, Gaussian processes,
+        and sample-efficient methods for automated machine learning. I completed
+        my PhD at the [University of Sydney](https://www.sydney.edu.au/), with
+        research recognized at NeurIPS and ICML through Oral and Spotlight
+        presentations.
 
-        During my PhD I had the privilege of collaborating with exceptional people
-        through several industrial research internships: at [Amazon](https://aws.amazon.com/sagemaker/)
-        in Berlin (Summer / Fall 2019), at [Secondmind Labs](https://www.secondmind.ai/)
-        in Cambridge, UK (Fall 2021 – Spring 2022), and again with the Amazon team
-        the following summer.
+        I began my career as a research software engineer at
+        [National ICT Australia (NICTA)](https://en.wikipedia.org/wiki/NICTA) and
+        later [CSIRO's Data61](https://research.csiro.au/data61/). During my
+        doctoral studies I gained extensive industrial research experience through
+        appointments at Amazon Development Centers in Berlin and Cambridge, UK,
+        and at [Secondmind Labs](https://www.secondmind.ai/) in Cambridge. My
+        publication record reflects this breadth, with work spanning both
+        academia and industry.
     design:
       columns: '1'
   - block: resume-experience
@@ -38,16 +40,50 @@ sections:
       date_format: 'January 2006'
       # Education or Experience section first?
       is_education_first: false
+  - block: markdown
+    id: collaborators
+    content:
+      title: 'Collaborators'
+      subtitle: ''
+      text: |-
+        I owe a great deal to the people below — colleagues and mentors who shaped
+        how I approach research. They include my current Meta teammates on the
+        Adaptive Experimentation team, and the researchers who hosted me at Amazon
+        and Secondmind during my PhD.
+
+        - **Sebastian Ament** — Research Scientist, Meta CAS (Adaptive Experimentation)
+        - **Cédric Archambeau** — formerly Principal Applied Scientist, AWS Berlin · now Helsing · [archambeau.com](https://archambeau.com)
+        - **Eytan Bakshy** — Senior Director, Meta CAS (Adaptive Experimentation)
+        - **Max Balandat** — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
+        - **Sam Daulton** — Research Scientist, Meta CAS (Adaptive Experimentation)
+        - **Nicolas Durrande** — formerly Research Director, Secondmind · now Research Lead, Shift Lab
+        - **Vincent Dutordoir** — formerly Research Scientist, Secondmind · now Google DeepMind
+        - **David Eriksson** — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
+        - **Aaron Klein** — formerly Applied Scientist, AWS Berlin · now leading a research group at the ELLIS Institute Tübingen as part of OpenEuroLLM, a European initiative developing foundation models for European languages · [aaronkl.github.io](https://aaronkl.github.io/)
+        - **Victor Picheny** — Director of Research, Secondmind
+        - **Matthias Seeger** — Principal Applied Scientist, AWS · [mseeger.github.io](https://mseeger.github.io/)
+    design:
+      columns: '1'
   - block: resume-skills
     content:
       title: Skills
-      username: me
-  - block: resume-awards
-    content:
-      title: Awards & Honors
       username: me
   - block: resume-languages
     content:
       title: Languages
       username: me
+  - block: markdown
+    id: service
+    content:
+      title: 'Academic service'
+      subtitle: ''
+      text: |-
+        **Conference reviewing**: NeurIPS (2021–2026), ICML (2021–2026, Best
+        Reviewer Award 2021 — top 10%), ICLR (2022–2026), AISTATS (2025–2026),
+        UAI 2026; first AutoML-Conf (2022); ICML Workshop on Graph Representation
+        Learning and Beyond (2020); NeurIPS 4th Workshop on Meta-Learning (2020);
+        ICLR 2nd Workshop on Neural Architecture Search (2021).
+
+        **Journal reviewing**: [TMLR](https://www.jmlr.org/tmlr/) (2022–);
+        IEEE [TPAMI](https://www.computer.org/csdl/journal/tp) (2019–).
 ---

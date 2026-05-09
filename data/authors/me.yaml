@@ -46,9 +46,9 @@ education:
     institution: University of Sydney
     end: 2024
     summary: |
-      Thesis: Probabilistic Machine Learning in the Age of Deep Learning.
-      Supervised by Edwin Bonilla and Fabio Ramos.
-      Research on Gaussian processes, Bayesian optimization, and approximate Bayesian inference.
+      Thesis: *Probabilistic Machine Learning in the Age of Deep Learning: New
+      Perspectives for Gaussian Processes, Bayesian Optimization and Beyond.*
+      Supervised by Fabio Ramos and Edwin Bonilla.
     button:
       text: Download thesis
       url: /resume.pdf
@@ -63,89 +63,155 @@ experience:
     location: New York, NY, United States
     start: 2024-08-05
     summary: |
-      **Central Applied Science (CAS) - Adaptive Experimentation (AE) Team.**
-      Developing and productionizing sample-efficient Bayesian optimization and 
-      AutoML methods--including early stopping, data truncation, and scaling law 
-      modeling--within the open-source Ax and BoTorch frameworks. 
-      Applying these methods to hyperparameter tuning and capacity management 
-      for large-scale Ads ranking models. 
-      Delivered millions of dollars in projected annual compute cost savings by 
-      productionizing Bayesian optimization with early stopping for capacity 
-      management tuning and launching early stopping for the team's flagship 
-      AutoML platform. 
-      Co-first author on "Ax: A Platform for Adaptive Experimentation", 
-      accepted at AutoML 2025. 
-      Leading cross-functional partnerships across multiple organizations to 
-      drive adoption of optimization methods.
-    button:
-      text: View portfolio
-      url: /
-      icon: hero/arrow-down-tray
+      At Meta's Central Applied Science (CAS), on the Adaptive Experimentation (AE)
+      team, I develop sample-efficient Bayesian optimization and AutoML methods
+      within the open-source [Ax](https://ax.dev/) and
+      [BoTorch](https://botorch.org/) frameworks — early stopping, data truncation,
+      and scaling-law modeling — and apply them to hyperparameter tuning and
+      capacity management for large-scale Ads ranking models. Co-first author on
+      *Ax: A Platform for Adaptive Experimentation* (AutoML 2025).
   - role: Applied Scientist Intern
     org: Amazon Web Services
     location: Cambridge, United Kingdom
     start: 2022-05-30
     end: 2022-09-16
     summary: |
-      As an applied scientist intern at Amazon Web Services (AWS), I led an explorative research project focused on addressing the challenges of hyperparameter optimization for large language models (LLMs). Our primary objective was to gain a comprehensive understanding of the scaling behavior of LLMs and investigate the feasibility of extrapolating optimal hyperparameters from smaller LLMs to their massive counterparts.
-
-      During this internship, I was fortunate to be reunited with Aaron Klein, Matthias Seeger, and Cedric Archambeau, with whom I had previously collaborated during an earlier internship at AWS Berlin.
+      At AWS, I led an exploratory research project on hyperparameter optimization
+      for large language models, focused on the scaling behavior of LLMs and the
+      feasibility of extrapolating optimal hyperparameters from smaller models to
+      larger ones. Reunited with Aaron Klein, Matthias Seeger, and Cédric
+      Archambeau from my earlier AWS Berlin internship.
   - role: Doctoral Student Researcher
     org: Secondmind
     location: Cambridge, United Kingdom
     start: 2021-09-20
     end: 2022-04-30
     summary: |
-      As a student researcher at Secondmind (formerly Prowler.io), a research-intensive AI startup renowned for its innovations in Bayesian optimization and Gaussian processes, I contributed impactful research and open-source code. I developed open-source software to facilitate sampling efficiently from GPs, and led a research initiative to improve the integration of neural networks with GP approximations. These efforts culminated in a research paper selected for an oral presentation at ICML.
-
-      I had the privilege of collaborating closely with Vincent Dutordoir and Victor Picheny during this period.
+      At [Secondmind](https://www.secondmind.ai/) (formerly Prowler.io), an AI
+      research lab focused on Bayesian optimization and Gaussian processes, I
+      contributed open-source software for efficient GP sampling and led research
+      on integrating neural network features into GP approximations — work that
+      led to *Spherical Inducing Features for Orthogonally-Decoupled Gaussian
+      Processes* (ICML 2023, Oral). Worked closely with Vincent Dutordoir and
+      Victor Picheny.
   - role: Applied Scientist Intern
     org: Amazon Web Services
     location: Berlin, Germany
     start: 2019-06-01
     end: 2019-12-01
     summary: |
-      As an applied scientist intern at Amazon Web Services (AWS), I contributed to the development of the Automatic Model Tuning functionality in AWS SageMaker. My primary focus was on advancing AutoML and hyperparameter optimization, particularly Bayesian optimization methods. I spearheaded a research project aimed at integrating multi-fidelity BO with asynchronous parallelism. This initiative led to the development of a research paper and the release of open-source code within AutoGluon, subsequently forming the basis of the SyneTune library.
-
-      I had the privilege of working closely with Matthias Seeger, Cedric Archambeau, and Aaron Klein during this internship.
+      At AWS, I contributed to Automatic Model Tuning in
+      [SageMaker](https://aws.amazon.com/sagemaker/), focusing on Bayesian
+      optimization methods for AutoML. I led research on integrating
+      multi-fidelity BO with asynchronous parallelism, resulting in a paper and
+      open-source code in [AutoGluon](https://auto.gluon.ai/) — work that later
+      formed the basis of [SyneTune](https://github.com/awslabs/syne-tune).
+      Worked with Matthias Seeger, Cédric Archambeau, and Aaron Klein.
+  - role: Teaching Assistant
+    org: University of New South Wales (UNSW)
+    location: Sydney, Australia
+    start: 2017-08-01
+    end: 2018-11-30
+    summary: |
+      Teaching assistant for COMP9418 — Advanced Topics in Statistical Machine
+      Learning, a postgraduate course covering probabilistic graphical models,
+      approximate inference, and Bayesian methods.
   - role: Software Engineer
     org: CSIRO's Data61
     location: Sydney, Australia
-    start: 2016-07-01
-    end: 2019-04-01
+    start: 2016-06-01
+    end: 2019-04-30
     summary: |
-      As a machine learning software engineer at CSIRO's Data61, the AI research division of Australia's national science agency, I was an integral part of the Inference Systems Engineering Team, specializing in probabilistic ML for diverse problem domains. I led the development of new microservices and contributed to the development of open-source libraries for large-scale Bayesian deep learning. I also had a stint with the Graph Analytics Engineering Team, where my contributions to research on graph representation learning led to a research paper selected for a spotlight presentation at NeurIPS.
+      At [CSIRO's Data61](https://research.csiro.au/data61/) — Australia's
+      national AI research division — I worked on the Inference Systems
+      Engineering team, building microservices and open-source libraries for
+      large-scale Bayesian deep learning. A stint with the Graph Analytics
+      Engineering team led to research on graph representation learning, resulting
+      in a NeurIPS spotlight paper.
   - role: Software Engineer
     org: National ICT Australia (NICTA)
     location: Sydney, Australia
-    start: 2015-05-01
+    start: 2015-06-01
     end: 2016-06-30
     summary: |
-      As a machine learning software engineer at NICTA, I was part of an interdisciplinary ML research team contributing to the Big Data Knowledge Discovery initiative. During this time, I led the development and release of numerous open-source libraries for applying Bayesian ML at scale.
+      At [NICTA](https://en.wikipedia.org/wiki/NICTA), I worked on the Big Data
+      Knowledge Discovery initiative within an interdisciplinary ML research team,
+      developing and releasing open-source libraries for applying Bayesian ML at
+      scale. NICTA later merged into CSIRO's Data61.
   - role: Research Intern
     org: Commonwealth Scientific and Industrial Research Organisation (CSIRO)
     location: Sydney, Australia
     start: 2013-11-01
     end: 2014-02-01
     summary: |
-      As a summer vacation scholar at CSIRO's Language and Social Computing team, I applied cutting-edge machine learning and natural language processing techniques to build a robust text classification system for automated sentiment analysis.
+      As a summer vacation scholar with CSIRO's Language and Social Computing
+      team, I built a text classification system for automated sentiment analysis
+      using contemporary ML and NLP methods.
 skills:
-  - name: Technical Skills
+  - name: Languages
     items:
       - label: Python
         level: 5
-      - label: Machine Learning
-        level: 5
-      - label: Cloud Computing
+      - label: C
         level: 4
-  - name: Research & Communication
+      - label: Java
+        level: 4
+      - label: Bash / shell
+        level: 4
+      - label: R
+        level: 3
+      - label: MATLAB
+        level: 3
+      - label: Mathematica
+        level: 3
+      - label: Haskell
+        level: 3
+      - label: Prolog
+        level: 3
+  - name: Machine learning
     items:
-      - label: Academic Writing
+      - label: PyTorch
         level: 5
-      - label: Conference Presentations
+      - label: TensorFlow / TF Probability
+        level: 5
+      - label: scikit-learn
+        level: 5
+      - label: GPyTorch
+        level: 5
+      - label: GPflow
+        level: 5
+      - label: JAX
         level: 4
-      - label: Grant Proposals
+      - label: HuggingFace transformers / datasets
         level: 4
+      - label: NetworkX
+        level: 4
+  - name: Scientific computing & visualization
+    items:
+      - label: NumPy / SciPy / pandas
+        level: 5
+      - label: Matplotlib
+        level: 5
+      - label: Jupyter / IPython
+        level: 5
+  - name: Tools & infrastructure
+    items:
+      - label: Git
+        level: 5
+      - label: Docker
+        level: 5
+      - label: Kubernetes
+        level: 5
+      - label: Hydra
+        level: 5
+      - label: LaTeX
+        level: 5
+      - label: AWS
+        level: 4
+      - label: Slurm / HPC
+        level: 4
+      - label: Weights & Biases
+        level: 3
 
 languages:
   - name: English
@@ -155,9 +221,9 @@ languages:
     level: 4
     label: Fluent
 
-awards:
-  - title: Best Paper Award
-    awarder: NeurIPS
-    date: "2022-12-01"
-    summary: Awarded for groundbreaking work on efficient training of large models.
-    icon: hero/trophy
+# awards:
+#   - title: ...
+#     awarder: ...
+#     date: ...
+#     summary: ...
+#     icon: hero/trophy

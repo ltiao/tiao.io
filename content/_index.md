@@ -57,16 +57,6 @@ sections:
         techniques such as early stopping and scaling laws. Past work
         includes graph representation learning, GANs, and implicit
         generative models.
-
-        Since 2024, I have been at Meta on the Adaptive Experimentation
-        team within Central Applied Science (CAS). My research continues
-        on Bayesian optimization, Gaussian processes, and sample-efficient
-        decision-making under uncertainty.
-
-        Our research has been recognized at NeurIPS and ICML, where it has
-        been selected for oral and spotlight presentations.
-
-        Reach out — collaborations welcome.
     design:
       columns: '1'
   - block: collection
@@ -157,33 +147,6 @@ sections:
       show_date: false
       show_read_time: false
       show_read_more: false
-  - block: markdown
-    id: collaborators
-    content:
-      title: 'Collaborators'
-      subtitle: ''
-      text: |-
-        ### Meta — Adaptive Experimentation (2024–present)
-
-        - **Eytan Bakshy** — Senior Director, Adaptive Experimentation
-        - **Max Balandat** — Research Scientist Manager, AE
-        - **David Eriksson** — Research Scientist Manager, AE
-        - **Sebastian Ament** — Research Scientist, AE
-        - **Sam Daulton** — Research Scientist, AE
-
-        ### Amazon — Berlin (Summer / Fall 2019, internship)
-
-        - **Aaron Klein** — then Applied Scientist, AWS Berlin · now leads a research group at the ELLIS Institute Tübingen as part of OpenEuroLLM, a European initiative developing foundation models for European languages · [aaronkl.github.io](https://aaronkl.github.io/)
-        - **Cédric Archambeau** — then Principal Applied Scientist, AWS Berlin · now Helsing · [archambeau.com](https://archambeau.com)
-        - **Matthias Seeger** — Principal Applied Scientist, AWS · [mseeger.github.io](https://mseeger.github.io/)
-
-        ### Secondmind Labs — Cambridge, UK (Fall 2021 – Spring 2022, internship)
-
-        - **Vincent Dutordoir** — then Research Scientist, Secondmind · now Google DeepMind
-        - **Victor Picheny** — Director of Research, Secondmind
-        - **Nicolas Durrande** — then Research Director, Secondmind · now Research Lead at Shift Lab
-    design:
-      columns: '1'
   - block: contact-info
     id: contact
     content:
