@@ -14,7 +14,14 @@ sections:
     content:
       # Choose a user profile to display (a folder name within `content/authors/`)
       username: me
-      text: ''
+      text: |-
+        Hi, I'm Louis. I'm a research scientist at Meta on the Adaptive
+        Experimentation team within Central Applied Science (CAS), based
+        in New York City. My research is in probabilistic machine
+        learning — approximate Bayesian inference, Gaussian processes,
+        and Bayesian optimization. I obtained my PhD at the [University
+        of Sydney](https://www.sydney.edu.au/), advised by [Edwin
+        Bonilla](#) and [Fabio Ramos](#).
       # Show a call-to-action button under your biography? (optional)
       button:
         text: Curriculum Vitae (CV)
@@ -42,11 +49,24 @@ sections:
       title: 'My Research'
       subtitle: ''
       text: |-
-        Use this area to speak to your mission. I'm a research scientist in the Moonshot team at DeepMind. I blog about machine learning, deep learning, and moonshots.
+        I work on probabilistic machine learning, with particular focus on
+        approximate Bayesian inference and Gaussian processes, and their
+        applications to Bayesian optimization. More broadly, my interests
+        extend to automated machine learning (AutoML), encompassing
+        hyperparameter optimization and adaptive resource allocation
+        techniques such as early stopping and scaling laws. Past work
+        includes graph representation learning, GANs, and implicit
+        generative models.
 
-        I apply a range of qualitative and quantitative methods to comprehensively investigate the role of science and technology in the economy.
+        Since 2024, I have been at Meta on the Adaptive Experimentation
+        team within Central Applied Science (CAS). My research continues
+        on Bayesian optimization, Gaussian processes, and sample-efficient
+        decision-making under uncertainty.
 
-        Please reach out to collaborate 😃
+        Our research has been recognized at NeurIPS and ICML, where it has
+        been selected for oral and spotlight presentations.
+
+        Reach out — collaborations welcome.
     design:
       columns: '1'
   - block: collection
@@ -58,7 +78,7 @@ sections:
       # Choose how many pages you would like to display (0 = all pages)
       count: 5
       # Page type to display. E.g. post, talk, publication...
-      page_type: blog
+      page_type: posts
       # Filter on criteria
       filters:
         author: ''
@@ -95,7 +115,7 @@ sections:
       # Choose how many pages you would like to display (0 = all pages)
       count: 8
       # Page type to display. E.g. post, talk, publication...
-      page_type: blog
+      page_type: posts
       # Filter on criteria
       filters:
         author: ''
@@ -120,27 +140,23 @@ sections:
         folders:
           - events
     design:
-      view: compact
-  - block: resume-experience
-    id: experience
-    content:
-      title: ''
-      subtitle: ''
-      username: me
-    design:
-      date_format: 'January 2006'
-      is_education_first: false
+      view: card
   - block: collection
+    id: projects
     content:
-      title: Publications
-      text: ''
-      count: 0
+      title: Featured Projects
+      count: 3
       filters:
         folders:
-          - publications
-        exclude_featured: false
+          - projects
+        featured_only: true
     design:
-      view: citation
+      view: article-grid
+      columns: 3
+      fill_image: false
+      show_date: false
+      show_read_time: false
+      show_read_more: false
   - block: contact-info
     id: contact
     content:

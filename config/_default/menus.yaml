@@ -16,6 +16,12 @@ main:
   - name: Publications
     url: publications/
     weight: 40
+  - name: Projects
+    url: projects/
+    weight: 45
   - name: Experience
     url: experience/
     weight: 50
+  - name: Contact
+    url: /#contact
+    weight: 60
