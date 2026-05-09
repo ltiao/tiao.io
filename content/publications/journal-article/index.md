@@ -1,4 +1,5 @@
 ---
+draft: true
 title: "An example journal article"
 authors:
 - me
