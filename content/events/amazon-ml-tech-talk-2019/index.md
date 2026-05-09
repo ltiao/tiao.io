@@ -1,5 +1,5 @@
 ---
-title: "Tech Talk: Asynchronous Multi-Fidelity Hyperparameter Optimization"
+title: "Tech Talk: Cycle-Consistent Adversarial Learning as Approximate Bayesian Inference"
 event: Amazon Machine Learning Community Tech Talk
 event_url: ""
 location: Berlin, Germany
@@ -14,9 +14,9 @@ publishDate: '2019-06-15T14:00:00'
 authors:
   - me
 tags:
-  - AutoML
-  - Hyperparameter Optimization
-  - Machine Learning
+  - Generative Adversarial Networks
+  - Variational Inference
+  - Probabilistic Models
 
 featured: false
 

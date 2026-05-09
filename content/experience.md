@@ -52,16 +52,16 @@ sections:
         and Secondmind during my PhD.
 
         - **Sebastian Ament** — Research Scientist, Meta CAS (Adaptive Experimentation)
-        - **Cédric Archambeau** — formerly Principal Applied Scientist, AWS Berlin · now Helsing · [archambeau.com](https://archambeau.com)
-        - **Eytan Bakshy** — Senior Director, Meta CAS (Adaptive Experimentation)
+        - **Cédric Archambeau** — formerly Principal Applied Scientist, AWS Berlin · now Director of Artificial Intelligence, Helsing · [archambeau.com](https://archambeau.com)
+        - **Eytan Bakshy** — Research Director, Meta CAS (Adaptive Experimentation)
         - **Max Balandat** — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
         - **Sam Daulton** — Research Scientist, Meta CAS (Adaptive Experimentation)
-        - **Nicolas Durrande** — formerly Research Director, Secondmind · now Research Lead, Shift Lab
+        - **Nicolas Durrande** — formerly Director of Research, Secondmind (preceded Victor Picheny) · now Research Lead, Shift Lab
         - **Vincent Dutordoir** — formerly Research Scientist, Secondmind · now Google DeepMind
         - **David Eriksson** — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
         - **Aaron Klein** — formerly Applied Scientist, AWS Berlin · now leading a research group at the ELLIS Institute Tübingen as part of OpenEuroLLM, a European initiative developing foundation models for European languages · [aaronkl.github.io](https://aaronkl.github.io/)
         - **Victor Picheny** — Director of Research, Secondmind
-        - **Matthias Seeger** — Principal Applied Scientist, AWS · [mseeger.github.io](https://mseeger.github.io/)
+        - **Matthias Seeger** — Principal Applied Scientist, AWS Berlin · [mseeger.github.io](https://mseeger.github.io/)
     design:
       columns: '1'
   - block: resume-skills
