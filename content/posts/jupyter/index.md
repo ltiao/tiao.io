@@ -1,4 +1,5 @@
 ---
+draft: true
 aliases:
   - /post/jupyter/
 title: Display Jupyter Notebooks with Academic

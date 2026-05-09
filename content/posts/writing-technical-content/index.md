@@ -1,4 +1,5 @@
 ---
+draft: true
 aliases:
   - /post/writing-technical-content/
 title: Writing technical content in Markdown

@@ -1,4 +1,5 @@
 ---
+summary: The unabridged acknowledgments from my PhD thesis.
 aliases:
   - /post/phd-thesis-acknowledgements/
 title: PhD Thesis Acknowledgements (Unabridged)

@@ -1,6 +1,6 @@
 ---
 title: 'A Tutorial on Variational Autoencoders with a Concise Keras Implementation'
-summary: An in-depth practical guide to variational encoders from a probabilistic perspective.
+summary: An in-depth practical guide to variational autoencoders from a probabilistic perspective.
 authors:
 - me
 tags:
