@@ -1,0 +1,699 @@
++++
+title = "Density Ratio Estimation vs. Density Estimation: Casting Unsupervised Learning as Supervised Learning"
+
+date = 2018-11-04T00:00:00
+lastmod = 2018-11-04T00:00:00
+draft = true
+
+# Does the content use math formatting?
+math = true
+
+# Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
+authors = ["admin"]
+
+tags = ["Information Theory", "Density Ratio Estimation", "Density Estimation", "Implicit Distributions", "Machine Learning"]
+summary = "Density Estimation vs. Density Ratio Estimation: Casting Unsupervised Learning as Supervised Learning"
+
+# Featured image
+# To use, add an image named `featured.jpg/png` to your project's folder. 
+[image]
+  # Caption (optional)
+  caption = "Density Estimation of the 'Swiss Roll' Distribution."
+
+  # Focal point (optional)
+  # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
+  focal_point = "Center"
+
+  # Show image only in page previews?
+  preview_only = false
++++
+
+<!-- TODO: Clarify that optimal classifier refers to the classifier that minimizes the Bayes risk -->
+
+Density estimation is a quintessential problem in unsupervised learning.
+The goal of density estimation is to estimate an unknown probability density 
+function given a finite collection of samples.
+More specifically, we are given observe a set of $N\_p$ samples assumed to be 
+drawn from some underlying distribution $p(\mathbf{x})$
+
+$$
+\mathbf{x}\_p^{(1)}, \dotsc, \mathbf{x}\_p^{(N\_p)} \sim p(\mathbf{x}).
+$$
+
+$p(\mathbf{x})$ is unknown, or implicit in that we have no way of evaluating 
+$p(\mathbf{x})$ numerically.
+
+Among the variety of approaches to density estimation that are used, the most
+popular is perhaps *kernel density estimation (KDE)*, also known as the 
+*Parzen–Rosenblatt window method* [^rosenblatt1956remarks] [^parzen1962estimation].
+
+In this post, we will discuss an alternative approach that transforms the 
+unsupervised learning problem of *density* estimation, into *density ratio* 
+estimation, which can be further reduced to the supervised learning problem of 
+probabilistic classification, as we showed previously. In this way, we transform
+an unsupervised learning problem into a supervised learning problem and recover 
+a solution for the former from the latter.
+
+This technique is highlighted the Elements of Statistical Learning 
+[&sect;14.2.4, Friedman et al. 2001][^friedman2001elements].
+
+
+
+## Density Estimation as Density Ratio Estimation
+
+introduce a known probability density $q(\mathbf{x})$ to be used as a reference.
+
+define the function as the ratio of densities
+
+$$ 
+r^\*(\mathbf{x}) := \frac{p(\mathbf{x})}{q(\mathbf{x})}.
+$$
+
+clearly
+
+$$
+p(\mathbf{x}) = r^\*(\mathbf{x}) \cdot q(\mathbf{x})
+$$
+
+we can think of $r^\*(\mathbf{x})$ as the scaling factor needed to adjust 
+$q(\mathbf{x})$ to match $p(\mathbf{x})$.
+
+while we can calculate $q(\mathbf{x})$ numerically, we obviously cannot 
+calculate $r^\*(\mathbf{x})$ numerically, since it depends on the unknown 
+density $p(\mathbf{x})$---which we are trying to estimate in the first place.
+
+
+
+
+the discriminative power of the classifier to model the density.
+
+
+$$ 
+r\_{\theta}(\mathbf{x}) \approx r^\*(\mathbf{x}).
+$$
+
+$$
+p\_{\theta}(\mathbf{x}) := r\_{\theta}(\mathbf{x}) \cdot q(\mathbf{x}) \approx p(\mathbf{x})
+$$
+
+$$
+p\_{\theta}(\mathbf{x}) = \exp [ \log q(\mathbf{x}) + \log r\_{\theta}(\mathbf{x}) ]
+$$
+
+```python
+p_estimate = tf.exp(q.log_prob(x) + log_ratio(x))
+```
+
+If we assign value $y=1$ to each sample drawn from $p(x)$ and $y=0$ to those 
+drawn from $q(x)$, then
+
+$$
+\mathcal{P}(y=1 \mid x) 
+= \frac{p(x)}{p(x) + q(x)}
+= \sigma(\log r^{\*}(x)).
+$$
+
+$\mathcal{P}(y=1 \mid x)$
+
+Suppose we have $N\_p$ and $N\_q$ samples drawn from $p(x)$ and $q(x)$, 
+respectively,
+
+$$
+x\_p^{(1)}, \dotsc, x\_p^{(N\_p)} \sim p(x), 
+\qquad \text{and} \qquad 
+x\_q^{(1)}, \dotsc, x\_q^{(N\_q)} \sim q(x).
+$$
+
+Then, we form the training set $\{ (x^{(n)}, y^{(n)}) \}\_{n=1}^N$, where $N = N\_p + N\_q$
+and
+
+$$
+\begin{align}
+  (x\_1, \dotsc, x\_N) & = (x\_p^{(1)}, \dotsc, x\_p^{(N\_p)},
+                            x\_q^{(1)}, \dotsc, x\_q^{(N\_q)}), \newline
+  (y\_1, \dotsc, y\_N) & = (\underbrace{1, \dotsc, 1}\_{N\_p}, 
+                            \underbrace{0, \dotsc, 0}\_{N\_q}).
+\end{align}
+$$
+
+In other words, we label samples drawn from $p(x)$ as 1 and those drawn from 
+$q(x)$ as 0.
+
+
+In code, this looks like:
+
+```python
+>>> p_samples = p.sample(sample_shape=(n_p, 1))
+>>> q_samples = q.sample(sample_shape=(n_q, 1))
+>>> X = tf.concat([p_samples, q_samples], axis=0)
+>>> y = tf.concat([tf.ones_like(p_samples), tf.zeros_like(q_samples)], axis=0)
+```
+
+$$
+r^{\*}(x) = \exp[ \sigma^{-1}(\mathcal{P}(y = 1 \mid x)) ]
+$$
+
+* $p(\mathbf{x})$ is an **implicit distribution**---we have access only to its 
+  samples.
+* $q(\mathbf{x})$ is a  **prescribed distribution**---we can not only sample 
+  from it, we can also evaluate its density function exactly.
+* $r\_{\theta}(\mathbf{x})$ is an estimator of the density ratio $\frac{p(\mathbf{x})}{q(\mathbf{x})}$
+
+
+We define a small fully-connected neural network with four hidden layers and 
+softplus activations:
+
+```python
+log_ratio = Sequential([
+    Dense(16, input_dim=2, activation='softplus'),
+    Dense(32, activation='softplus'),
+    Dense(64, activation='softplus'),
+    Dense(32, activation='softplus'),
+    Dense(1),  # n.b. no sigmoid activation here.
+])
+```
+
+This simple architecture is visualized in the diagram below:
+
+{{< figure src="log_ratio_architecture.svg" caption="Log Density Ratio Architecture." >}}
+
+
+
+We learn the optimal class probability estimator by optimizing it with respect
+to a *proper scoring rule*[^gneiting2007strictly] that yields well-calibrated probabilistic predictions, such as the *binary cross-entropy loss*,
+
+$$
+\begin{align}
+  \mathcal{L}(\theta) & := 
+  - \mathbb{E}\_{p(x)} [ \log D\_{\theta} (x) ] 
+  - \mathbb{E}\_{q(x)} [ \log(1-D\_{\theta} (x)) ] \newline
+  & =
+  - \mathbb{E}\_{p(x)} [ \log \sigma ( \log r\_{\theta} (x) ) ] 
+  - \mathbb{E}\_{q(x)} [ \log(1 - \sigma ( \log r\_{\theta} (x) )) ].
+\end{align}
+$$
+
+An implementation optimized for numerical stability is given below:
+
+```python
+def _binary_crossentropy(log_ratio_p, log_ratio_q):
+
+    loss_p = tf.nn.sigmoid_cross_entropy_with_logits(
+        logits=log_ratio_p,
+        labels=tf.ones_like(log_ratio_p)
+    )
+
+    loss_q = tf.nn.sigmoid_cross_entropy_with_logits(
+        logits=log_ratio_q,
+        labels=tf.zeros_like(log_ratio_q)
+    )
+
+    return tf.reduce_mean(loss_p + loss_q)
+```
+
+
+Now we can build a [multi-input/multi-output model](https://keras.io/getting-started/functional-api-guide/#multi-input-and-multi-output-models), where the [inputs 
+are fixed with stochastic tensors](http://louistiao.me/notes/keras-constant-input-layers-with-fixed-source-of-stochasticity/)---samples from 
+$p(x)$ and $q(x)$, respectively.
+
+```python
+>>> x_p = Input(tensor=p_samples)
+>>> x_q = Input(tensor=q_samples)
+>>> log_ratio_p = log_ratio(x_p)
+>>> log_ratio_q = log_ratio(x_q)
+```
+
+The model can now be compiled and finalized. Since we're using a custom loss 
+that take the two sets of log-ratios as input, we specify `loss=None` and 
+define it instead through the `add_loss` method.
+
+```python
+>>> m = Model(inputs=[x_p, x_q], outputs=[log_ratio_p, log_ratio_q])
+>>> m.add_loss(_binary_crossentropy(log_ratio_p, log_ratio_q))
+>>> m.compile(optimizer='rmsprop', loss=None)
+```
+
+As a sanity-check, the loss evaluated on a random batch can be obtained like so: 
+
+```python
+>>> m.evaluate(x=None, steps=1)
+1.3765026330947876
+```
+
+We can now fit our estimator, recording the loss at the end of each epoch:
+
+```python
+>>> hist = m.fit(x=None, y=None, steps_per_epoch=1, epochs=500)
+```
+
+### Example 1: Banana-shaped distribution
+
+$$
+\mathbf{x} \sim p(\mathbf{x}) \quad 
+\Leftrightarrow \quad 
+\mathbf{x} = G(\mathbf{z}), 
+\quad \mathbf{z} \sim p(\mathbf{z}),
+$$
+
+where
+
+$$
+G(\mathbf{z}) =
+\begin{bmatrix}
+  z_1 \newline 
+  z_2 - z_1^2 - 1 \newline 
+\end{bmatrix}
+$$
+
+$$
+p(\mathbf{z}) = 
+\mathcal{N}(\mathbf{z} | \mathbf{0}, \mathbf{\Sigma}),
+\qquad
+\mathbf{\Sigma} = 
+\begin{bmatrix}
+  1    & 0.95 \newline
+  0.95 & 1
+\end{bmatrix}.
+$$
+
+**INSERT SCATTERPLOT OF SAMPLES HERE**
+
+<!-- previous post, where I demonstrate how to [Implement its Probability Density Function using the TensorFlow Probability Bijector API]().
+ -->
+ 
+{{< figure src="p_density_3d_surface.png" caption="3D surface plot of probability density function $p(\mathbf{x})$." >}}
+
+
+
+$$ 
+q(\mathbf{x}) = \mathcal{N} ( \mathbf{0}, \mathbf{I} ).
+$$
+
+{{< figure src="q_density_3d_surface.png" caption="3D surface plot of probability density functions $q(\mathbf{x})$." >}}
+
+{{< figure src="densities_contour.svg" caption="Contour plots of probability density functions $p(\mathbf{x})$ and $q(\mathbf{x})$." >}}
+
+### Example 2: Swiss roll distribution
+
+$$
+\mathbf{x} \sim p(\mathbf{x}) \quad 
+\Leftrightarrow \quad 
+\mathbf{x} = G(\mathbf{z}), 
+\quad \mathbf{z} \sim p(\mathbf{z}),
+$$
+
+
+$$
+G(\mathbf{z}) =
+\begin{bmatrix}
+  r \cos z\_1 \newline 
+  r \sin z\_1 \newline 
+\end{bmatrix}
+$$
+where $r = a z\_1 + b z\_2$.
+
+$$
+p(\mathbf{z}) = 
+\mathcal{N} \left (
+  \mathbf{z} \mid
+  \begin{bmatrix}
+    2 \newline
+    -2 
+  \end{bmatrix}, 
+  \begin{bmatrix}
+    3 & 0 \newline
+    0 & 0.25
+  \end{bmatrix} 
+\right ).
+$$
+
+
+
+for $a = \frac{2}{5}$ and $b = -1$
+
+{{< figure src="samples_swiss_roll.svg" caption="1k samples drawn from $p(\mathbf{x})$." >}}
+
+
+```python
+class SwissRoll(tfp.bijectors.Bijector):
+
+    def __init__(self, a=0.4, b=-1.0, name="swiss_roll"):
+
+        super(Spiral, self).__init__(inverse_min_event_ndims=1, name=name)
+
+        self.a = a
+        self.b = b
+
+    def _forward(self, z):
+
+        r = self.a * z[..., 0:1] + self.b * z[..., 1:2]
+
+        x_0 = r * tf.cos(z[..., 0:1])
+        x_1 = r * tf.sin(z[..., 0:1])
+        x_tail = z[..., 2:-1]
+
+        return tf.concat([x_0, x_1, x_tail], axis=-1)
+```
+
+{{< figure src="https://thumbs.gfycat.com/WhisperedFamiliarKingsnake-size_restricted.gif" caption="Probability density functions." >}}
+
+Let's create the density ratio function for the Gaussian distributions we just 
+instantiated:
+
+```python
+>>> r = density_ratio(p, q)
+```
+
+This density ratio function is plotted as the orange dotted line below, 
+alongside the individual densities shown in the previous plot:
+
+{{< figure src="density_ratio_contour.svg" caption="Contour plot of density ratio function." >}}
+
+{{< figure src="density_ratio_3d_surface.png" caption="3D surface plot of density ratio function." >}}
+
+## Density Ratio Estimation --- implicit distributions
+
+When either density $p(x)$ or $q(x)$ is unavailable, things become more tricky. 
+Which brings us to the topic of this post. Suppose we only have samples from 
+$p(x)$ and $q(x)$---these could be natural images, outputs from a neural 
+network with stochastic inputs, or in the case of our running example, i.i.d. 
+samples drawn from Gaussians, etc. 
+Distributions for which we are only able to observe their samples are known as
+**implicit distributions**, since their samples *imply* some underlying true 
+density which we may not have direct access to.
+
+Density ratio estimation is concerned with estimating the ratio of densities
+$r^{\*}(x) = p(x) / q(x)$ given access only to samples from $p(x)$ and $q(x)$.
+Moreover, density ratio estimation usually encompass methods that achieve this 
+without resorting to direct *density estimation* of the individual densities 
+$p(x)$ or $q(x)$, since any error in the estimation of the denominator $q(x)$ 
+is magnified exponentially. 
+
+Of the many density ratio estimation methods that now 
+flourish[^sugiyama2012density], the classical approach of *probabilistic 
+classification* remains dominant, due in no small part to its simplicity.
+
+### Reducing Density Ratio Estimation to Probabilistic Classification
+
+We now demonstrate that density ratio estimation can be reduced to probabilistic 
+classification. We shall do this by highlighting the one-to-one correspondence 
+between the density ratio of $p(x)$ and $q(x)$ and the optimal probabilistic 
+classifier that discriminates between their samples. 
+Specifically, suppose we have a collection of samples from both $p(x)$ and $q(x)$, 
+where each sample is assigned a class label indicating which distribution it was 
+drawn from. Then, from an estimator of the class-membership probabilities, it is
+straightforward to recover an estimator of the density ratio.
+
+Suppose we have $N\_p$ and $N\_q$ samples drawn from $p(x)$ and $q(x)$, 
+respectively,
+
+$$
+x\_p^{(1)}, \dotsc, x\_p^{(N\_p)} \sim p(x), 
+\qquad \text{and} \qquad 
+x\_q^{(1)}, \dotsc, x\_q^{(N\_q)} \sim q(x).
+$$
+
+Then, we form the dataset $\{ (x\_n, y\_n) \}\_{n=1}^N$, where $N = N\_p + N\_q$
+and
+
+$$
+\begin{align}
+  (x\_1, \dotsc, x\_N) & = (x\_p^{(1)}, \dotsc, x\_p^{(N\_p)},
+                            x\_q^{(1)}, \dotsc, x\_q^{(N\_q)}), \newline
+  (y\_1, \dotsc, y\_N) & = (\underbrace{1, \dotsc, 1}\_{N\_p}, 
+                            \underbrace{0, \dotsc, 0}\_{N\_q}).
+\end{align}
+$$
+
+In other words, we label samples drawn from $p(x)$ as 1 and those drawn from 
+$q(x)$ as 0. In code, this looks like:
+
+```python
+>>> p_samples = p.sample(sample_shape=(n_p, 1))
+>>> q_samples = q.sample(sample_shape=(n_q, 1))
+>>> X = tf.concat([p_samples, q_samples], axis=0)
+>>> y = tf.concat([tf.ones_like(p_samples), tf.zeros_like(q_samples)], axis=0)
+```
+
+This dataset is visualized below. The blue squares in the top row are samples 
+$x_p^{(i)} \sim p(x)$ with label 1; red squares in the bottom row are samples
+$x_q^{(j)} \sim q(x)$ with label 0.
+
+{{< figure src="dataset_scatterplot.svg" caption="Classification dataset." >}}
+
+Now, by construction, we have
+
+$$
+p(x) = \mathcal{P}(x \mid y = 1),
+\qquad
+\text{and}
+\qquad
+q(x) = \mathcal{P}(x \mid y = 0).
+$$
+
+Using Baye's rule, we can write
+
+$$
+\mathcal{P}(x \mid y) = 
+\frac{\mathcal{P}(y \mid x) \mathcal{P}(x)}
+     {\mathcal{P}(y)}.
+$$
+
+Hence, we can express the density ratio $r^{\*}(x)$ as
+
+$$
+\begin{align}
+  r^{\*}(x) & = \frac{p(x)}{q(x)}
+       = \frac{\mathcal{P}(x \mid y = 1)}
+              {\mathcal{P}(x \mid y = 0)} \newline
+       & = \left ( \frac{\mathcal{P}(y = 1 \mid x) \mathcal{P}(x)}
+                        {\mathcal{P}(y = 1)} \right ) 
+           \left ( \frac{\mathcal{P}(y = 0 \mid x) \mathcal{P}(x)}
+                        {\mathcal{P}(y = 0)} \right ) ^ {-1} \newline
+       & = \frac{\mathcal{P}(y = 0)}{\mathcal{P}(y = 1)} 
+           \frac{\mathcal{P}(y = 1 \mid x)}
+                {\mathcal{P}(y = 0 \mid x)}.
+\end{align}
+$$
+
+Let us approximate the ratio of marginal densities by the ratio of sample sizes,
+
+$$
+\frac{\mathcal{P}(y = 0)}
+     {\mathcal{P}(y = 1)} 
+\approx
+\frac{N\_q}{N\_p + N\_q} 
+\left ( \frac{N\_p}{N\_p + N\_q} \right )^{-1}
+= \frac{N\_q}{N\_p}.
+$$
+
+To avoid notational clutter, let us assume from now on that $N\_q = N\_p$. 
+We can then write $r^{\*}(x)$ in terms of class-posterior probabilities,
+
+$$
+\begin{align}
+  r^{\*}(x) = \frac{\mathcal{P}(y = 1 \mid x)}
+              {\mathcal{P}(y = 0 \mid x)}.
+\end{align}
+$$
+
+#### Recovering the Density Ratio from the Class Probability
+
+This yields a one-to-one correspondence between the density ratio $r^{\*}(x)$ 
+and the class-posterior probability $\mathcal{P}(y = 1 \mid x)$. 
+Namely,
+
+$$
+\begin{align}
+  r^{\*}(x) = \frac{\mathcal{P}(y = 1 \mid x)}
+              {\mathcal{P}(y = 0 \mid x)} 
+       & = \frac{\mathcal{P}(y = 1 \mid x)}
+                {1 - \mathcal{P}(y = 1 \mid x)} \newline
+       & = \exp 
+           \left [ 
+             \log \frac{\mathcal{P}(y = 1 \mid x)}
+                       {1 - \mathcal{P}(y = 1 \mid x)} \right ] \newline
+       & = \exp[ \sigma^{-1}(\mathcal{P}(y = 1 \mid x)) ],
+\end{align}
+$$
+
+where $\sigma^{-1}$ is the *logit* function, or inverse sigmoid function, given 
+by $\sigma^{-1}(\rho) = \log \left ( \frac{\rho}{1-\rho} \right )$
+
+#### Recovering the Class Probability from the Density Ratio
+
+By simultaneously manipulating both sides of this equation, we can also recover 
+the exact class-posterior probability as a function of the density ratio,
+
+$$
+\mathcal{P}(y=1 \mid x) = \sigma(\log r^{\*}(x)) = \frac{p(x)}{p(x) + q(x)}.
+$$
+
+This is implemented below:
+
+```python
+def optimal_classifier(p, q):
+
+    def classifier^{\*}(x):
+
+        return tf.truediv(p.prob(x), p.prob(x) + q.prob(x))
+
+    return classifier
+```
+
+In the figure below, The class-posterior probability $\mathcal{P}(y=1 \mid x)$ 
+is plotted against the dataset visualized earlier.
+
+{{< figure src="optimal_classifier_contour.svg" caption="Optimal classifier---class-posterior probabilities." >}}
+
+{{< figure src="optimal_classifier_3d_surface.png" caption="Optimal classifier---class-posterior probabilities." >}}
+
+
+<!-- {{% alert note %}}
+If there is just one thing you take away from this post, let it be this:
+
+$$
+r^{\*}(x) = \exp[ \sigma^{-1}(\mathcal{P}(y = 1 \mid x)) ],
+$$
+{{% /alert %}}
+ -->
+
+### Probabilistic Classification with Logistic Regression
+
+The class-posterior probability $\mathcal{P}(y = 1 \mid x)$ can be approximated
+using a parameterized function $D\_{\theta}(x)$ with parameters $\theta$. This
+functions takes as input samples from $p(x)$ and $q(x)$ and outputs a *score*,
+or probability, in the range $[0, 1]$ that it was drawn from $p(x)$. 
+Hence, we refer to $D\_{\theta}(x)$ as the probabilistic classifier.
+
+From before, it is clear to see how an estimator of the density ratio 
+$r\_{\theta}(x)$ might be constructed as a function of probabilistic classifier 
+$D\_{\theta}(x)$. Namely,
+
+$$
+\begin{align}
+  r\_{\theta}(x) & = \exp[ \sigma^{-1}(D\_{\theta}(x)) ] \newline
+  & \approx \exp[ \sigma^{-1}(\mathcal{P}(y = 1 \mid x)) ] = r^{\*}(x),
+\end{align}
+$$
+and *vice versa*,
+$$
+\begin{align}
+  D\_{\theta}(x) & = \sigma(\log r_{\theta}(x)) \newline
+  & \approx \sigma(\log r^{\*}(x)) = \mathcal{P}(y = 1 \mid x).
+\end{align}
+$$
+
+Instead of $D\_{\theta}(x)$, we usually specify the parameterized function 
+$\log r\_{\theta}(x)$. This is also referred to as the *log-odds*, or *logits*, 
+since it is equivalent to the unnormalized output of the classifier before being 
+fed through the logistic sigmoid function.
+
+We learn the optimal class probability estimator by optimizing it with respect
+to a *proper scoring rule*[^gneiting2007strictly] that yields well-calibrated probabilistic predictions, such as the *binary cross-entropy loss*,
+
+$$
+\begin{align}
+  \mathcal{L}(\theta) & := 
+  - \mathbb{E}\_{p(x)} [ \log D\_{\theta} (x) ] 
+  - \mathbb{E}\_{q(x)} [ \log(1-D\_{\theta} (x)) ] \newline
+  & =
+  - \mathbb{E}\_{p(x)} [ \log \sigma ( \log r\_{\theta} (x) ) ] 
+  - \mathbb{E}\_{q(x)} [ \log(1 - \sigma ( \log r\_{\theta} (x) )) ].
+\end{align}
+$$
+
+An implementation optimized for numerical stability is given below:
+
+```python
+def _binary_crossentropy(log_ratio_p, log_ratio_q):
+
+    loss_p = tf.nn.sigmoid_cross_entropy_with_logits(
+        logits=log_ratio_p,
+        labels=tf.ones_like(log_ratio_p)
+    )
+
+    loss_q = tf.nn.sigmoid_cross_entropy_with_logits(
+        logits=log_ratio_q,
+        labels=tf.zeros_like(log_ratio_q)
+    )
+
+    return tf.reduce_mean(loss_p + loss_q)
+```
+
+
+The following animation shows how the predictions for the probabilistic 
+classifier, density ratio, log density ratio, evolve after every epoch:
+
+<video controls autoplay src="https://giant.gfycat.com/FrighteningThunderousFlicker.webm"></video>
+
+It is overlaid on top of their exact, analytical counterparts, which are only 
+available since we prescribed them to be Gaussian distribution. 
+For implicit distributions, these won't be accessible at all.
+
+Below is the final plot of how the binary cross-entropy loss converges:
+
+{{< figure src="binary_crossentropy.svg" caption="Binary Cross-entropy Loss." >}}
+
+Below is a plot of the probabilistic classifier $D\_{\theta}(x)$ (*dotted green*), 
+plotted against the optimal classifier, which is the class-posterior probability 
+$\mathcal{P}(y=1 \mid x) = \frac{p(x)}{p(x) + q(x)}$ (*solid blue*):
+
+{{< figure src="class_probability_estimator_3d_surface.png" caption="Class Probability Estimator." >}}
+
+{{< figure src="class_probability_estimator_contour.svg" caption="Class Probability Estimator." >}}
+
+
+Below is a plot of the density ratio estimator $r\_{\theta}(x)$ 
+(*dotted green*), plotted against the exact density ratio function 
+$r^{\*}(x) = \frac{p(x)}{q(x)}$ (*solid blue*):
+
+{{< figure src="density_ratio_estimator_3d_surface.png" caption="Density Ratio Estimator." >}}
+
+{{< figure src="density_ratio_estimator_contour.svg" caption="Density Ratio Estimator." >}}
+
+And finally, the previous plot in logarithmic scale:
+
+{{< figure src="log_density_ratio_estimator_3d_surface.png" caption="Log Density Ratio Estimator." >}}
+
+{{< figure src="log_density_ratio_estimator_contour.svg" caption="Log Density Ratio Estimator." >}}
+
+{{< figure src="p_density_estimator_3d_surface.png" caption="Log Density Ratio Estimator." >}}
+
+{{< figure src="p_density_estimator_contour.svg" caption="Log Density Ratio Estimator." >}}
+
+
+While it may appear that we are simply performing regression on the latent 
+function $r^{\*}(x)$ (which is not wrong---we are), it is important to emphasize that 
+we do this without ever having observed values of $r^{\*}(x)$.
+Instead, we only ever observed samples from $p(x)$ and $q(x)$ 
+This has profound implications and potential for a great number of applications 
+that we shall explore later on.
+
+# Summary
+
+This post covered how to evaluate the KL divergence, or any $f$-divergence, 
+between implicit distributions---distributions which we can only sample from. 
+First, we discussed the crucial role of the density ratio for estimating 
+$f$-divergences. 
+Next, we showed the correspondence between the density ratio and the optimal 
+classifier.
+By exploiting this link, we demonstrated how one can use a trained probabilistic classifier to construct a proxy for the exact density ratio, and use this to 
+enable estimation of any $f$-divergence.
+Finally, we provided some context on where this method is used, touching upon 
+some recent advances in GANs and VI.
+
+<!-- # Acknowledgements -->
+
+# Links and Resources
+
+- The [notebook](https://gist.github.com/ltiao/c066d22588d9494cb4b94a6cdd472392) used to generate the figures in this post, which you can [try out in Colaboratory](https://colab.research.google.com/gist/ltiao/c066d22588d9494cb4b94a6cdd472392/approximating-the-kl-divergence-between-implicit-distributions.ipynb).
+- The paper by Mohamed and Lakshminarayanan, 2016[^mohamed2016learning] along with Mohamed's related blog post [Machine Learning Trick of the Day: Density Ratio Trick](http://blog.shakirm.com/2018/01/machine-learning-trick-of-the-day-7-density-ratio-trick/).
+- Other recommended papers:
+  * Menon and Ong, 2016[^menon2016linking].
+  * Uehara et al. 2016[^uehara2016generative].
+
+[^rosenblatt1956remarks]: Rosenblatt, M. (1956). Remarks on some Nonparametric Estimates of a Density Function. The Annals of Mathematical Statistics, 832-837.
+[^parzen1962estimation]: Parzen, E. (1962). On Estimation of a Probability Density Function and Mode. The Annals of Mathematical Statistics, 33(3), 1065-1076.
+[^friedman2001elements]: Friedman, J., Hastie, T., & Tibshirani, R. (2001). [The Elements of Statistical Learning](https://amzn.to/2RzOCKf). New York, NY, USA: Springer Series in Statistics. <a target="_blank"  href="https://www.amazon.com/gp/product/0387848576/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0387848576&linkCode=as2&tag=tiao03-20&linkId=28752b3a955455d364b46346ce6bd30e"><img border="0" src="//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=0387848576&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=tiao03-20" ></a><img src="//ir-na.amazon-adsystem.com/e/ir?t=tiao03-20&l=am2&o=1&a=0387848576" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+[^sugiyama2012density]: Sugiyama, M., Suzuki, T., & Kanamori, T. (2012). [Density Ratio Estimation in Machine Learning](https://amzn.to/2EVZJMr). Cambridge University Press. <a target="_blank"  href="https://www.amazon.com/gp/product/0521190177/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=0521190177&linkCode=as2&tag=tiao03-20&linkId=0907c42c1a834ffa68ca2f27c2bdb92f"><img border="0" src="//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=0521190177&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=tiao03-20" ></a><img src="//ir-na.amazon-adsystem.com/e/ir?t=tiao03-20&l=am2&o=1&a=0521190177" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
