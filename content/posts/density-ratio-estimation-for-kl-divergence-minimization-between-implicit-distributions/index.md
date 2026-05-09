@@ -8,6 +8,8 @@ tags:
 - Density Ratio Estimation
 - Implicit Distributions
 - Machine Learning
+- Variational Inference
+- Probabilistic Models
 categories:
 - technical
 date: "2018-08-27T00:00:00Z"

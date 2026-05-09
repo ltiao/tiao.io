@@ -47,6 +47,7 @@ tags:
   - AutoML
   - Hyperparameter Optimization
   - Open Source
+  - Machine Learning
 
 featured: true
 

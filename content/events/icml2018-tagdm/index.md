@@ -24,6 +24,12 @@ authors:
 - me
 tags:
 - Machine Learning
+- Generative Adversarial Networks
+- Variational Inference
+- Probabilistic Models
+- Unsupervised Learning
+- Density Ratio Estimation
+- Latent Variable Models
 
 # Is this a featured talk? (true/false)
 featured: true

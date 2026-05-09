@@ -26,6 +26,8 @@ tags:
   - Density Ratio Estimation
   - Hyperparameter Optimization
   - AutoML
+  - Machine Learning
+  - Probabilistic Models
 
 featured: false
 

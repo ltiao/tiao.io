@@ -9,6 +9,7 @@ tags:
   - Probabilistic Models
   - Variational Inference
   - Open Source
+  - Deep Learning
 date: '2017-06-01T00:00:00Z'
 draft: false
 

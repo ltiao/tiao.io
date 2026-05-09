@@ -15,6 +15,7 @@ tags:
   - Graph Representation Learning
   - Variational Inference
   - Probabilistic Models
+  - Machine Learning
 image:
   focal_point: Smart
   preview_only: false

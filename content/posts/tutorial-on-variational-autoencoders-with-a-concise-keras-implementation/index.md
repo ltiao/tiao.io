@@ -9,6 +9,7 @@ tags:
 - Unsupervised Learning
 - Latent Variable Models
 - Probabilistic Models
+- Deep Learning
 categories:
 - technical
 date: "2016-04-20T00:00:00Z"

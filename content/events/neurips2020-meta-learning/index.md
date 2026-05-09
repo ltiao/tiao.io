@@ -17,6 +17,10 @@ tags:
   - Bayesian Optimization
   - Meta-Learning
   - Machine Learning
+  - Density Ratio Estimation
+  - AutoML
+  - Hyperparameter Optimization
+  - Probabilistic Models
 
 featured: false
 

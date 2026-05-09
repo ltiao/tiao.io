@@ -9,6 +9,7 @@ tags:
   - Hyperparameter Optimization
   - Bayesian Optimization
   - Open Source
+  - Deep Learning
 date: '2019-09-01T00:00:00Z'
 draft: false
 

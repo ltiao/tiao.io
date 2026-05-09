@@ -10,6 +10,7 @@ tags:
 - TensorFlow Probability
 - TensorFlow
 - Machine Learning
+- Probabilistic Models
 categories:
 - technical
 date: 2018-07-30

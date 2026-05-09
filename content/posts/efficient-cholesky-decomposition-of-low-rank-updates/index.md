@@ -16,6 +16,7 @@ tags:
   - TensorFlow Probability
   - Machine Learning
   - Linear Algebra
+  - Gaussian Processes
 categories:
   - technical
 image:

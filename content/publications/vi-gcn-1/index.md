@@ -24,6 +24,7 @@ tags:
   - Variational Inference
   - Probabilistic Models
   - Machine Learning
+  - Semi-supervised Learning
 
 featured: false
 

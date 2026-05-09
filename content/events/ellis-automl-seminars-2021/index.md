@@ -16,6 +16,10 @@ authors:
 tags:
   - Bayesian Optimization
   - Machine Learning
+  - Density Ratio Estimation
+  - AutoML
+  - Hyperparameter Optimization
+  - Probabilistic Models
 
 featured: false
 

@@ -10,6 +10,11 @@ draft: false
 featured: false
 categories:
   - news
+tags:
+  - Bayesian Optimization
+  - Density Ratio Estimation
+  - Hyperparameter Optimization
+  - AutoML
 image:
   filename: featured
   focal_point: Smart

@@ -17,6 +17,10 @@ tags:
   - Generative Adversarial Networks
   - Variational Inference
   - Probabilistic Models
+  - Machine Learning
+  - Unsupervised Learning
+  - Density Ratio Estimation
+  - Latent Variable Models
 
 featured: false
 

@@ -14,6 +14,7 @@ authors:
 tags:
   - Bayesian Optimization
   - AutoML
+  - Open Source
 image:
   focal_point: Smart
   preview_only: false

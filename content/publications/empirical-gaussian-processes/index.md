@@ -29,6 +29,7 @@ tags:
   - Gaussian Processes
   - Bayesian Optimization
   - Probabilistic Models
+  - Machine Learning
 
 featured: true
 

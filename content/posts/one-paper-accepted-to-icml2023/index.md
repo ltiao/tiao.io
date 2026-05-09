@@ -10,6 +10,11 @@ draft: false
 featured: false
 categories:
   - news
+tags:
+  - Gaussian Processes
+  - Variational Inference
+  - Probabilistic Models
+  - Machine Learning
 image:
   filename: featured
   focal_point: Smart
