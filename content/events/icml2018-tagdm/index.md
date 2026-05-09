@@ -23,13 +23,14 @@ publishDate: '2018-07-14T15:30:00'
 authors:
 - me
 tags:
-- Machine Learning
 - Generative Adversarial Networks
+- Generative Models
 - Variational Inference
 - Probabilistic Models
 - Unsupervised Learning
 - Density Ratio Estimation
 - Latent Variable Models
+- Machine Learning
 
 # Is this a featured talk? (true/false)
 featured: true

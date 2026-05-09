@@ -35,12 +35,14 @@ abstract: We introduce a model-based asynchronous multi-fidelity method for hype
 summary: We introduce a model-based method for asynchronous multi-fidelity hyperparameter and neural architecture search that combines the strengths of asynchronous Hyperband and Gaussian process-based Bayesian optimization, achieving substantial speed-ups over current state-of-the-art methods on challenging benchmarks for tabular data, image classification, and language modeling.
 
 tags:
-- Machine Learning
+- Hyperparameter Optimization
+- Neural Architecture Search
+- Multi-fidelity Optimization
 - AutoML
 - Bayesian Optimization
-- Hyperparameter Optimization
 - Gaussian Processes
 - Parallel Computing
+- Machine Learning
 featured: true
 
 

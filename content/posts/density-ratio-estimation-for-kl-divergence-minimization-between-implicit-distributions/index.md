@@ -7,9 +7,10 @@ tags:
 - Information Theory
 - Density Ratio Estimation
 - Implicit Distributions
-- Machine Learning
+- Generative Models
 - Variational Inference
 - Probabilistic Models
+- Machine Learning
 categories:
 - technical
 date: "2018-08-27T00:00:00Z"

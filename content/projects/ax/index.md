@@ -6,6 +6,7 @@ title: Ax
 summary: A platform for adaptive experimentation
 tags:
   - Bayesian Optimization
+  - Adaptive Experimentation
   - AutoML
   - Hyperparameter Optimization
   - Open Source

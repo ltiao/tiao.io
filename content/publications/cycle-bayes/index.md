@@ -28,13 +28,14 @@ abstract: We formalize the problem of learning interdomain correspondences in th
 summary: We derive cycle-consistent adversarial learning (CycleGAN) as a special case of variational inference in a latent-variable model with implicit priors, establishing a Bayesian foundation for unsupervised inter-domain translation.
 
 tags:
-- Machine Learning
 - Generative Adversarial Networks
+- Generative Models
 - Unsupervised Learning
 - Probabilistic Models
 - Latent Variable Models
 - Variational Inference
 - Density Ratio Estimation
+- Machine Learning
 featured: false
 
 

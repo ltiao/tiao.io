@@ -44,6 +44,7 @@ summary: An open-source platform for adaptive experimentation built on BoTorch, 
 
 tags:
   - Bayesian Optimization
+  - Adaptive Experimentation
   - AutoML
   - Hyperparameter Optimization
   - Open Source

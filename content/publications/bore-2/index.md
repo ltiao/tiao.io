@@ -34,12 +34,12 @@ abstract: Bayesian optimization (BO) is among the most effective and widely-used
 summary: We reformulate the computation of the acquisition function in Bayesian optimization (BO) as a probabilistic classification problem, providing advantages in scalability, flexibility, and representational capacity, while casting aside the limitations of tractability constraints on the model.
 
 tags:
-  - Machine Learning
-  - Probabilistic Models
-  - Density Ratio Estimation
-  - AutoML
   - Bayesian Optimization
+  - Density Ratio Estimation
+  - Probabilistic Models
+  - AutoML
   - Hyperparameter Optimization
+  - Machine Learning
 
 # Display this page in the Featured widget?
 featured: true

@@ -6,6 +6,7 @@ title: AutoGluon
 summary: An AutoML toolkit for deep learning
 tags:
   - AutoML
+  - Neural Architecture Search
   - Hyperparameter Optimization
   - Bayesian Optimization
   - Open Source

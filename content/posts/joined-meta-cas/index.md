@@ -13,6 +13,7 @@ authors:
   - me
 tags:
   - Bayesian Optimization
+  - Adaptive Experimentation
   - AutoML
   - Open Source
 image:

@@ -20,8 +20,10 @@ abstract: ''
 summary: ''
 
 tags:
-  - AutoML
   - Hyperparameter Optimization
+  - Neural Architecture Search
+  - Multi-fidelity Optimization
+  - AutoML
   - Bayesian Optimization
   - Machine Learning
 

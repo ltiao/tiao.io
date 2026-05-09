@@ -4,12 +4,13 @@ summary: An in-depth practical guide to variational autoencoders from a probabil
 authors:
 - me
 tags:
-- Machine Learning
 - Variational Inference
+- Generative Models
 - Unsupervised Learning
 - Latent Variable Models
 - Probabilistic Models
 - Deep Learning
+- Machine Learning
 categories:
 - technical
 date: "2016-04-20T00:00:00Z"

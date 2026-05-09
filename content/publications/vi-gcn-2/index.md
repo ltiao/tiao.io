@@ -36,11 +36,11 @@ abstract: We propose a framework that lifts the capabilities of graph convolutio
 summary: Our proposed framework uses a joint probabilistic model and stochastic variational inference to improve the performance and robustness of graph convolutional networks (GCNs) in scenarios without input graph data, outperforming state-of-the-art algorithms on semi-supervised classification tasks.
 
 tags:
-- Machine Learning
 - Graph Representation Learning
+- Variational Inference
 - Semi-supervised Learning
 - Probabilistic Models
-- Variational Inference
+- Machine Learning
 # Display this page in the Featured widget?
 featured: true
 

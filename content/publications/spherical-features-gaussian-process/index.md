@@ -31,10 +31,10 @@ abstract: Despite their many desirable properties, Gaussian processes (GPs) are 
 summary: We introduce spherical inter-domain inducing features that yield more flexible, data-dependent basis functions for orthogonally-decoupled GP approximations, narrowing the representation gap with neural networks while remaining scalable.
 
 tags:
-  - Machine Learning
-  - Probabilistic Models
   - Gaussian Processes
   - Variational Inference
+  - Probabilistic Models
+  - Machine Learning
 
 # Display this page in the Featured widget?
 featured: true

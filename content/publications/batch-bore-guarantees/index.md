@@ -32,12 +32,12 @@ abstract: We extend BORE — a Bayesian optimization framework that recasts the 
 summary: A batch extension of BORE with theoretical convergence guarantees for parallel Bayesian optimization.
 
 tags:
-  - Machine Learning
-  - Density Ratio Estimation
   - Bayesian Optimization
+  - Density Ratio Estimation
   - Probabilistic Models
   - AutoML
   - Hyperparameter Optimization
+  - Machine Learning
 # Display this page in the Featured widget?
 featured: false
 

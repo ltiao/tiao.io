@@ -26,12 +26,12 @@ abstract: Advances in artificial intelligence (AI) are rapidly transforming our 
 summary: This thesis explores the intersection of deep learning and probabilistic machine learning to enhance the capabilities of artificial intelligence. It addresses the limitations of Gaussian processes (GPs) in practical applications, particularly in comparison to neural networks (NNs), and proposes advancements such as improved approximations and a novel formulation of Bayesian optimization (BO) that seamlessly integrates deep learning methods. The contributions aim to enrich the interplay between deep learning and probabilistic ML, advancing the foundations of AI and fostering the development of more capable and reliable automated decision-making systems.
 
 tags:
-- Machine Learning
 - Probabilistic Models
 - Gaussian Processes
-- Variational Inference
 - Bayesian Optimization
+- Variational Inference
 - Deep Learning
+- Machine Learning
 
 featured: true
 
