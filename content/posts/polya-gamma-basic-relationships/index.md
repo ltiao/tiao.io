@@ -6,8 +6,13 @@ aliases:
 title: "A Primer on Pólya-gamma Random Variables - Part I: Basic Relationships"
 subtitle: ""
 summary: ""
-authors: []
-tags: []
+authors:
+- me
+tags:
+- Machine Learning
+- Bayesian Statistics
+- Probabilistic Models
+- Pólya-Gamma
 categories: []
 date: 2021-03-04T17:20:53+01:00
 lastmod: 2021-03-04T17:20:53+01:00

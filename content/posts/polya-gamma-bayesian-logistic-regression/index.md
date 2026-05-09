@@ -12,7 +12,7 @@ tags:
 - Machine Learning
 - Bayesian Statistics
 - Probabilistic Models
-- Pólya-gamma Variable
+- Pólya-Gamma
 categories:
 - technical
 date: 2021-04-20T17:20:53+01:00
