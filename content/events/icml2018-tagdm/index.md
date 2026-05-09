@@ -8,7 +8,7 @@ event_url: "https://sites.google.com/view/tadgm"
 
 location: Stockholm, Sweden
 
-summary: ''
+summary: 'ICML 2018 Workshop on Theoretical Foundations and Applications of Deep Generative Models (TAGDM), Stockholm.'
 abstract: ''
 
 # Talk start and end times.

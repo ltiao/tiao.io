@@ -3,7 +3,7 @@ title: "Contributed Talk: BORE — Bayesian Optimization by Density-Ratio Estima
 event: NeurIPS 4th Workshop on Meta-Learning
 event_url: "https://meta-learn.github.io/2020/"
 location: Virtual
-summary: ""
+summary: "NeurIPS 2020 4th Workshop on Meta-Learning (virtual)."
 abstract: ""
 
 date: '2020-12-11T15:00:00'

@@ -93,7 +93,7 @@ sections:
     id: publications
     content:
       title: Featured Publications
-      count: 6
+      count: 4
       filters:
         folders:
           - publications
@@ -108,7 +108,7 @@ sections:
       subtitle: ''
       text: ''
       # Choose how many pages you would like to display (0 = all pages)
-      count: 8
+      count: 6
       # Page type to display. E.g. post, talk, publication...
       page_type: posts
       # Filter on criteria
@@ -130,12 +130,12 @@ sections:
   - block: collection
     id: talks
     content:
-      title: Recent & Upcoming Talks
+      title: Selected Talks
       filters:
         folders:
           - events
     design:
-      view: card
+      view: date-title-summary
   - block: collection
     id: projects
     content:

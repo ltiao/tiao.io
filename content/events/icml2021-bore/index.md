@@ -3,7 +3,7 @@ title: "Long Talk: BORE — Bayesian Optimization by Density-Ratio Estimation"
 event: The 38th International Conference on Machine Learning (ICML 2021)
 event_url: "https://icml.cc/Conferences/2021"
 location: Virtual
-summary: ""
+summary: "The 38th International Conference on Machine Learning (ICML 2021), virtual."
 abstract: ""
 
 date: '2021-07-21T14:00:00'

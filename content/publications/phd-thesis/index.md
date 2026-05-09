@@ -33,7 +33,7 @@ tags:
 - Deep Learning
 - Machine Learning
 
-featured: true
+featured: false
 
 
 # Featured image

@@ -3,7 +3,7 @@ title: "Tech Talk: Cycle-Consistent Adversarial Learning as Approximate Bayesian
 event: Amazon Machine Learning Community Tech Talk
 event_url: ""
 location: Berlin, Germany
-summary: ""
+summary: "Amazon Machine Learning Community Tech Talk, Berlin."
 abstract: ""
 
 date: '2019-06-15T13:00:00'
