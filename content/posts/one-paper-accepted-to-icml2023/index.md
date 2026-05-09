@@ -1,7 +1,7 @@
 ---
 aliases:
   - /post/one-paper-accepted-to-icml2023/
-title: One paper accepted to ICML2023
+title: 📄 One paper accepted to ICML 2023
 subtitle: ""
 date: 2023-04-25T20:37:43.228Z
 summary: Our paper "Spherical Inducing Features for Orthogonally-Decoupled
