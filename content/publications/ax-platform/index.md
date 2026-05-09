@@ -43,13 +43,12 @@ abstract: |
   resource-intensive black-box optimization. Adaptive experimentation
   substantially improves the sample efficiency of such tasks compared with
   naive baselines (such as grid or random search) by utilizing surrogate
-  models and sequential optimization algorithms. Ax
-  (<https://ax.dev>) is an open-source platform for adaptive
-  experimentation. Ax is highly extensible and full-featured, and is used at
-  scale at Meta. We discuss Ax's design, usage, and performance. Off the
-  shelf, Ax achieves state-of-the-art performance in a wide range of
-  synthetic and real-world black-box optimization tasks in machine learning,
-  engineering, and science.
+  models and sequential optimization algorithms. Ax is an open-source
+  platform for adaptive experimentation. It is highly extensible and
+  full-featured, and is used at scale at Meta. We discuss Ax's design,
+  usage, and performance. Off the shelf, Ax achieves state-of-the-art
+  performance in a wide range of synthetic and real-world black-box
+  optimization tasks in machine learning, engineering, and science.
 
 summary: We present Ax, an open-source platform for adaptive experimentation built on BoTorch. Off the shelf, Ax achieves state-of-the-art performance across a wide range of synthetic and real-world black-box optimization tasks in machine learning, engineering, and science.
 
@@ -74,6 +73,14 @@ projects:
 slides: ""
 
 links:
-  - type: source
+  - type: pdf
+    url: "https://proceedings.mlr.press/v293/olson25a.html"
+  - type: code
     url: "https://github.com/facebook/Ax"
+  - type: site
+    label: "Website"
+    url: "https://ax.dev/"
+  - type: source
+    label: "Meta Engineering"
+    url: "https://engineering.fb.com/2025/11/18/open-source/efficient-optimization-ax-open-platform-adaptive-experimentation/"
 ---
