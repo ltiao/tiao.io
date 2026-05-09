@@ -5,8 +5,8 @@ title: Efficient Cholesky decomposition of low-rank updates
 subtitle: A short and practical guide to efficiently computing the Cholesky
   decomposition of matrices perturbed by low-rank updates
 date: 2023-04-16T11:16:03.167Z
-summary: A short and practical guide to efficiently computing the Cholesky
-  decomposition of matrices perturbed by low-rank updates
+summary: We give a short and practical guide to efficiently computing the Cholesky
+  decomposition of matrices perturbed by low-rank updates.
 draft: false
 featured: true
 authors:

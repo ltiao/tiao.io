@@ -49,7 +49,7 @@ featured: true
 # To use, add an image named `featured.jpg/png` to your page's folder.
 image:
   placement: 1
-  caption: '**Left:** A single-layer feedforward neural network on the unit sphere projected onto a plane in 3D; **Right:** Decoupling of a GP as a sum of orthogonal GPs'
+  caption: ''
   focal_point: Center
   preview_only: false
 

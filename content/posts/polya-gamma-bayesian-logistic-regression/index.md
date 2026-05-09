@@ -5,7 +5,7 @@ aliases:
 
 title: "A Primer on Pólya-gamma Random Variables - Part II: Bayesian Logistic Regression"
 subtitle: ""
-summary: "One weird trick to make exact inference in Bayesian logistic regression tractable."
+summary: "We use one weird trick — Pólya-Gamma augmentation — to make exact inference in Bayesian logistic regression tractable."
 authors: 
 - me
 tags:

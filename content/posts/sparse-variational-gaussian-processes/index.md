@@ -3,7 +3,7 @@ aliases:
   - /post/sparse-variational-gaussian-processes/
 title: A Handbook for Sparse Variational Gaussian Processes
 subtitle: A summary of notation, identities and derivations for the sparse variational Gaussian process (SVGP) framework
-summary: A summary of notation, identities and derivations for the sparse variational Gaussian process (SVGP) framework.
+summary: We summarize the notation, identities, and derivations underlying the sparse variational Gaussian process (SVGP) framework.
 authors:
 - me
 tags:

@@ -33,7 +33,7 @@ publication_short: In *NeurIPS2020*. Accepted as *Spotlight Presentation* (Award
 abstract: We propose a framework that lifts the capabilities of graph convolutional networks (GCNs) to scenarios where no input graph is given and increases their robustness to adversarial attacks. We formulate a joint probabilistic model that considers a prior distribution over graphs along with a GCN-based likelihood and develop a stochastic variational inference algorithm to estimate the graph posterior and the GCN parameters jointly. To address the problem of propagating gradients through latent variables drawn from discrete distributions, we use their continuous relaxations known as Concrete distributions. We show that, on real datasets, our approach can outperform state-of-the-art Bayesian and non-Bayesian graph neural network algorithms on the task of semi-supervised classification in the absence of graph data and when the network structure is subjected to adversarial perturbations.
 
 # Summary. An optional shortened abstract.
-summary: Our proposed framework uses a joint probabilistic model and stochastic variational inference to improve the performance and robustness of graph convolutional networks (GCNs) in scenarios without input graph data, outperforming state-of-the-art algorithms on semi-supervised classification tasks.
+summary: We propose a joint probabilistic model with stochastic variational inference to improve the performance and robustness of graph convolutional networks (GCNs) in scenarios without input graph data, outperforming state-of-the-art algorithms on semi-supervised classification tasks.
 
 tags:
 - Graph Representation Learning
@@ -48,7 +48,7 @@ featured: true
 # Featured image
 # To use, add an image named `featured.jpg/png` to your page's folder. 
 image:
-  caption: '**Left:** Observed graph. Edges of original graph are denoted by *solid lines*, while spuriously added edges are denoted by *maroon dashed lines*. **Right:** Resulting posterior probabilities over edges denoted by edge color opacity. With few exceptions, the posterior probabilities of the added edges are attenuated.'
+  caption: ''
   focal_point: Center
   preview_only: false
 

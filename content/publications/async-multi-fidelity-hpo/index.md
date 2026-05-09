@@ -49,7 +49,7 @@ featured: true
 # Featured image
 # To use, add an image named `featured.jpg/png` to your page's folder. 
 image:
-  caption: Behavior of synchronous BOHB compared to MoBSter, an asynchronous extension of BOHB based on Gaussian processes.
+  caption: ''
   focal_point: Center
   preview_only: false
 

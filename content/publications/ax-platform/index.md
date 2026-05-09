@@ -40,7 +40,7 @@ publication_short: In *AutoML 2025* (ABCD Track)
 
 abstract: We present Ax, an open-source platform for adaptive experimentation that unifies Bayesian optimization, multi-fidelity, multi-objective, and constrained optimization within a single interface. Built on top of BoTorch, Ax provides a modular architecture that scales from research prototypes to large-scale production deployments and has been used to drive optimization workloads across hyperparameter tuning, online experimentation, and capacity management.
 
-summary: An open-source platform for adaptive experimentation built on BoTorch, supporting Bayesian optimization, multi-fidelity, multi-objective, and constrained optimization across research and production settings.
+summary: We present Ax, an open-source platform for adaptive experimentation built on BoTorch, supporting Bayesian optimization, multi-fidelity, multi-objective, and constrained optimization across research and production settings.
 
 tags:
   - Bayesian Optimization

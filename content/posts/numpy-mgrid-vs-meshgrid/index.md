@@ -1,5 +1,5 @@
 ---
-summary: Comparing NumPy's mgrid and meshgrid for building coordinate grids — what each does, why both exist, and how broadcasting often makes them optional.
+summary: We compare NumPy's `mgrid` and `meshgrid` for building coordinate grids — what each does, why both exist, and how broadcasting often makes them optional.
 aliases:
   - /post/numpy-mgrid-vs-meshgrid/
 title: 'NumPy mgrid vs. meshgrid'

@@ -1,6 +1,6 @@
 ---
 title: 'Density Ratio Estimation for KL Divergence Minimization between Implicit Distributions'
-summary: This post demonstrates how to approximate the KL divergence (in fact, any f-divergence) between implicit distributions, using density ratio estimation by probabilistic classification.
+summary: We show how to approximate the KL divergence (in fact, any f-divergence) between implicit distributions using density ratio estimation by probabilistic classification.
 authors:
 - me
 tags:

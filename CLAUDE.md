@@ -22,6 +22,32 @@ name:
 Existing stubs live in `data/authors/`. Mirror their format. Owner profile
 (`me.yaml`) is the exception — full bio, links, education, etc.
 
+## Publication hero images
+
+Hero images on publication pages should **never** carry a caption. Leave
+`image.caption: ''` empty. Captions clutter the layout and the figure
+context is already conveyed by the abstract / summary on the same page.
+The figure caption from the paper belongs in the paper, not on the
+publication card.
+
+## Publication and technical-post summaries
+
+`summary:` fields on **publications** and **technical blog posts** (category
+`technical`) are written in the first-person plural — start with **"We …"**
+(e.g. "We introduce…", "We extend…", "We study…", "We propose…", "We
+give…"). This holds even for single-authored work like the PhD thesis.
+Don't use "Our framework…", "This paper…", or impersonal descriptions
+("A guide to…", "An open-source platform…"). The summary is shown on
+cards, so keep it tight: 1–3 sentences.
+
+The longer `abstract:` field on publications can be used verbatim from the
+paper without rewriting.
+
+**Exceptions:** news posts (category `news`) and personal essays
+(category `personal`) follow their own register — typically "Our paper X
+was accepted…" or first-person singular for personal milestones. Don't
+force "We …" onto these.
+
 ## Tags
 
 **URL pattern is `/tags/<slug>/` plural.** `taxonomies` in `config/_default/hugo.yaml`

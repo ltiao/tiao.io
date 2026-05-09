@@ -5,7 +5,7 @@ aliases:
 
 title: "An Illustrated Guide to the Knowledge Gradient Acquisition Function"
 subtitle: ""
-summary: "A short illustrated reference guide to the Knowledge Gradient acquisition function with an implementation from scratch in TensorFlow Probability."
+summary: "We give a short illustrated reference guide to the Knowledge Gradient acquisition function with an implementation from scratch in TensorFlow Probability."
 authors:
 - me
 tags:

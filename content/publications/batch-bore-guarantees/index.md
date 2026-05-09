@@ -29,7 +29,7 @@ publication_short: In *NeurIPS2022*
 abstract: We extend BORE — a Bayesian optimization framework that recasts the acquisition function as a probabilistic classification problem via density-ratio estimation — to the batch setting, where multiple candidates are evaluated in parallel. We characterize the conditions under which the resulting algorithm enjoys theoretical convergence guarantees and demonstrate its practical effectiveness on a range of black-box optimization benchmarks.
 
 # Summary. An optional shortened abstract.
-summary: A batch extension of BORE with theoretical convergence guarantees for parallel Bayesian optimization.
+summary: We extend BORE to the batch setting and establish theoretical convergence guarantees for parallel Bayesian optimization.
 
 tags:
   - Bayesian Optimization
