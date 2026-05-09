@@ -20,13 +20,14 @@ image:
   focal_point: Center
 
 links:
-  - icon: github
-    icon_pack: fab
+  - icon: brands/github
     name: GitHub
     url: https://github.com/gradientinstitute/aboleth
 ---
 
 [Aboleth](https://github.com/gradientinstitute/aboleth) is a minimalistic
-TensorFlow framework for scalable Bayesian deep learning and Gaussian process
-approximation, focused on variational inference techniques. Built at CSIRO
-Data61 with Daniel Steinberg and Lachlan McCalman.
+TensorFlow framework for scalable [Bayesian deep
+learning](/tags/bayesian-deep-learning/) and [Gaussian
+process](/tags/gaussian-processes/) approximation, focused on [variational
+inference](/tags/variational-inference/) techniques. Built at CSIRO Data61
+with Daniel Steinberg and Lachlan McCalman.

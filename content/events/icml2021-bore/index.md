@@ -31,8 +31,10 @@ slides: ""
 projects: []
 
 links:
-  - icon: arrow-up-right-from-square
-    icon_pack: fas
+  - icon: hero/book-open
+    name: Publication
+    url: /publications/bore-2/
+  - icon: hero/arrow-top-right-on-square
     name: Paper
     url: http://proceedings.mlr.press/v139/tiao21a.html
 ---

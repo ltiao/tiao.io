@@ -31,5 +31,8 @@ image:
 slides: ""
 projects: []
 
-links: []
+links:
+  - icon: hero/book-open
+    name: Publication
+    url: /publications/bore-1/
 ---

@@ -21,7 +21,7 @@ image:
   preview_only: false
 ---
 
-Our paper *Variational Inference for Graph Convolutional Networks in the Absence
-of Graph Data and Adversarial Settings* was accepted to NeurIPS 2020 as a
+Our paper [*Variational Inference for Graph Convolutional Networks in the Absence
+of Graph Data and Adversarial Settings*]({{< relref "/publications/vi-gcn-2" >}}) was accepted to NeurIPS 2020 as a
 **Spotlight Presentation** (awarded to the top 3% of submissions). This is
 joint work with Pantelis Elinas and Edwin Bonilla.

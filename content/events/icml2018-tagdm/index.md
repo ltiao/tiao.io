@@ -56,9 +56,8 @@ projects:
   - implicit-models
 
 links:
-  - icon: twitter
-    icon_pack: fab
-    name: Follow
-    url: https://twitter.com/louistiao
+  - icon: hero/book-open
+    name: Publication
+    url: /publications/cycle-bayes/
 ---
 

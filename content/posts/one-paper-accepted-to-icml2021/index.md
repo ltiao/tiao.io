@@ -21,7 +21,7 @@ image:
   preview_only: false
 ---
 
-Our paper *BORE: Bayesian Optimization by Density-Ratio Estimation* was
+Our paper [*BORE: Bayesian Optimization by Density-Ratio Estimation*]({{< relref "/publications/bore-2" >}}) was
 accepted to ICML 2021 as a **Long Talk** (awarded to the top 3% of submissions).
 This is joint work with Aaron Klein, Cédric Archambeau, Edwin Bonilla, Matthias
 Seeger, and Fabio Ramos — much of it carried out during my AWS Berlin

@@ -36,6 +36,11 @@ image:
 projects: []
 ---
 
+> [!NOTE]
+> This is **Part II** of a three-part series on Pólya-Gamma random variables.
+> Part I (Basic Relationships) and Part III (Local Variational Methods) are
+> in preparation.
+
 {{< toc >}}
 
 ## Binary Classification

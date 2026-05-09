@@ -20,3 +20,10 @@ image:
   focal_point: Smart
   preview_only: false
 ---
+
+Our paper [*Batch Bayesian Optimisation via Density-ratio Estimation with
+Guarantees*]({{< relref "/publications/batch-bore-guarantees" >}}) was accepted
+to NeurIPS 2022. Led by Rafael Oliveira, this is the batch extension of
+[BORE]({{< relref "/publications/bore-2" >}}) with theoretical convergence
+guarantees for parallel Bayesian optimization. Joint work with Rafael
+Oliveira, Edwin Bonilla, and Fabio Ramos.

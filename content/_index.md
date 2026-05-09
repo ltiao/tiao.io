@@ -15,13 +15,14 @@ sections:
       # Choose a user profile to display (a folder name within `content/authors/`)
       username: me
       text: |-
-        Hi, I'm Louis. I'm a research scientist at Meta on the Adaptive
-        Experimentation team within Central Applied Science (CAS), based
-        in New York City. My research is in probabilistic machine
-        learning — approximate Bayesian inference, Gaussian processes,
-        and Bayesian optimization. I obtained my PhD at the [University
-        of Sydney](https://www.sydney.edu.au/), advised by [Edwin
-        Bonilla](#) and [Fabio Ramos](#).
+        Hi, I'm Louis. I'm a research scientist at Meta on the [Adaptive
+        Experimentation](/tags/adaptive-experimentation/) team within Central
+        Applied Science (CAS), based in New York City. My research is in
+        probabilistic machine learning — approximate Bayesian inference,
+        [Gaussian processes](/tags/gaussian-processes/), and [Bayesian
+        optimization](/tags/bayesian-optimization/). I obtained my PhD at
+        the [University of Sydney](https://www.sydney.edu.au/), advised
+        by [Edwin Bonilla](#) and [Fabio Ramos](#).
       # Show a call-to-action button under your biography? (optional)
       button:
         text: Curriculum Vitae (CV)
@@ -50,13 +51,17 @@ sections:
       subtitle: ''
       text: |-
         I work on probabilistic machine learning, with particular focus on
-        approximate Bayesian inference and Gaussian processes, and their
-        applications to Bayesian optimization. More broadly, my interests
-        extend to automated machine learning (AutoML), encompassing
-        hyperparameter optimization and adaptive resource allocation
-        techniques such as early stopping and scaling laws. Past work
-        includes graph representation learning, GANs, and implicit
-        generative models.
+        approximate Bayesian inference and [Gaussian
+        processes](/tags/gaussian-processes/), and their applications to
+        [Bayesian optimization](/tags/bayesian-optimization/). More
+        broadly, my interests extend to [automated machine learning
+        (AutoML)](/tags/automl/), encompassing [hyperparameter
+        optimization](/tags/hyperparameter-optimization/) and adaptive
+        resource allocation techniques such as early stopping and
+        scaling laws. Past work includes [graph representation
+        learning](/tags/graph-representation-learning/),
+        [GANs](/tags/generative-adversarial-networks/), and [implicit
+        generative models](/tags/generative-models/).
     design:
       columns: '1'
   - block: collection

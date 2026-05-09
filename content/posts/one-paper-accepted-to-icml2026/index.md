@@ -20,6 +20,6 @@ image:
   preview_only: false
 ---
 
-Our paper *Empirical Gaussian Processes* was accepted to ICML 2026. This is
+Our paper [*Empirical Gaussian Processes*]({{< relref "/publications/empirical-gaussian-processes" >}}) was accepted to ICML 2026. This is
 joint work with Jihao Andreas Lin and Sebastian Ament (co-first authors), and
 David Eriksson, Maximilian Balandat, and Eytan Bakshy.

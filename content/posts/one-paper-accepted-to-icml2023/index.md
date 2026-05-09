@@ -21,7 +21,7 @@ image:
   preview_only: false
 ---
 
-Our paper "Spherical Inducing Features for Orthogonally-Decoupled Gaussian Processes" 
+Our paper [*Spherical Inducing Features for Orthogonally-Decoupled Gaussian Processes*]({{< relref "/publications/spherical-features-gaussian-process" >}})
 was accepted to ICML2023 as an Oral Presentation! 
 This work was largely done during my time at Secondmind Labs as a 
 Student Researcher, in collaboration with Vincent Dutordoir and Victor Picheny.

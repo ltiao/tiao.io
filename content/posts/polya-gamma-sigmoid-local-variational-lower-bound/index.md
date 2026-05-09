@@ -36,6 +36,11 @@ image:
 projects: []
 ---
 
+> [!NOTE]
+> This is **Part III** of a three-part series on Pólya-Gamma random variables.
+> See also: [Part I — Basic Relationships]({{< relref "/posts/polya-gamma-basic-relationships" >}})
+> and [Part II — Bayesian Logistic Regression]({{< relref "/posts/polya-gamma-bayesian-logistic-regression" >}}).
+
 ## Lower bound on the logistic sigmoid function
 
 (Jaakkola and Jordan, 2000[^jaakkola2000bayesian], Bouchard, 2007[^bouchard2007efficient])

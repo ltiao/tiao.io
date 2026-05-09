@@ -15,10 +15,13 @@ sections:
       title: ''
       subtitle: ''
       text: |-
-        I'm a research scientist at Meta on the Adaptive Experimentation team in
-        New York City, where I work on Bayesian optimization, Gaussian processes,
-        and sample-efficient methods for automated machine learning. I completed
-        my PhD at the [University of Sydney](https://www.sydney.edu.au/), with
+        I'm a research scientist at Meta on the [Adaptive
+        Experimentation](/tags/adaptive-experimentation/) team in New York
+        City, where I work on [Bayesian
+        optimization](/tags/bayesian-optimization/), [Gaussian
+        processes](/tags/gaussian-processes/), and sample-efficient methods
+        for [automated machine learning](/tags/automl/). I completed my PhD
+        at the [University of Sydney](https://www.sydney.edu.au/), with
         research recognized at NeurIPS and ICML through Oral and Spotlight
         presentations.
 

@@ -21,18 +21,18 @@ image:
   focal_point: Center
 
 links:
-  - icon: globe
-    icon_pack: fas
+  - icon: hero/globe-alt
     name: Website
     url: https://auto.gluon.ai/
-  - icon: github
-    icon_pack: fab
+  - icon: brands/github
     name: GitHub
     url: https://github.com/awslabs/autogluon
 ---
 
-[AutoGluon](https://auto.gluon.ai/) is an open-source AutoML toolkit from AWS
-that automates ML for tabular, image, and text data. During my AWS Berlin
-internship I was a core developer of the Gaussian-process-based multi-fidelity
-searcher module — work that later formed the basis of
+[AutoGluon](https://auto.gluon.ai/) is an open-source [AutoML](/tags/automl/)
+toolkit from AWS that automates ML for tabular, image, and text data. During
+my AWS Berlin internship I was a core developer of the [Gaussian
+process](/tags/gaussian-processes/)-based [multi-fidelity](/tags/multi-fidelity-optimization/)
+searcher module — described in [Klein et al.]({{< relref "/publications/async-multi-fidelity-hpo" >}})
+and later forming the basis of
 [SyneTune](https://github.com/awslabs/syne-tune).

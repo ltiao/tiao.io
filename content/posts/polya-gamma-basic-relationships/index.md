@@ -37,7 +37,10 @@ projects: []
 ---
 
 > [!NOTE]
-> Draft -- work in progress.
+> Draft — work in progress. This is **Part I** of a three-part series on
+> Pólya-Gamma random variables. See also:
+> [Part II — Bayesian Logistic Regression]({{< relref "/posts/polya-gamma-bayesian-logistic-regression" >}})
+> and [Part III — Local Variational Methods]({{< relref "/posts/polya-gamma-sigmoid-local-variational-lower-bound" >}}).
 
 A classical problem in Bayesian statistics is inference in Bayesian logistic 
 regression, logit link is non-conjugate with a Gaussian prior. 

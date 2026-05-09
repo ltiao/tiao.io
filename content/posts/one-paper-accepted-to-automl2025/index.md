@@ -20,7 +20,7 @@ image:
   preview_only: false
 ---
 
-Our paper *Ax: A Platform for Adaptive Experimentation* was accepted to the
+Our paper [*Ax: A Platform for Adaptive Experimentation*]({{< relref "/publications/ax-platform" >}}) was accepted to the
 4th International Conference on Automated Machine Learning (AutoML 2025) in
 the ABCD Track. This is joint work with the
 [Adaptive Experimentation team](https://research.facebook.com/teams/cas/) at
