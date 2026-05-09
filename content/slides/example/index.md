@@ -1,4 +1,5 @@
 ---
+draft: true
 title: "Example Talk: Recent Work"
 date: 2024-01-01
 # `type: slides` is inferred from folder, but can be set explicitly:
