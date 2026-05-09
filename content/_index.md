@@ -25,7 +25,7 @@ sections:
       # Show a call-to-action button under your biography? (optional)
       button:
         text: Curriculum Vitae (CV)
-        url: uploads/resume.pdf
+        url: uploads/cv-louis-tiao.pdf
       headings:
         about: 'About'
         education: ''
