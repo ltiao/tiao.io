@@ -210,10 +210,10 @@ $$
   &= \mathbb{E}_{q(\omega;\xi)}
   \left [ y \psi - \frac{\psi + \xi}{2} - \frac{\omega}{2} (\psi^2 - \xi^2) + \log{\sigma(\xi)} \right ] \newline
   &= y \psi - \frac{\psi + \xi}{2}
-    - \frac{1}{2} (\psi^2 - \xi^2) \mathbb{E}_{q(\omega;\xi)}[\omega]  
+    -\frac{1}{2} (\psi^2 - \xi^2) \mathbb{E}_{q(\omega;\xi)}[\omega]  
     + \log{\sigma(\xi)} \newline
   &= y \psi - \frac{\psi + \xi}{2}
-    - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)
+    -\frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)
     + \log{\sigma(\xi)} \newline
 \end{align}
 $$

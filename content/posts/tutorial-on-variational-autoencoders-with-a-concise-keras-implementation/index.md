@@ -267,7 +267,7 @@ $$
   & = 
   \mathbb{E}_{q_{\phi}(\mathbf{z} | \mathbf{x})} 
   [ \log p_{\theta}(\mathbf{x} | \mathbf{z}) ]
-  - \mathrm{KL} [ q_{\phi}(\mathbf{z} | \mathbf{x}) || p(\mathbf{z}) ].
+  -\mathrm{KL} [ q_{\phi}(\mathbf{z} | \mathbf{x}) || p(\mathbf{z}) ].
 \end{align*}
 $$
 

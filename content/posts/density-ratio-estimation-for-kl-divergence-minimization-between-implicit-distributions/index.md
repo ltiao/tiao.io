@@ -491,11 +491,11 @@ to a *proper scoring rule*[^gneiting2007strictly] that yields well-calibrated pr
 $$
 \begin{align*}
   \mathcal{L}(\theta) & := 
-  - \mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] 
-  - \mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline
+  -\mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] 
+  -\mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline
   & =
-  - \mathbb{E}_{p(x)} [ \log \sigma ( \log r_{\theta} (x) ) ] 
-  - \mathbb{E}_{q(x)} [ \log(1 - \sigma ( \log r_{\theta} (x) )) ].
+  -\mathbb{E}_{p(x)} [ \log \sigma ( \log r_{\theta} (x) ) ] 
+  -\mathbb{E}_{q(x)} [ \log(1 - \sigma ( \log r_{\theta} (x) )) ].
 \end{align*}
 $$
 
@@ -741,7 +741,7 @@ It is natural to wonder: what is the significance, if any, of this value?
 It is in fact the (negative) Jensen-Shannon (JS) divergence, up to constants,
 
 $$
-- 2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] + \log 4.
+-2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] + \log 4.
 $$
 
 Recall the Jensen-Shannon divergence is defined as
@@ -818,14 +818,14 @@ Negating both sides, we get
 
 $$
 \begin{align*}
-  - 2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] + \log 4
+  -2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] + \log 4
   \leq &
-  - \sup_{\theta} 
+  -\sup_{\theta} 
   \mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] + 
   \mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline
   = & \inf_{\theta} 
-  - \mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] 
-  - \mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline
+  -\mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] 
+  -\mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline
   = & \inf_{\theta} \mathcal{L}(\theta),
 \end{align*}
 $$
