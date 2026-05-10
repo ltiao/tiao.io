@@ -32,7 +32,7 @@ In the sparse variational Gaussian process (SVGP) framework (Titsias, 2009)[^tit
 one augments the joint distribution $p(\mathbf{y}, \mathbf{f})$ with auxiliary 
 variables $\mathbf{u}$ so that the joint becomes
 $$
-p(\mathbf{y}, \mathbf{f}, \mathbf{u}) = p(\mathbf{y} \| \mathbf{f}) p(\mathbf{f}, \mathbf{u}).
+p(\mathbf{y}, \mathbf{f}, \mathbf{u}) = p(\mathbf{y} | \mathbf{f}) p(\mathbf{f}, \mathbf{u}).
 $$
 The vector $\mathbf{u} = \begin{bmatrix} u(\mathbf{z}_1) \cdots u(\mathbf{z}_M)\end{bmatrix}^{\top} \in \mathbb{R}^M$ 
 consists of *inducing variables*, the latent function values corresponding 
@@ -63,16 +63,16 @@ p(\mathbf{f}, \mathbf{u}) =
 $$
 If we let the joint prior factorize as
 $$
-p(\mathbf{f}, \mathbf{u}) = p(\mathbf{f} \| \mathbf{u}) p(\mathbf{u}),
+p(\mathbf{f}, \mathbf{u}) = p(\mathbf{f} | \mathbf{u}) p(\mathbf{u}),
 $$
 we can apply the rules of Gaussian conditioning to derive the marginal prior
-$p(\mathbf{u})$ and conditional prior $p(\mathbf{f} \| \mathbf{u})$.
+$p(\mathbf{u})$ and conditional prior $p(\mathbf{f} | \mathbf{u})$.
 
 ### Marginal prior over inducing variables
 
 The marginal prior over inducing variables is simply given by
 $$
-p(\mathbf{u}) = \mathcal{N}(\mathbf{u} \| \mathbf{0}, \mathbf{K}_\mathbf{uu}).
+p(\mathbf{u}) = \mathcal{N}(\mathbf{u} | \mathbf{0}, \mathbf{K}_\mathbf{uu}).
 $$
 
 > [!NOTE]
@@ -105,7 +105,7 @@ $$
 Then, we can condition the joint prior distribution on the inducing 
 variables to give
 $$
-p(\mathbf{f} \| \mathbf{u}) = \mathcal{N}(\mathbf{f} \| \mathbf{m}, \mathbf{S}),
+p(\mathbf{f} | \mathbf{u}) = \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}),
 $$
 where the mean vector and covariance matrix are
 $$
@@ -120,9 +120,9 @@ $$
 > #### Gaussian process notation
 > We can express the distribution over the function value $f(\mathbf{x})$ at 
 > input $\mathbf{x}$, given $\mathbf{u}$, that is, the conditional 
-> $p(f(\mathbf{x}) \| \mathbf{u})$, as a Gaussian process:
+> $p(f(\mathbf{x}) | \mathbf{u})$, as a Gaussian process:
 > $$
-> p(f(\mathbf{x}) \| \mathbf{u}) = \mathcal{GP}(m(\mathbf{x}), s(\mathbf{x}, \mathbf{x}')),
+> p(f(\mathbf{x}) | \mathbf{u}) = \mathcal{GP}(m(\mathbf{x}), s(\mathbf{x}, \mathbf{x}')),
 > $$
 > with mean and covariance functions,
 > $$
@@ -149,11 +149,11 @@ $$
 We specify a joint variational distribution $q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u})$
 which factorizes as
 $$
-q_{\boldsymbol{\phi}}(\mathbf{f}, \mathbf{u}) \triangleq p(\mathbf{f} \| \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u}).
+q_{\boldsymbol{\phi}}(\mathbf{f}, \mathbf{u}) \triangleq p(\mathbf{f} | \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u}).
 $$
 For convenience, let us specify a variational distribution that is also Gaussian,
 $$
-q_{\boldsymbol{\phi}}(\mathbf{u}) \triangleq \mathcal{N}(\mathbf{u} \| \mathbf{b}, \mathbf{W}\mathbf{W}^{\top}),
+q_{\boldsymbol{\phi}}(\mathbf{u}) \triangleq \mathcal{N}(\mathbf{u} | \mathbf{b}, \mathbf{W}\mathbf{W}^{\top}),
 $$
 with variational parameters $\boldsymbol{\phi} = \{ \mathbf{W}, \mathbf{b} \}$.
 To obtain the corresponding marginal variational distribution over $\mathbf{f}$, 
@@ -161,7 +161,7 @@ we marginalize out the inducing variables $\mathbf{u}$, leading to
 $$
 q_{\boldsymbol{\phi}}(\mathbf{f}) = 
 \int q_{\boldsymbol{\phi}}(\mathbf{f}, \mathbf{u}) \\, \mathrm{d}\mathbf{u} = 
-\mathcal{N}(\mathbf{f} \| \boldsymbol{\mu}, \mathbf{\Sigma}),
+\mathcal{N}(\mathbf{f} | \boldsymbol{\mu}, \mathbf{\Sigma}),
 $$
 where
 $$
@@ -272,15 +272,15 @@ $$
 \require{cancel}
 \begin{align*}
 \mathrm{ELBO}(\boldsymbol{\phi}, \mathbf{Z}) & = \iint \log{\frac{p(\mathbf{f},\mathbf{u}, \mathbf{y})}{q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u}) \\,\mathrm{d}\mathbf{f} \mathrm{d}\mathbf{u} \newline & =
-\iint \log{\frac{p(\mathbf{y} \| \mathbf{f}) \bcancel{p(\mathbf{f} \| \mathbf{u})} p(\mathbf{u})}{\bcancel{p(\mathbf{f} \| \mathbf{u})} q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u}) \\,\mathrm{d}\mathbf{f} \mathrm{d}\mathbf{u} \newline & =
+\iint \log{\frac{p(\mathbf{y} | \mathbf{f}) \bcancel{p(\mathbf{f} | \mathbf{u})} p(\mathbf{u})}{\bcancel{p(\mathbf{f} | \mathbf{u})} q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u}) \\,\mathrm{d}\mathbf{f} \mathrm{d}\mathbf{u} \newline & =
 \int \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u},
 \end{align*}
 $$
 where we have made use of the previous 
-definition $q_{\boldsymbol{\phi}}(\mathbf{f}, \mathbf{u}) = p(\mathbf{f} \| \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u})$ 
+definition $q_{\boldsymbol{\phi}}(\mathbf{f}, \mathbf{u}) = p(\mathbf{f} | \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u})$ 
 and also introduced the definition
 $$
-\Phi(\mathbf{y}, \mathbf{u}) \triangleq \exp{ \left ( \int \log{p(\mathbf{y} \| \mathbf{f})} p(\mathbf{f} \| \mathbf{u}) \\,\mathrm{d}\mathbf{f} \right ) }.
+\Phi(\mathbf{y}, \mathbf{u}) \triangleq \exp{ \left ( \int \log{p(\mathbf{y} | \mathbf{f})} p(\mathbf{f} | \mathbf{u}) \\,\mathrm{d}\mathbf{f} \right ) }.
 $$
 It is straightforward to verify that the optimal variational distribution, that
 is, the distribution $q_{\boldsymbol{\phi}^{\star}}(\mathbf{u})$ at which the
@@ -306,12 +306,12 @@ $$
 
 Let us assume we have a Gaussian likelihood of the form
 $$
-p(\mathbf{y} \| \mathbf{f}) = \mathcal{N}(\mathbf{y} | \mathbf{f}, \beta^{-1} \mathbf{I}).
+p(\mathbf{y} | \mathbf{f}) = \mathcal{N}(\mathbf{y} | \mathbf{f}, \beta^{-1} \mathbf{I}).
 $$
 Then it is straightforward to show that
 $$
 \log{\Phi(\mathbf{y}, \mathbf{u})} = 
-\log{\mathcal{N}(\mathbf{y} \| \mathbf{m}, \beta^{-1} \mathbf{I} )} - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}),
+\log{\mathcal{N}(\mathbf{y} | \mathbf{m}, \beta^{-1} \mathbf{I} )} - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}),
 $$
 where $\mathbf{m}$ and $\mathbf{S}$ are defined as before, i.e. $\mathbf{m} = \boldsymbol{\Psi}^{\top} \mathbf{u}$ and 
 $\mathbf{S} = \mathbf{K}_\textbf{ff} - \boldsymbol{\Psi}^{\top} \mathbf{K}_\textbf{uu} \boldsymbol{\Psi}$.
@@ -370,7 +370,7 @@ $$
 \mathrm{ELBO}(\boldsymbol{\phi}, \mathbf{Z}) & =
 \int \log{\left(\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}\right)} q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & = 
 \int \left(\log{\Phi(\mathbf{y}, \mathbf{u})} + \log{\frac{p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}}\ \right) q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =
-\mathrm{ELL}(\boldsymbol{\phi}, \mathbf{Z}) - \mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\\|p(\mathbf{u})],
+\mathrm{ELL}(\boldsymbol{\phi}, \mathbf{Z}) - \mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\|p(\mathbf{u})],
 \end{align*}
 $$
 where we define $\mathrm{ELL}(\boldsymbol{\phi}, \mathbf{Z})$, the *expected log-likelihood (ELL)*, as
@@ -382,10 +382,10 @@ $$
 \begin{align*}
 \mathrm{ELL}(\boldsymbol{\phi}, \mathbf{Z}) & =
 \int \log{\Phi(\mathbf{y}, \mathbf{u})} q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =
-\int \left(\int \log{p(\mathbf{y} \| \mathbf{f})} p(\mathbf{f} \| \mathbf{u}) \\,\mathrm{d}\mathbf{f}\right) q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =
-\int \log{p(\mathbf{y} \| \mathbf{f})} \left(\int p(\mathbf{f} \| \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \right) \\,\mathrm{d}\mathbf{f} \\\\ & =
-\int \log{p(\mathbf{y} \| \mathbf{f})} q(\mathbf{f}) \\,\mathrm{d}\mathbf{f} \\\\ & =
-\mathbb{E}_{q(\mathbf{f})}[\log{p(\mathbf{y} \| \mathbf{f})}].
+\int \left(\int \log{p(\mathbf{y} | \mathbf{f})} p(\mathbf{f} | \mathbf{u}) \\,\mathrm{d}\mathbf{f}\right) q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =
+\int \log{p(\mathbf{y} | \mathbf{f})} \left(\int p(\mathbf{f} | \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \right) \\,\mathrm{d}\mathbf{f} \\\\ & =
+\int \log{p(\mathbf{y} | \mathbf{f})} q(\mathbf{f}) \\,\mathrm{d}\mathbf{f} \\\\ & =
+\mathbb{E}_{q(\mathbf{f})}[\log{p(\mathbf{y} | \mathbf{f})}].
 \end{align*}
 $$
 While this integral is analytically intractable in general, we can nonetheless 
@@ -396,14 +396,14 @@ effective rules such as [Gauss-Hermite quadrature](https://mathworld.wolfram.com
 
 Now, the second term in the ELBO is the KL divergence between $q_{\boldsymbol{\phi}}(\mathbf{u})$ and $p(\mathbf{u})$, which are both multivariate Gaussians,
 $$
-\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\\|p(\mathbf{u})] = 
+\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\|p(\mathbf{u})] = 
 \mathrm{KL}[\mathcal{N}(\mathbf{b}, \mathbf{W} {\mathbf{W}}^\top) || \mathcal{N}(\mathbf{0}, \mathbf{K}_\mathbf{uu})],
 $$
 and has a [closed-form expression](https://web.stanford.edu/~jduchi/projects/general_notes.pdf).
 In the case of the whitened parameterization, it can be simplified as
 $$
 \begin{align*}
-\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\\|p(\mathbf{u})] & = 
+\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\|p(\mathbf{u})] & = 
 \mathrm{KL}[\mathcal{N}(\mathbf{b}', \mathbf{W}' {\mathbf{W}'}^\top) || \mathcal{N}(\mathbf{0}, \mathbf{K}_\mathbf{uu})] \\\\ & =
 \mathrm{KL}[\mathcal{N}(\mathbf{b}, \mathbf{W} {\mathbf{W}}^\top) || \mathcal{N}(\mathbf{0}, \mathbf{I})].
 \end{align*}
@@ -663,13 +663,13 @@ These allow us to write
 $$
 \begin{align*}
 \log{\Phi(\mathbf{y}, \mathbf{u})} & = 
-\int \log{\mathcal{N}(\mathbf{y} | \mathbf{f}, \beta^{-1} \mathbf{I})} \mathcal{N}(\mathbf{f} \| \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} 
-\newline & = - \frac{1}{2\sigma^2} \int (\mathbf{y} - \mathbf{f})^{\top} (\mathbf{y} - \mathbf{f}) \mathcal{N}(\mathbf{f} \| \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
-\newline & = - \frac{1}{2\sigma^2} \int \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{f}^{\top} + \mathbf{f}\mathbf{f}^{\top} \right) \mathcal{N}(\mathbf{f} \| \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
+\int \log{\mathcal{N}(\mathbf{y} | \mathbf{f}, \beta^{-1} \mathbf{I})} \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} 
+\newline & = - \frac{1}{2\sigma^2} \int (\mathbf{y} - \mathbf{f})^{\top} (\mathbf{y} - \mathbf{f}) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
+\newline & = - \frac{1}{2\sigma^2} \int \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{f}^{\top} + \mathbf{f}\mathbf{f}^{\top} \right) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
 \newline & = - \frac{1}{2\sigma^2} \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{m}^{\top} + \mathbf{S} + \mathbf{m} \mathbf{m}^{\top} \right) - 
 \frac{N}{2}\log{(2\pi\sigma^2)}
 \newline & = - \frac{1}{2\sigma^2} (\mathbf{y} - \mathbf{m})^{\top} (\mathbf{y} - \mathbf{m}) - \frac{N}{2}\log{(2\pi\sigma^2)} - \frac{1}{2\sigma^2} \mathrm{tr}(\mathbf{S})
-\newline & = \log{\mathcal{N}(\mathbf{y} \| \mathbf{m}, \beta^{-1} \mathbf{I} )} - \frac{1}{2\sigma^2} \mathrm{tr}(\mathbf{S}).
+\newline & = \log{\mathcal{N}(\mathbf{y} | \mathbf{m}, \beta^{-1} \mathbf{I} )} - \frac{1}{2\sigma^2} \mathrm{tr}(\mathbf{S}).
 \end{align*}
 $$
 
@@ -724,7 +724,7 @@ $$
 \mathrm{ELBO}(\boldsymbol{\phi}^{\star}, \mathbf{Z}) & = 
 \log \mathcal{Z} \\\\ & = 
 \log \int \Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =  
-\log \left [ \exp{\left(-\frac{\beta}{2} \mathrm{tr}(\mathbf{S})\right)} \int \mathcal{N}(\mathbf{y} \| \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) p(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \right ] \\\\ & =  
+\log \left [ \exp{\left(-\frac{\beta}{2} \mathrm{tr}(\mathbf{S})\right)} \int \mathcal{N}(\mathbf{y} | \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) p(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \right ] \\\\ & =  
 \log \int \mathcal{N}(\mathbf{y} \mid \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) \mathcal{N}(\mathbf{u} \mid \mathbf{0}, \mathbf{K}_\mathbf{uu}) \\,\mathrm{d}\mathbf{u} - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}) \\\\ & = 
 \log \mathcal{N}(\mathbf{y} \mid \mathbf{0}, \beta^{-1} \mathbf{I} + \boldsymbol{\Psi}^{\top} \mathbf{K}_\textbf{uu} \boldsymbol{\Psi}) - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}) \\\\ & = 
 \log \mathcal{N}(\mathbf{y} \mid \mathbf{0}, \mathbf{Q}_\mathbf{ff} + \beta^{-1} \mathbf{I}) - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}).
