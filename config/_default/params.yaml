@@ -106,7 +106,7 @@ hugoblox:
     style: minimal                      # minimal | columns | centered
     language_switcher: true
     # Custom footer text (HTML supported)
-    text: ""
+    text: '<a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/disclaimer/">Disclaimer</a>'
 
   # ────────────────────────────────────────────────────────────────────────────
   # COPYRIGHT
