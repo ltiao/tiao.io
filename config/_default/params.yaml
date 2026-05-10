@@ -19,7 +19,7 @@ hugoblox:
     # Schema.org type for structured data
     type: person                        # person | organization | local_business
     # Short tagline displayed on your site
-    tagline: ""
+    tagline: "Research Scientist · Bayesian Optimization, Gaussian Processes, AutoML"
     # Site meta description for search engines and social sharing
     description: "Louis Tiao - Research Scientist at Meta. Machine learning, Gaussian processes, Bayesian optimization."
     # Social accounts (used for meta tags like Twitter Cards)
@@ -32,7 +32,7 @@ hugoblox:
   # ────────────────────────────────────────────────────────────────────────────
   theme:
     # Mode: 'light', 'dark', or 'system' (follows OS preference)
-    mode: system
+    mode: light
     # Theme pack: name from data/themes/ or { light: "x", dark: "y" } for mix-and-match
     pack: minimal
     # Optional: Override theme pack colors
@@ -72,7 +72,7 @@ hugoblox:
     # Spacing density: 'compact', 'comfortable', or 'spacious'
     spacing: "comfortable"
     # Avatar shape in author profiles
-    avatar_shape: rounded                # circle | square | rounded
+    avatar_shape: circle                 # circle | square | rounded
 
   # ────────────────────────────────────────────────────────────────────────────
   # HEADER
@@ -90,7 +90,7 @@ hugoblox:
     search: true
     theme_toggle: true
     theme_picker: false
-    language_switcher: true
+    language_switcher: false
     # Call-to-action button
     cta:
       enable: false
@@ -104,7 +104,7 @@ hugoblox:
   footer:
     # Footer style variant
     style: minimal                      # minimal | columns | centered
-    language_switcher: true
+    language_switcher: false
     # Custom footer text (HTML supported)
     text: '<a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/disclaimer/">Disclaimer</a>'
 
@@ -118,7 +118,7 @@ hugoblox:
     license:
       type: cc                          # cc | custom
       allow_derivatives: false
-      share_alike: true
+      share_alike: false
       allow_commercial: false
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -145,8 +145,9 @@ hugoblox:
       allow:
         - /
       disallow: []
-      note: "Guidance for AI crawlers - customize to match your public content."
-      contact: ""
+      note: "All content is public; please preserve attribution when summarizing or quoting."
+      contact: "louis@tiao.io"
+      policy_url: "https://tiao.io/privacy/"
 
   # ────────────────────────────────────────────────────────────────────────────
   # CONTENT
@@ -155,7 +156,7 @@ hugoblox:
   content:
     # Math rendering
     math:
-      enable: false
+      enable: true
     # Table of contents
     toc:
       enable: true
@@ -173,9 +174,24 @@ hugoblox:
   search:
     enable: true
     # Trending/suggested search terms
-    suggestions: []
+    suggestions:
+      - "Bayesian Optimization"
+      - "Gaussian Processes"
+      - "AutoML"
     # Quick action shortcuts in search modal
-    quick_actions: []
+    quick_actions:
+      - title: "Curriculum Vitae"
+        description: "Download CV (PDF)"
+        url: "/uploads/cv-louis-tiao.pdf"
+        icon: "hero/arrow-down-tray"
+      - title: "PhD thesis"
+        description: "Probabilistic ML in the age of deep learning"
+        url: "/publications/phd-thesis/"
+        icon: "hero/academic-cap"
+      - title: "Contact"
+        description: "Get in touch by email"
+        url: "/#contact"
+        icon: "hero/envelope"
 
   # ────────────────────────────────────────────────────────────────────────────
   # COMMENTS
@@ -259,7 +275,7 @@ hugoblox:
   # Privacy and compliance features
   # ────────────────────────────────────────────────────────────────────────────
   privacy:
-    enable: false
+    enable: true
     anonymize_analytics: true
 
   # ────────────────────────────────────────────────────────────────────────────
