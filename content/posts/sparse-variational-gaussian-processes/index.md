@@ -160,7 +160,7 @@ To obtain the corresponding marginal variational distribution over $\mathbf{f}$,
 we marginalize out the inducing variables $\mathbf{u}$, leading to
 $$
 q_{\boldsymbol{\phi}}(\mathbf{f}) = 
-\int q_{\boldsymbol{\phi}}(\mathbf{f}, \mathbf{u}) \\, \mathrm{d}\mathbf{u} = 
+\int q_{\boldsymbol{\phi}}(\mathbf{f}, \mathbf{u}) \, \mathrm{d}\mathbf{u} = 
 \mathcal{N}(\mathbf{f} | \boldsymbol{\mu}, \mathbf{\Sigma}),
 $$
 where
@@ -269,18 +269,17 @@ with equality at $\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u}) \mid\
 
 Let us now focus our attention on the ELBO, which can be written as 
 $$
-\require{cancel}
 \begin{align*}
-\mathrm{ELBO}(\boldsymbol{\phi}, \mathbf{Z}) & = \iint \log{\frac{p(\mathbf{f},\mathbf{u}, \mathbf{y})}{q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u}) \\,\mathrm{d}\mathbf{f} \mathrm{d}\mathbf{u} \newline & =
-\iint \log{\frac{p(\mathbf{y} | \mathbf{f}) \bcancel{p(\mathbf{f} | \mathbf{u})} p(\mathbf{u})}{\bcancel{p(\mathbf{f} | \mathbf{u})} q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u}) \\,\mathrm{d}\mathbf{f} \mathrm{d}\mathbf{u} \newline & =
-\int \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u},
+\mathrm{ELBO}(\boldsymbol{\phi}, \mathbf{Z}) & = \iint \log{\frac{p(\mathbf{f},\mathbf{u}, \mathbf{y})}{q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u}) \,\mathrm{d}\mathbf{f} \mathrm{d}\mathbf{u} \newline & =
+\iint \log{\frac{p(\mathbf{y} | \mathbf{f}) \bcancel{p(\mathbf{f} | \mathbf{u})} p(\mathbf{u})}{\bcancel{p(\mathbf{f} | \mathbf{u})} q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{f},\mathbf{u}) \,\mathrm{d}\mathbf{f} \mathrm{d}\mathbf{u} \newline & =
+\int \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u},
 \end{align*}
 $$
 where we have made use of the previous 
 definition $q_{\boldsymbol{\phi}}(\mathbf{f}, \mathbf{u}) = p(\mathbf{f} | \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u})$ 
 and also introduced the definition
 $$
-\Phi(\mathbf{y}, \mathbf{u}) \triangleq \exp{ \left ( \int \log{p(\mathbf{y} | \mathbf{f})} p(\mathbf{f} | \mathbf{u}) \\,\mathrm{d}\mathbf{f} \right ) }.
+\Phi(\mathbf{y}, \mathbf{u}) \triangleq \exp{ \left ( \int \log{p(\mathbf{y} | \mathbf{f})} p(\mathbf{f} | \mathbf{u}) \,\mathrm{d}\mathbf{f} \right ) }.
 $$
 It is straightforward to verify that the optimal variational distribution, that
 is, the distribution $q_{\boldsymbol{\phi}^{\star}}(\mathbf{u})$ at which the
@@ -293,12 +292,11 @@ Specifically, after normalization, we have
 $$
 q_{\boldsymbol{\phi}^{\star}}(\mathbf{u}) = \frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{\mathcal{Z}},
 $$
-where $\mathcal{Z} \triangleq \int \Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u}) \\,\mathrm{d}\mathbf{u}$.
+where $\mathcal{Z} \triangleq \int \Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u}) \,\mathrm{d}\mathbf{u}$.
 Plugging this back into the ELBO, we get
 $$
-\require{cancel}
 \mathrm{ELBO}(\boldsymbol{\phi}^{\star}, \mathbf{Z}) = 
-\int \log{\left (\bcancel{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}  \frac{\mathcal{Z}}{\bcancel{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}} \right )} q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u}
+\int \log{\left (\bcancel{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}  \frac{\mathcal{Z}}{\bcancel{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}} \right )} q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u}
 = \log{\mathcal{Z}}.
 $$
 
@@ -320,7 +318,7 @@ Refer to [Appendix IV]({{< relref "#iv" >}}) for derivations.
 Now, there are a few key objects of interest. 
 First, the 
 optimal variational distribution $q_{\boldsymbol{\phi}^{\star}}(\mathbf{u})$, 
-which is required to compute the predictive distribution $q_{\boldsymbol{\phi}^{\star}}(\mathbf{f}) = \int p(\mathbf{f}|\mathbf{u}) q_{\boldsymbol{\phi}^{\star}}(\mathbf{u}) \\, \mathrm{d}\mathbf{u}$,
+which is required to compute the predictive distribution $q_{\boldsymbol{\phi}^{\star}}(\mathbf{f}) = \int p(\mathbf{f}|\mathbf{u}) q_{\boldsymbol{\phi}^{\star}}(\mathbf{u}) \, \mathrm{d}\mathbf{u}$,
 but which may also be of independent interest.
 Second, the ELBO, the objective with respect to which the inducing input 
 locations $\mathbf{Z}$ are optimized.
@@ -368,9 +366,9 @@ Recall from earlier that the ELBO is written as
 $$
 \begin{align*}
 \mathrm{ELBO}(\boldsymbol{\phi}, \mathbf{Z}) & =
-\int \log{\left(\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}\right)} q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & = 
-\int \left(\log{\Phi(\mathbf{y}, \mathbf{u})} + \log{\frac{p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}}\ \right) q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =
-\mathrm{ELL}(\boldsymbol{\phi}, \mathbf{Z}) - \mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\|p(\mathbf{u})],
+\int \log{\left(\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}\right)} q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u} \\\\ & = 
+\int \left(\log{\Phi(\mathbf{y}, \mathbf{u})} + \log{\frac{p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}}\ \right) q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u} \\\\ & =
+\mathrm{ELL}(\boldsymbol{\phi}, \mathbf{Z}) - \mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})|p(\mathbf{u})],
 \end{align*}
 $$
 where we define $\mathrm{ELL}(\boldsymbol{\phi}, \mathbf{Z})$, the *expected log-likelihood (ELL)*, as
@@ -381,10 +379,10 @@ This constitutes the first term in the ELBO, and can be written as
 $$
 \begin{align*}
 \mathrm{ELL}(\boldsymbol{\phi}, \mathbf{Z}) & =
-\int \log{\Phi(\mathbf{y}, \mathbf{u})} q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =
-\int \left(\int \log{p(\mathbf{y} | \mathbf{f})} p(\mathbf{f} | \mathbf{u}) \\,\mathrm{d}\mathbf{f}\right) q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =
-\int \log{p(\mathbf{y} | \mathbf{f})} \left(\int p(\mathbf{f} | \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \right) \\,\mathrm{d}\mathbf{f} \\\\ & =
-\int \log{p(\mathbf{y} | \mathbf{f})} q(\mathbf{f}) \\,\mathrm{d}\mathbf{f} \\\\ & =
+\int \log{\Phi(\mathbf{y}, \mathbf{u})} q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u} \\\\ & =
+\int \left(\int \log{p(\mathbf{y} | \mathbf{f})} p(\mathbf{f} | \mathbf{u}) \,\mathrm{d}\mathbf{f}\right) q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u} \\\\ & =
+\int \log{p(\mathbf{y} | \mathbf{f})} \left(\int p(\mathbf{f} | \mathbf{u}) q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u} \right) \,\mathrm{d}\mathbf{f} \\\\ & =
+\int \log{p(\mathbf{y} | \mathbf{f})} q(\mathbf{f}) \,\mathrm{d}\mathbf{f} \\\\ & =
 \mathbb{E}_{q(\mathbf{f})}[\log{p(\mathbf{y} | \mathbf{f})}].
 \end{align*}
 $$
@@ -396,14 +394,14 @@ effective rules such as [Gauss-Hermite quadrature](https://mathworld.wolfram.com
 
 Now, the second term in the ELBO is the KL divergence between $q_{\boldsymbol{\phi}}(\mathbf{u})$ and $p(\mathbf{u})$, which are both multivariate Gaussians,
 $$
-\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\|p(\mathbf{u})] = 
+\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})|p(\mathbf{u})] = 
 \mathrm{KL}[\mathcal{N}(\mathbf{b}, \mathbf{W} {\mathbf{W}}^\top) || \mathcal{N}(\mathbf{0}, \mathbf{K}_\mathbf{uu})],
 $$
 and has a [closed-form expression](https://web.stanford.edu/~jduchi/projects/general_notes.pdf).
 In the case of the whitened parameterization, it can be simplified as
 $$
 \begin{align*}
-\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})\|p(\mathbf{u})] & = 
+\mathrm{KL}[q_{\boldsymbol{\phi}}(\mathbf{u})|p(\mathbf{u})] & = 
 \mathrm{KL}[\mathcal{N}(\mathbf{b}', \mathbf{W}' {\mathbf{W}'}^\top) || \mathcal{N}(\mathbf{0}, \mathbf{K}_\mathbf{uu})] \\\\ & =
 \mathrm{KL}[\mathcal{N}(\mathbf{b}, \mathbf{W} {\mathbf{W}}^\top) || \mathcal{N}(\mathbf{0}, \mathbf{I})].
 \end{align*}
@@ -618,17 +616,17 @@ Taking the functional derivative of the ELBO wrt to $q_{\boldsymbol{\phi}}(\math
 $$
 \begin{align*}
 \frac{\partial}{\partial q_{\boldsymbol{\phi}}(\mathbf{u})} \mathrm{ELBO}(\boldsymbol{\phi}, \mathbf{Z}) & = 
-\frac{\partial}{\partial q_{\boldsymbol{\phi}}(\mathbf{u})} \left ( \int \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \right ) \newline & =
-\int \frac{\partial}{\partial q_{\boldsymbol{\phi}}(\mathbf{u})} \left ( \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{u}) \right ) \\,\mathrm{d}\mathbf{u} \newline & =
+\frac{\partial}{\partial q_{\boldsymbol{\phi}}(\mathbf{u})} \left ( \int \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u} \right ) \newline & =
+\int \frac{\partial}{\partial q_{\boldsymbol{\phi}}(\mathbf{u})} \left ( \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} q_{\boldsymbol{\phi}}(\mathbf{u}) \right ) \,\mathrm{d}\mathbf{u} \newline & =
 \begin{split}
 & \int \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} \left ( \frac{\partial}{\partial q_{\boldsymbol{\phi}}(\mathbf{u})} q_{\boldsymbol{\phi}}(\mathbf{u}) \right ) + \newline 
-& \qquad q_{\boldsymbol{\phi}}(\mathbf{u}) \left ( \frac{\partial}{\partial q_{\boldsymbol{\phi}}(\mathbf{u})} \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} \right ) \\,\mathrm{d}\mathbf{u} 
+& \qquad q_{\boldsymbol{\phi}}(\mathbf{u}) \left ( \frac{\partial}{\partial q_{\boldsymbol{\phi}}(\mathbf{u})} \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} \right ) \,\mathrm{d}\mathbf{u} 
 \end{split}
 \newline & =
 \int \log{\frac{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}{q_{\boldsymbol{\phi}}(\mathbf{u})}} + 
-q_{\boldsymbol{\phi}}(\mathbf{u}) \left ( -\frac{1}{q_{\boldsymbol{\phi}}(\mathbf{u})} \right ) \\,\mathrm{d}\mathbf{u}
+q_{\boldsymbol{\phi}}(\mathbf{u}) \left ( -\frac{1}{q_{\boldsymbol{\phi}}(\mathbf{u})} \right ) \,\mathrm{d}\mathbf{u}
 \newline & =
-\int \log{\Phi(\mathbf{y}, \mathbf{u})} + \log{p(\mathbf{u})} - \log{q_{\boldsymbol{\phi}}(\mathbf{u})} - 1 \\,\mathrm{d}\mathbf{u}.
+\int \log{\Phi(\mathbf{y}, \mathbf{u})} + \log{p(\mathbf{u})} - \log{q_{\boldsymbol{\phi}}(\mathbf{u})} - 1 \,\mathrm{d}\mathbf{u}.
 \end{align*}
 $$
 Setting this expression to zero, we have
@@ -654,18 +652,18 @@ Second, the relationship between the auto-correlation matrix $\mathbb{E}[\mathbf
 and the covariance matrix,
 $$
 \begin{align*}
-\mathrm{Cov}[\mathbf{a}] & = \mathbb{E}[\mathbf{a}\mathbf{a}^{\top}] - \mathbb{E}[\mathbf{a}] \\, \mathbb{E}[\mathbf{a}]^\top \\\\
+\mathrm{Cov}[\mathbf{a}] & = \mathbb{E}[\mathbf{a}\mathbf{a}^{\top}] - \mathbb{E}[\mathbf{a}] \, \mathbb{E}[\mathbf{a}]^\top \\\\
 \Leftrightarrow \quad
-\mathbb{E}[\mathbf{a}\mathbf{a}^{\top}] & = \mathrm{Cov}[\mathbf{a}] + \mathbb{E}[\mathbf{a}] \\, \mathbb{E}[\mathbf{a}]^\top  
+\mathbb{E}[\mathbf{a}\mathbf{a}^{\top}] & = \mathrm{Cov}[\mathbf{a}] + \mathbb{E}[\mathbf{a}] \, \mathbb{E}[\mathbf{a}]^\top  
 \end{align*}
 $$
 These allow us to write
 $$
 \begin{align*}
 \log{\Phi(\mathbf{y}, \mathbf{u})} & = 
-\int \log{\mathcal{N}(\mathbf{y} | \mathbf{f}, \beta^{-1} \mathbf{I})} \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} 
-\newline & = - \frac{1}{2\sigma^2} \int (\mathbf{y} - \mathbf{f})^{\top} (\mathbf{y} - \mathbf{f}) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
-\newline & = - \frac{1}{2\sigma^2} \int \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{f}^{\top} + \mathbf{f}\mathbf{f}^{\top} \right) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \\,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
+\int \log{\mathcal{N}(\mathbf{y} | \mathbf{f}, \beta^{-1} \mathbf{I})} \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \,\mathrm{d}\mathbf{f} 
+\newline & = - \frac{1}{2\sigma^2} \int (\mathbf{y} - \mathbf{f})^{\top} (\mathbf{y} - \mathbf{f}) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
+\newline & = - \frac{1}{2\sigma^2} \int \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{f}^{\top} + \mathbf{f}\mathbf{f}^{\top} \right) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
 \newline & = - \frac{1}{2\sigma^2} \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{m}^{\top} + \mathbf{S} + \mathbf{m} \mathbf{m}^{\top} \right) - 
 \frac{N}{2}\log{(2\pi\sigma^2)}
 \newline & = - \frac{1}{2\sigma^2} (\mathbf{y} - \mathbf{m})^{\top} (\mathbf{y} - \mathbf{m}) - \frac{N}{2}\log{(2\pi\sigma^2)} - \frac{1}{2\sigma^2} \mathrm{tr}(\mathbf{S})
@@ -723,9 +721,9 @@ $$
 \begin{align*}
 \mathrm{ELBO}(\boldsymbol{\phi}^{\star}, \mathbf{Z}) & = 
 \log \mathcal{Z} \\\\ & = 
-\log \int \Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \\\\ & =  
-\log \left [ \exp{\left(-\frac{\beta}{2} \mathrm{tr}(\mathbf{S})\right)} \int \mathcal{N}(\mathbf{y} | \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) p(\mathbf{u}) \\,\mathrm{d}\mathbf{u} \right ] \\\\ & =  
-\log \int \mathcal{N}(\mathbf{y} \mid \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) \mathcal{N}(\mathbf{u} \mid \mathbf{0}, \mathbf{K}_\mathbf{uu}) \\,\mathrm{d}\mathbf{u} - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}) \\\\ & = 
+\log \int \Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u}) \,\mathrm{d}\mathbf{u} \\\\ & =  
+\log \left [ \exp{\left(-\frac{\beta}{2} \mathrm{tr}(\mathbf{S})\right)} \int \mathcal{N}(\mathbf{y} | \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) p(\mathbf{u}) \,\mathrm{d}\mathbf{u} \right ] \\\\ & =  
+\log \int \mathcal{N}(\mathbf{y} \mid \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) \mathcal{N}(\mathbf{u} \mid \mathbf{0}, \mathbf{K}_\mathbf{uu}) \,\mathrm{d}\mathbf{u} - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}) \\\\ & = 
 \log \mathcal{N}(\mathbf{y} \mid \mathbf{0}, \beta^{-1} \mathbf{I} + \boldsymbol{\Psi}^{\top} \mathbf{K}_\textbf{uu} \boldsymbol{\Psi}) - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}) \\\\ & = 
 \log \mathcal{N}(\mathbf{y} \mid \mathbf{0}, \mathbf{Q}_\mathbf{ff} + \beta^{-1} \mathbf{I}) - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}).
 \end{align*}
@@ -884,7 +882,7 @@ Hence, we see that the optimal variational distribution is itself a
 whitened parameterization with $\mathbf{b}' = \mathbf{L}_\mathbf{B}^{-\top} \mathbf{c}$ 
 and $\mathbf{W}' = \mathbf{L}_\mathbf{B}^{-\top}$ (such that ${\mathbf{W}'} {\mathbf{W}'}^\top = \mathbf{B}^{-1}$).
 Combined with results from a [previous section]({{< relref "#whitened-parameterization" >}}),
-we can directly write the predictive $q_{\boldsymbol{\phi}^{\star}}(\mathbf{f}) = \int p(\mathbf{f}|\mathbf{u}) q_{\boldsymbol{\phi}^{\star}}(\mathbf{u}) \\, \mathrm{d}\mathbf{u}$ as
+we can directly write the predictive $q_{\boldsymbol{\phi}^{\star}}(\mathbf{f}) = \int p(\mathbf{f}|\mathbf{u}) q_{\boldsymbol{\phi}^{\star}}(\mathbf{u}) \, \mathrm{d}\mathbf{u}$ as
 $$
 q_{\boldsymbol{\phi}^{\star}}(\mathbf{f}) = 
   \mathcal{N}\left(\boldsymbol{\Lambda}^\top \mathbf{L}_\mathbf{B}^{-\top} \mathbf{c}, 
