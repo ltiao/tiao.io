@@ -45,29 +45,29 @@ The Kullback-Leibler (KL) divergence between distributions $p$ and $q$ is
 defined as
 
 $$
-\mathcal{D}\_{\mathrm{KL}}[p(x) || q(x)] := 
-\mathbb{E}\_{p(x)} \left [ \log \left ( \frac{p(x)}{q(x)} \right ) \right ].
+\mathcal{D}_{\mathrm{KL}}[p(x) || q(x)] := 
+\mathbb{E}_{p(x)} \left [ \log \left ( \frac{p(x)}{q(x)} \right ) \right ].
 $$
 
 It can be expressed more succinctly as
 
 $$
-\mathcal{D}\_{\mathrm{KL}}[p(x) || q(x)] = \mathbb{E}\_{p(x)} [ \log r^{\*}(x) ],
+\mathcal{D}_{\mathrm{KL}}[p(x) || q(x)] = \mathbb{E}_{p(x)} [ \log r^{*}(x) ],
 $$
 
-where $r^{\*}(x)$ is defined to be the ratio of between the densities $p(x)$ and 
+where $r^{*}(x)$ is defined to be the ratio of between the densities $p(x)$ and 
 $q(x)$,
 
 $$ 
-r^{\*}(x) := \frac{p(x)}{q(x)}.
+r^{*}(x) := \frac{p(x)}{q(x)}.
 $$
 
 This density ratio is crucial for computing not only the KL divergence but for
 all $f$-divergences, defined as[^1]
 
 $$
-\mathcal{D}\_f[p(x) || q(x)] := 
-\mathbb{E}\_{q(x)} \left [ f \left ( \frac{p(x)}{q(x)} \right ) \right ].
+\mathcal{D}_f[p(x) || q(x)] := 
+\mathbb{E}_{q(x)} \left [ f \left ( \frac{p(x)}{q(x)} \right ) \right ].
 $$
 
 Rarely can this expectation (i.e. integral) can be calculated analytically---in 
@@ -159,18 +159,18 @@ standard" to benchmark against.
 In general, for Gaussian distributions
 
 $$
-p(x) = \mathcal{N}(x \mid \mu\_p, \sigma\_p^2), 
+p(x) = \mathcal{N}(x \mid \mu_p, \sigma_p^2), 
 \qquad
 \text{and}
 \qquad
-q(x) = \mathcal{N}(x \mid \mu\_q, \sigma\_q^2),
+q(x) = \mathcal{N}(x \mid \mu_q, \sigma_q^2),
 $$
 it is easy to verify that
 $$
 \mathrm{KL}[ p(x) || q(x) ]
-= \log \sigma\_q - \log \sigma\_p - \frac{1}{2} 
+= \log \sigma_q - \log \sigma_p - \frac{1}{2} 
   \left [ 
-    1 - \left ( \frac{\sigma\_p^2 + (\mu\_p - \mu\_q)^2}{\sigma\_q^2} \right ) 
+    1 - \left ( \frac{\sigma_p^2 + (\mu_p - \mu_q)^2}{\sigma_q^2} \right ) 
   \right ].
 $$
 
@@ -207,15 +207,15 @@ For distributions where their KL divergence is not analytically tractable, we
 may appeal to Monte Carlo (MC) estimation:
 
 $$
-\begin{align\*}
-  \mathcal{D}\_{\mathrm{KL}}[p(x) || q(x)] 
-  & = \mathbb{E}\_{p(x)} [ \log r^{\*}(x) ] \newline
-  & \approx \frac{1}{M} \sum\_{i=1}^{M} \log r^{\*}(x_p^{(i)}),
+\begin{align*}
+  \mathcal{D}_{\mathrm{KL}}[p(x) || q(x)] 
+  & = \mathbb{E}_{p(x)} [ \log r^{*}(x) ] \newline
+  & \approx \frac{1}{M} \sum_{i=1}^{M} \log r^{*}(x_p^{(i)}),
   \quad x_p^{(i)} \sim p(x).
-\end{align\*}
+\end{align*}
 $$
 
-Clearly, this requires the density ratio $r^{\*}(x)$ and, in turn, the densities 
+Clearly, this requires the density ratio $r^{*}(x)$ and, in turn, the densities 
 $p(x)$ and $q(x)$ to be analytically tractable. Distributions for which the 
 density function can be readily evaluated are sometimes referred to as 
 **prescribed distributions**. As before, we *prescribed* Gaussians distributions 
@@ -241,12 +241,12 @@ Probability--Monte Carlo* (`tfp.monte_carlo`):
 More generally, we can approximate any $f$-divergence with MC estimation: 
 
 $$
-\begin{align\*}
-  \mathcal{D}\_f[p(x) || q(x)] 
-  & = \mathbb{E}\_{q(x)} [ f(r^{\*}(x)) ] \newline
-  & \approx \frac{1}{M} \sum\_{i=1}^{M} f(r^{\*}(x_q^{(i)})),
+\begin{align*}
+  \mathcal{D}_f[p(x) || q(x)] 
+  & = \mathbb{E}_{q(x)} [ f(r^{*}(x)) ] \newline
+  & \approx \frac{1}{M} \sum_{i=1}^{M} f(r^{*}(x_q^{(i)})),
   \quad x_q^{(i)} \sim q(x).
-\end{align\*}
+\end{align*}
 $$
 
 This can be done using the  `monte_carlo_csiszar_f_divergence` function from 
@@ -274,7 +274,7 @@ Distributions for which we are only able to observe their samples are known as
 density which we may not have direct access to.
 
 Density ratio estimation is concerned with estimating the ratio of densities
-$r^{\*}(x) = p(x) / q(x)$ given access only to samples from $p(x)$ and $q(x)$.
+$r^{*}(x) = p(x) / q(x)$ given access only to samples from $p(x)$ and $q(x)$.
 Moreover, density ratio estimation usually encompass methods that achieve this 
 without resorting to direct *density estimation* of the individual densities 
 $p(x)$ or $q(x)$, since any error in the estimation of the denominator $q(x)$ 
@@ -295,25 +295,25 @@ where each sample is assigned a class label indicating which distribution it was
 drawn from. Then, from an estimator of the class-membership probabilities, it is
 straightforward to recover an estimator of the density ratio.
 
-Suppose we have $N\_p$ and $N\_q$ samples drawn from $p(x)$ and $q(x)$, 
+Suppose we have $N_p$ and $N_q$ samples drawn from $p(x)$ and $q(x)$, 
 respectively,
 
 $$
-x\_p^{(1)}, \dotsc, x\_p^{(N\_p)} \sim p(x), 
+x_p^{(1)}, \dotsc, x_p^{(N_p)} \sim p(x), 
 \qquad \text{and} \qquad 
-x\_q^{(1)}, \dotsc, x\_q^{(N\_q)} \sim q(x).
+x_q^{(1)}, \dotsc, x_q^{(N_q)} \sim q(x).
 $$
 
-Then, we form the dataset $\{ (x\_n, y\_n) \}\_{n=1}^N$, where $N = N\_p + N\_q$
+Then, we form the dataset $\{ (x_n, y_n) \}_{n=1}^N$, where $N = N_p + N_q$
 and
 
 $$
-\begin{align\*}
-  (x\_1, \dotsc, x\_N) & = (x\_p^{(1)}, \dotsc, x\_p^{(N\_p)},
-                            x\_q^{(1)}, \dotsc, x\_q^{(N\_q)}), \newline
-  (y\_1, \dotsc, y\_N) & = (\underbrace{1, \dotsc, 1}\_{N\_p}, 
-                            \underbrace{0, \dotsc, 0}\_{N\_q}).
-\end{align\*}
+\begin{align*}
+  (x_1, \dotsc, x_N) & = (x_p^{(1)}, \dotsc, x_p^{(N_p)},
+                            x_q^{(1)}, \dotsc, x_q^{(N_q)}), \newline
+  (y_1, \dotsc, y_N) & = (\underbrace{1, \dotsc, 1}_{N_p}, 
+                            \underbrace{0, \dotsc, 0}_{N_q}).
+\end{align*}
 $$
 
 In other words, we label samples drawn from $p(x)$ as 1 and those drawn from 
@@ -350,11 +350,11 @@ $$
      {\mathcal{P}(y)}.
 $$
 
-Hence, we can express the density ratio $r^{\*}(x)$ as
+Hence, we can express the density ratio $r^{*}(x)$ as
 
 $$
-\begin{align\*}
-  r^{\*}(x) & = \frac{p(x)}{q(x)}
+\begin{align*}
+  r^{*}(x) & = \frac{p(x)}{q(x)}
        = \frac{\mathcal{P}(x \mid y = 1)}
               {\mathcal{P}(x \mid y = 0)} \newline
        & = \left ( \frac{\mathcal{P}(y = 1 \mid x) \mathcal{P}(x)}
@@ -364,7 +364,7 @@ $$
        & = \frac{\mathcal{P}(y = 0)}{\mathcal{P}(y = 1)} 
            \frac{\mathcal{P}(y = 1 \mid x)}
                 {\mathcal{P}(y = 0 \mid x)}.
-\end{align\*}
+\end{align*}
 $$
 
 Let us approximate the ratio of marginal densities by the ratio of sample sizes,
@@ -373,30 +373,30 @@ $$
 \frac{\mathcal{P}(y = 0)}
      {\mathcal{P}(y = 1)} 
 \approx
-\frac{N\_q}{N\_p + N\_q} 
-\left ( \frac{N\_p}{N\_p + N\_q} \right )^{-1}
-= \frac{N\_q}{N\_p}.
+\frac{N_q}{N_p + N_q} 
+\left ( \frac{N_p}{N_p + N_q} \right )^{-1}
+= \frac{N_q}{N_p}.
 $$
 
-To avoid notational clutter, let us assume from now on that $N\_q = N\_p$. 
-We can then write $r^{\*}(x)$ in terms of class-posterior probabilities,
+To avoid notational clutter, let us assume from now on that $N_q = N_p$. 
+We can then write $r^{*}(x)$ in terms of class-posterior probabilities,
 
 $$
-\begin{align\*}
-  r^{\*}(x) = \frac{\mathcal{P}(y = 1 \mid x)}
+\begin{align*}
+  r^{*}(x) = \frac{\mathcal{P}(y = 1 \mid x)}
               {\mathcal{P}(y = 0 \mid x)}.
-\end{align\*}
+\end{align*}
 $$
 
 #### Recovering the Density Ratio from the Class Probability
 
-This yields a one-to-one correspondence between the density ratio $r^{\*}(x)$ 
+This yields a one-to-one correspondence between the density ratio $r^{*}(x)$ 
 and the class-posterior probability $\mathcal{P}(y = 1 \mid x)$. 
 Namely,
 
 $$
-\begin{align\*}
-  r^{\*}(x) = \frac{\mathcal{P}(y = 1 \mid x)}
+\begin{align*}
+  r^{*}(x) = \frac{\mathcal{P}(y = 1 \mid x)}
               {\mathcal{P}(y = 0 \mid x)} 
        & = \frac{\mathcal{P}(y = 1 \mid x)}
                 {1 - \mathcal{P}(y = 1 \mid x)} \newline
@@ -405,7 +405,7 @@ $$
              \log \frac{\mathcal{P}(y = 1 \mid x)}
                        {1 - \mathcal{P}(y = 1 \mid x)} \right ] \newline
        & = \exp[ \sigma^{-1}(\mathcal{P}(y = 1 \mid x)) ],
-\end{align\*}
+\end{align*}
 $$
 
 where $\sigma^{-1}$ is the *logit* function, or inverse sigmoid function, given 
@@ -418,7 +418,7 @@ the exact class-posterior probability as a function of the density ratio,
 
 {{< math >}}
 $$
-\mathcal{P}(y=1 \mid x) = \sigma(\log r^{\*}(x)) = \frac{p(x)}{p(x) + q(x)}.
+\mathcal{P}(y=1 \mid x) = \sigma(\log r^{*}(x)) = \frac{p(x)}{p(x) + q(x)}.
 $$
 {{< /math >}}
 
@@ -442,31 +442,31 @@ is plotted against the dataset visualized earlier.
 ### Probabilistic Classification with Logistic Regression
 
 The class-posterior probability $\mathcal{P}(y = 1 \mid x)$ can be approximated
-using a parameterized function $D\_{\theta}(x)$ with parameters $\theta$. This
+using a parameterized function $D_{\theta}(x)$ with parameters $\theta$. This
 functions takes as input samples from $p(x)$ and $q(x)$ and outputs a *score*,
 or probability, in the range $[0, 1]$ that it was drawn from $p(x)$. 
-Hence, we refer to $D\_{\theta}(x)$ as the probabilistic classifier.
+Hence, we refer to $D_{\theta}(x)$ as the probabilistic classifier.
 
 From before, it is clear to see how an estimator of the density ratio 
-$r\_{\theta}(x)$ might be constructed as a function of probabilistic classifier 
-$D\_{\theta}(x)$. Namely,
+$r_{\theta}(x)$ might be constructed as a function of probabilistic classifier 
+$D_{\theta}(x)$. Namely,
 
 $$
-\begin{align\*}
-  r\_{\theta}(x) & = \exp[ \sigma^{-1}(D\_{\theta}(x)) ] \newline
-  & \approx \exp[ \sigma^{-1}(\mathcal{P}(y = 1 \mid x)) ] = r^{\*}(x),
-\end{align\*}
+\begin{align*}
+  r_{\theta}(x) & = \exp[ \sigma^{-1}(D_{\theta}(x)) ] \newline
+  & \approx \exp[ \sigma^{-1}(\mathcal{P}(y = 1 \mid x)) ] = r^{*}(x),
+\end{align*}
 $$
 and *vice versa*,
 $$
-\begin{align\*}
-  D\_{\theta}(x) & = \sigma(\log r_{\theta}(x)) \newline
-  & \approx \sigma(\log r^{\*}(x)) = \mathcal{P}(y = 1 \mid x).
-\end{align\*}
+\begin{align*}
+  D_{\theta}(x) & = \sigma(\log r_{\theta}(x)) \newline
+  & \approx \sigma(\log r^{*}(x)) = \mathcal{P}(y = 1 \mid x).
+\end{align*}
 $$
 
-Instead of $D\_{\theta}(x)$, we usually specify the parameterized function 
-$\log r\_{\theta}(x)$. This is also referred to as the *log-odds*, or *logits*, 
+Instead of $D_{\theta}(x)$, we usually specify the parameterized function 
+$\log r_{\theta}(x)$. This is also referred to as the *log-odds*, or *logits*, 
 since it is equivalent to the unnormalized output of the classifier before being 
 fed through the logistic sigmoid function.
 
@@ -489,14 +489,14 @@ We learn the optimal class probability estimator by optimizing it with respect
 to a *proper scoring rule*[^gneiting2007strictly] that yields well-calibrated probabilistic predictions, such as the *binary cross-entropy loss*,
 
 $$
-\begin{align\*}
+\begin{align*}
   \mathcal{L}(\theta) & := 
-  \- \mathbb{E}\_{p(x)} [ \log D\_{\theta} (x) ] 
-  \- \mathbb{E}\_{q(x)} [ \log(1-D\_{\theta} (x)) ] \newline
+  - \mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] 
+  - \mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline
   & =
-  \- \mathbb{E}\_{p(x)} [ \log \sigma ( \log r\_{\theta} (x) ) ] 
-  \- \mathbb{E}\_{q(x)} [ \log(1 - \sigma ( \log r\_{\theta} (x) )) ].
-\end{align\*}
+  - \mathbb{E}_{p(x)} [ \log \sigma ( \log r_{\theta} (x) ) ] 
+  - \mathbb{E}_{q(x)} [ \log(1 - \sigma ( \log r_{\theta} (x) )) ].
+\end{align*}
 $$
 
 An implementation optimized for numerical stability is given below:
@@ -564,15 +564,15 @@ Below is the final plot of how the binary cross-entropy loss converges:
 
 ![Binary Cross-entropy Loss](binary_crossentropy.svg)
 
-Below is a plot of the probabilistic classifier $D\_{\theta}(x)$ (*dotted green*), 
+Below is a plot of the probabilistic classifier $D_{\theta}(x)$ (*dotted green*), 
 plotted against the optimal classifier, which is the class-posterior probability 
 $\mathcal{P}(y=1 \mid x) = \frac{p(x)}{p(x) + q(x)}$ (*solid blue*):
 
 ![Class Probability Estimator](class_probability_estimation.svg)
 
-Below is a plot of the density ratio estimator $r\_{\theta}(x)$ 
+Below is a plot of the density ratio estimator $r_{\theta}(x)$ 
 (*dotted green*), plotted against the exact density ratio function 
-$r^{\*}(x) = \frac{p(x)}{q(x)}$ (*solid blue*):
+$r^{*}(x) = \frac{p(x)}{q(x)}$ (*solid blue*):
 
 ![Density Ratio Estimator](density_ratio_estimation.svg)
 
@@ -581,8 +581,8 @@ And finally, the previous plot in logarithmic scale:
 ![Log Density Ratio Estimator](log_density_ratio_estimation.svg)
 
 While it may appear that we are simply performing regression on the latent 
-function $r^{\*}(x)$ (which is not wrong---we are), it is important to emphasize that 
-we do this without ever having observed values of $r^{\*}(x)$.
+function $r^{*}(x)$ (which is not wrong---we are), it is important to emphasize that 
+we do this without ever having observed values of $r^{*}(x)$.
 Instead, we only ever observed samples from $p(x)$ and $q(x)$ 
 This has profound implications and potential for a great number of applications 
 that we shall explore later on.
@@ -593,14 +593,14 @@ Having an obtained an estimate of the log density ratio, it is now feasible to
 perform Monte Carlo estimation:
 
 $$
-\begin{align\*}
-  \mathcal{D}\_{\mathrm{KL}}[p(x) || q(x)] 
-  & = \mathbb{E}\_{p(x)} [ \log r^{\*}(x) ] \newline
-  & \approx \frac{1}{M} \sum\_{i=1}^{M} \log r^{\*}(x_p^{(i)}),
+\begin{align*}
+  \mathcal{D}_{\mathrm{KL}}[p(x) || q(x)] 
+  & = \mathbb{E}_{p(x)} [ \log r^{*}(x) ] \newline
+  & \approx \frac{1}{M} \sum_{i=1}^{M} \log r^{*}(x_p^{(i)}),
   \quad x_p^{(i)} \sim p(x) \newline
-  & \approx \frac{1}{M} \sum\_{i=1}^{M} \log r\_{\theta}(x_p^{(i)}),
+  & \approx \frac{1}{M} \sum_{i=1}^{M} \log r_{\theta}(x_p^{(i)}),
   \quad x_p^{(i)} \sim p(x).
-\end{align\*}
+\end{align*}
 $$
 
 ```python
@@ -609,9 +609,9 @@ $$
 ```
 
 In other words, we draw MC samples from $p(x)$ as before. But instead of taking 
-the mean of the function $\log r^{\*}(x)$ evaluated on these samples (which is 
+the mean of the function $\log r^{*}(x)$ evaluated on these samples (which is 
 unavailable for implicit distributions), we do so on a proxy function 
-$\log r\_{\theta}(x)$ that is estimated through probabilistic classification as
+$\log r_{\theta}(x)$ that is estimated through probabilistic classification as
 described above.
 
 ## Learning in Implicit Generative Models
@@ -625,43 +625,43 @@ distribution $q(\mathbf{x})$:
 
 Directly estimating the density of $q(\mathbf{x})$ may not always be feasible---in 
 some cases, it may not even exist.
-Instead, consider defining a parametric function $G\_{\phi}: \mathbf{z} \mapsto 
+Instead, consider defining a parametric function $G_{\phi}: \mathbf{z} \mapsto 
 \mathbf{x}$ with parameters $\phi$, that takes as input $\mathbf{z}$ drawn from 
 some fixed distribution $p(\mathbf{z})$. 
 The outputs $\mathbf{x}$ of this generative process are assumed to be samples 
-following some implicit distribution $p\_{\phi}(\mathbf{x})$. In other words,
+following some implicit distribution $p_{\phi}(\mathbf{x})$. In other words,
 we can write
 
 $$
-\mathbf{x} \sim p\_{\phi}(\mathbf{x}) \quad 
+\mathbf{x} \sim p_{\phi}(\mathbf{x}) \quad 
 \Leftrightarrow \quad 
-\mathbf{x} = G\_{\phi}(\mathbf{z}), 
+\mathbf{x} = G_{\phi}(\mathbf{z}), 
 \quad \mathbf{z} \sim p(\mathbf{z}).
 $$
 
-By optimizing parameters $\phi$, we can make $p\_{\phi}(\mathbf{x})$ close to 
+By optimizing parameters $\phi$, we can make $p_{\phi}(\mathbf{x})$ close to 
 the real data distribution $q(\mathbf{x})$. This is a compelling alternative to
 density estimation since there are many situations where being able to generate 
 samples is more important than being able to calculate the numerical value of 
 the density. Some examples of these include *image super-resolution* and 
 *semantic segmentation*.
 
-One approach might be to introduce a classifier $D\_{\theta}$ that discriminates 
+One approach might be to introduce a classifier $D_{\theta}$ that discriminates 
 between real and synthetic samples. 
-Then we optimize $G\_{\phi}$ to synthesize samples that are indistinguishable, 
-to classifier $D\_{\theta}$, from the real samples. This can be achieved by 
+Then we optimize $G_{\phi}$ to synthesize samples that are indistinguishable, 
+to classifier $D_{\theta}$, from the real samples. This can be achieved by 
 simultaneously optimizing the binary cross-entropy loss, resulting in the 
 saddle-point objective,
 
 $$
-\begin{align\*}
-  & \min\_{\phi} \max\_{\theta}
-  \mathbb{E}\_{q(\mathbf{x})} [ \log D\_{\theta} (\mathbf{x}) ] +
-  \mathbb{E}\_{p\_{\phi}(\mathbf{x})} [ \log(1-D\_{\theta} (\mathbf{x})) ] \newline = 
-  & \min\_{\phi} \max\_{\theta} 
-  \mathbb{E}\_{q(\mathbf{x})} [ \log D\_{\theta} (\mathbf{x}) ] +
-  \mathbb{E}\_{p(\mathbf{z})} [ \log(1-D\_{\theta} (G\_{\phi}(\mathbf{z}))) ].
-\end{align\*}
+\begin{align*}
+  & \min_{\phi} \max_{\theta}
+  \mathbb{E}_{q(\mathbf{x})} [ \log D_{\theta} (\mathbf{x}) ] +
+  \mathbb{E}_{p_{\phi}(\mathbf{x})} [ \log(1-D_{\theta} (\mathbf{x})) ] \newline = 
+  & \min_{\phi} \max_{\theta} 
+  \mathbb{E}_{q(\mathbf{x})} [ \log D_{\theta} (\mathbf{x}) ] +
+  \mathbb{E}_{p(\mathbf{z})} [ \log(1-D_{\theta} (G_{\phi}(\mathbf{z}))) ].
+\end{align*}
 $$
 
 This is, of course, none other than the groundbreaking *generative adversarial 
@@ -675,43 +675,43 @@ approach that specifically aims to minimize the KL divergence w.r.t. parameters
 $\phi$,
 
 $$
-\min\_{\phi} \mathcal{D}\_{\mathrm{KL}}[p\_{\phi}(\mathbf{x}) || q(\mathbf{x})].
+\min_{\phi} \mathcal{D}_{\mathrm{KL}}[p_{\phi}(\mathbf{x}) || q(\mathbf{x})].
 $$
 
-To overcome the fact that the densities of both $p\_{\phi}(\mathbf{x})$ and 
+To overcome the fact that the densities of both $p_{\phi}(\mathbf{x})$ and 
 $q(\mathbf{x})$ are unknown, we can readily adopt the density ratio estimation 
 approach outlined in this post. 
 Namely, by maximizing the following objective,
 
 $$
-\begin{align\*}
-  & \max\_{\theta}
-  \mathbb{E}\_{q(\mathbf{x})} [ \log D\_{\theta} (\mathbf{x}) ] +
-  \mathbb{E}\_{p(\mathbf{z})} [ \log(1-D\_{\theta} (G\_{\phi}(\mathbf{z}))) ] \newline
-  = & \max\_{\theta}
-  \mathbb{E}\_{q(\mathbf{x})} [ \log \sigma ( \log r\_{\theta} (\mathbf{x}) ) ] +
-  \mathbb{E}\_{p(\mathbf{z})} [ \log(1 - \sigma ( \log r\_{\theta} (G\_{\phi}(\mathbf{z})) )) ],
-\end{align\*}
+\begin{align*}
+  & \max_{\theta}
+  \mathbb{E}_{q(\mathbf{x})} [ \log D_{\theta} (\mathbf{x}) ] +
+  \mathbb{E}_{p(\mathbf{z})} [ \log(1-D_{\theta} (G_{\phi}(\mathbf{z}))) ] \newline
+  = & \max_{\theta}
+  \mathbb{E}_{q(\mathbf{x})} [ \log \sigma ( \log r_{\theta} (\mathbf{x}) ) ] +
+  \mathbb{E}_{p(\mathbf{z})} [ \log(1 - \sigma ( \log r_{\theta} (G_{\phi}(\mathbf{z})) )) ],
+\end{align*}
 $$
 
 which attains its maximum at 
 
 $$
-r\_{\theta}(\mathbf{x}) = \frac{q(\mathbf{x})}{p\_{\phi}(\mathbf{x})}.
+r_{\theta}(\mathbf{x}) = \frac{q(\mathbf{x})}{p_{\phi}(\mathbf{x})}.
 $$
 
 Concurrently, we also minimize the current best estimate of the KL divergence,
 
 $$
-\begin{align\*}
-\min\_{\phi} \mathcal{D}\_{\mathrm{KL}}[p\_{\phi}(\mathbf{x}) || q(\mathbf{x})] 
+\begin{align*}
+\min_{\phi} \mathcal{D}_{\mathrm{KL}}[p_{\phi}(\mathbf{x}) || q(\mathbf{x})] 
 & = 
-\min\_{\phi} \mathbb{E}\_{p\_{\phi}(\mathbf{x})} \left [ \log \frac{p\_{\phi}(\mathbf{x})}{q(\mathbf{x})} \right ] \newline
+\min_{\phi} \mathbb{E}_{p_{\phi}(\mathbf{x})} \left [ \log \frac{p_{\phi}(\mathbf{x})}{q(\mathbf{x})} \right ] \newline
 & \approx
-\min\_{\phi} \mathbb{E}\_{p\_{\phi}(\mathbf{x})} [ - \log r\_{\theta}(\mathbf{x}) ] \newline
+\min_{\phi} \mathbb{E}_{p_{\phi}(\mathbf{x})} [ - \log r_{\theta}(\mathbf{x}) ] \newline
 & = 
-\min\_{\phi} \mathbb{E}\_{p(\mathbf{z})} [ - \log r\_{\theta}(G\_{\phi}(\mathbf{z})) ].
-\end{align\*}
+\min_{\phi} \mathbb{E}_{p(\mathbf{z})} [ - \log r_{\theta}(G_{\phi}(\mathbf{z})) ].
+\end{align*}
 $$
 
 In addition to being more stable than the vanilla GAN approach (alleviates 
@@ -741,15 +741,15 @@ It is natural to wonder: what is the significance, if any, of this value?
 It is in fact the (negative) Jensen-Shannon (JS) divergence, up to constants,
 
 $$
-\- 2 \cdot \mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)] + \log 4.
+- 2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] + \log 4.
 $$
 
 Recall the Jensen-Shannon divergence is defined as
 
 $$
-\mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)]
-= \frac{1}{2} \mathcal{D}\_{\mathrm{KL}}[p(x) || m(x)] + 
-  \frac{1}{2} \mathcal{D}\_{\mathrm{KL}}[q(x) || m(x)],
+\mathcal{D}_{\mathrm{JS}}[p(x) || q(x)]
+= \frac{1}{2} \mathcal{D}_{\mathrm{KL}}[p(x) || m(x)] + 
+  \frac{1}{2} \mathcal{D}_{\mathrm{KL}}[q(x) || m(x)],
 $$
 
 where $m$ is the mixture density
@@ -778,56 +778,56 @@ this histogram.
 It is straightforward to show that we have the upper bound
 
 $$
-\inf\_{\theta} \mathcal{L}(\theta) \geq - 2 \cdot \mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)] + \log 4.
+\inf_{\theta} \mathcal{L}(\theta) \geq - 2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] + \log 4.
 $$
 
 Firstly, we have 
 
 $$
-\begin{align\*}
-  \sup\_{\theta} &
-  \mathbb{E}\_{p(x)} [ \log D\_{\theta} (x) ] +
-  \mathbb{E}\_{q(x)} [ \log(1-D\_{\theta} (x)) ] \newline 
+\begin{align*}
+  \sup_{\theta} &
+  \mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] +
+  \mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline 
   & =
-  \mathbb{E}\_{p(x)} [ \log \mathcal{P}(y=1 \mid x) ] +
-  \mathbb{E}\_{q(x)} [ \log \mathcal{P}(y=0 \mid x) ] \newline 
+  \mathbb{E}_{p(x)} [ \log \mathcal{P}(y=1 \mid x) ] +
+  \mathbb{E}_{q(x)} [ \log \mathcal{P}(y=0 \mid x) ] \newline 
   & =
-  \mathbb{E}\_{p(x)} \left [ \log \frac{p(x)}{p(x) + q(x)} \right ] +
-  \mathbb{E}\_{q(x)} \left [ \log \frac{q(x)}{p(x) + q(x)} \right ] \newline 
+  \mathbb{E}_{p(x)} \left [ \log \frac{p(x)}{p(x) + q(x)} \right ] +
+  \mathbb{E}_{q(x)} \left [ \log \frac{q(x)}{p(x) + q(x)} \right ] \newline 
   & =
-  \mathbb{E}\_{p(x)} \left [ \log \frac{1}{2} \frac{p(x)}{m(x)} \right ] +
-  \mathbb{E}\_{q(x)} \left [ \log \frac{1}{2} \frac{q(x)}{m(x)} \right ] \newline 
+  \mathbb{E}_{p(x)} \left [ \log \frac{1}{2} \frac{p(x)}{m(x)} \right ] +
+  \mathbb{E}_{q(x)} \left [ \log \frac{1}{2} \frac{q(x)}{m(x)} \right ] \newline 
   & =
-  \mathbb{E}\_{p(x)} \left [ \log \frac{p(x)}{m(x)} \right ] +
-  \mathbb{E}\_{q(x)} \left [ \log \frac{q(x)}{m(x)} \right ] - 2 \log 2 \newline
-  & = 2 \cdot \mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)] - \log 4.
-\end{align\*}
+  \mathbb{E}_{p(x)} \left [ \log \frac{p(x)}{m(x)} \right ] +
+  \mathbb{E}_{q(x)} \left [ \log \frac{q(x)}{m(x)} \right ] - 2 \log 2 \newline
+  & = 2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] - \log 4.
+\end{align*}
 $$
 
 Therefore,
 
 $$
-2 \cdot \mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)] - \log 4 
+2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] - \log 4 
 \geq 
-\sup\_{\theta} 
-\mathbb{E}\_{p(x)} [ \log D\_{\theta} (x) ] +
-\mathbb{E}\_{q(x)} [ \log(1-D\_{\theta} (x)) ].
+\sup_{\theta} 
+\mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] +
+\mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ].
 $$
 
 Negating both sides, we get
 
 $$
-\begin{align\*}
-  \- 2 \cdot \mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)] + \log 4
+\begin{align*}
+  - 2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] + \log 4
   \leq &
-  \- \sup\_{\theta} 
-  \mathbb{E}\_{p(x)} [ \log D\_{\theta} (x) ] + 
-  \mathbb{E}\_{q(x)} [ \log(1-D\_{\theta} (x)) ] \newline
-  = & \inf\_{\theta} 
-  \- \mathbb{E}\_{p(x)} [ \log D\_{\theta} (x) ] 
-  \- \mathbb{E}\_{q(x)} [ \log(1-D\_{\theta} (x)) ] \newline
-  = & \inf\_{\theta} \mathcal{L}(\theta),
-\end{align\*}
+  - \sup_{\theta} 
+  \mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] + 
+  \mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline
+  = & \inf_{\theta} 
+  - \mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] 
+  - \mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ] \newline
+  = & \inf_{\theta} \mathcal{L}(\theta),
+\end{align*}
 $$
 
 as required.
@@ -842,14 +842,14 @@ Using convex analysis, one can actually show that for any $f$-divergence, we
 have the lower bound[^nguyen2010estimating]
 
 $$
-\mathcal{D}\_f[p(x) || q(x)]
+\mathcal{D}_f[p(x) || q(x)]
 \geq 
-\sup\_{\theta} 
-\mathbb{E}\_{p(x)} [ f'(r\_{\theta}(x)) ] -
-\mathbb{E}\_{q(x)} [ f^{\star}(f'(r\_{\theta}(x))) ],
+\sup_{\theta} 
+\mathbb{E}_{p(x)} [ f'(r_{\theta}(x)) ] -
+\mathbb{E}_{q(x)} [ f^{\star}(f'(r_{\theta}(x))) ],
 $$
 
-with equality exactly when $r\_{\theta}(x) = r^{\*}(x)$. 
+with equality exactly when $r_{\theta}(x) = r^{*}(x)$. 
 Importantly, this lower bound can be computed without requiring the densities of 
 $p(x)$ or $q(x)$---only their samples are needed.
 
@@ -857,28 +857,28 @@ In the special case of $f(u) = u \log u - (u + 1) \log (u + 1)$, we recover the
 binary cross-entropy loss and the previous result, as expected,
 
 $$
-\begin{align\*}
-  \mathcal{D}\_f[p(x) || q(x)]
-  & = 2 \cdot \mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)] - \log 4 \newline
-  & \geq \sup\_{\theta} 
-  \mathbb{E}\_{p(x)} [ \log \sigma ( \log r\_{\theta} (x) ) ] +
-  \mathbb{E}\_{q(x)} [ \log(1 - \sigma ( \log r\_{\theta} (x) )) ] \newline
-  & = \sup\_{\theta} 
-  \mathbb{E}\_{p(x)} [ \log D\_{\theta} (x) ] +
-  \mathbb{E}\_{q(x)} [ \log(1-D\_{\theta} (x)) ].
-\end{align\*}
+\begin{align*}
+  \mathcal{D}_f[p(x) || q(x)]
+  & = 2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] - \log 4 \newline
+  & \geq \sup_{\theta} 
+  \mathbb{E}_{p(x)} [ \log \sigma ( \log r_{\theta} (x) ) ] +
+  \mathbb{E}_{q(x)} [ \log(1 - \sigma ( \log r_{\theta} (x) )) ] \newline
+  & = \sup_{\theta} 
+  \mathbb{E}_{p(x)} [ \log D_{\theta} (x) ] +
+  \mathbb{E}_{q(x)} [ \log(1-D_{\theta} (x)) ].
+\end{align*}
 $$
 
 Alternately, in the special case of $f(u) = u \log u$, we get
 
 $$
-\begin{align\*}
-  \mathcal{D}\_f[p(x) || q(x)]
-  & = \mathcal{D}\_{\mathrm{KL}}[p(x) || q(x)] \newline
-  & \geq \sup\_{\theta} 
-  \mathbb{E}\_{p(x)} [ \log r\_{\theta} (x) ] -
-  \mathbb{E}\_{q(x)} [ r\_{\theta} (x) - 1 ].
-\end{align\*}
+\begin{align*}
+  \mathcal{D}_f[p(x) || q(x)]
+  & = \mathcal{D}_{\mathrm{KL}}[p(x) || q(x)] \newline
+  & \geq \sup_{\theta} 
+  \mathbb{E}_{p(x)} [ \log r_{\theta} (x) ] -
+  \mathbb{E}_{q(x)} [ r_{\theta} (x) - 1 ].
+\end{align*}
 $$
 
 This gives us *yet* another way to estimate the KL divergence between 
@@ -954,15 +954,15 @@ for their comments and suggestions.
 [^1]: 
     The (forward) KL divergence can be recovered with 
     $$
-    f\_{\mathrm{KL}}(u) := u \log u.
+    f_{\mathrm{KL}}(u) := u \log u.
     $$
     This is easy to verify,
     $$
-    \begin{align\*}
-      \mathcal{D}\_{\mathrm{KL}}[p(x) || q(x)] & := 
-      \mathbb{E}\_{p(x)} \left [ \log \left ( \frac{p(x)}{q(x)} \right ) \right ] \newline
-      & = \mathbb{E}\_{q(x)} \left [  \frac{p(x)}{q(x)} \log \left ( \frac{p(x)}{q(x)} \right ) \right ] \newline
-      & = \mathbb{E}\_{q(x)} \left [ f\_{\mathrm{KL}} \left ( \frac{p(x)}{q(x)} \right ) \right ].
-    \end{align\*}
+    \begin{align*}
+      \mathcal{D}_{\mathrm{KL}}[p(x) || q(x)] & := 
+      \mathbb{E}_{p(x)} \left [ \log \left ( \frac{p(x)}{q(x)} \right ) \right ] \newline
+      & = \mathbb{E}_{q(x)} \left [  \frac{p(x)}{q(x)} \log \left ( \frac{p(x)}{q(x)} \right ) \right ] \newline
+      & = \mathbb{E}_{q(x)} \left [ f_{\mathrm{KL}} \left ( \frac{p(x)}{q(x)} \right ) \right ].
+    \end{align*}
     $$
-[^2]: Note that `jensen_shannon` with `self_normalized=False` (default), corresponds to $2 \cdot \mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)] - \log 4$, while `self_normalized=True` corresponds to $\mathcal{D}\_{\mathrm{JS}}[p(x) || q(x)]$.
+[^2]: Note that `jensen_shannon` with `self_normalized=False` (default), corresponds to $2 \cdot \mathcal{D}_{\mathrm{JS}}[p(x) || q(x)] - \log 4$, while `self_normalized=True` corresponds to $\mathcal{D}_{\mathrm{JS}}[p(x) || q(x)]$.

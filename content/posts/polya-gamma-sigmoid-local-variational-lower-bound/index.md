@@ -103,8 +103,8 @@ The model joint factorizes as
 $$
 \begin{align}
 p(\mathbf{y}, \boldsymbol{\omega}, \boldsymbol{\beta}) &= 
-\prod\_{n=1}^N p(y\_n, \omega\_n, \boldsymbol{\beta}) \newline &=
-p(\boldsymbol{\beta}) \prod\_{n=1}^N p(y\_n | \omega\_n, \boldsymbol{\beta}) p(\omega\_n) 
+\prod_{n=1}^N p(y_n, \omega_n, \boldsymbol{\beta}) \newline &=
+p(\boldsymbol{\beta}) \prod_{n=1}^N p(y_n | \omega_n, \boldsymbol{\beta}) p(\omega_n) 
 \end{align}
 $$
 
@@ -117,17 +117,17 @@ $$
 
 The prior on auxiliary variables
 $$
-p(\omega\_n) = \mathrm{PG}(\omega\_n | 1, 0)
+p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0)
 $$
 
 ### Likelihood
 
 $$
-p(y\_n | \omega\_n, \boldsymbol{\beta}) = 
-\frac{1}{2} \exp{\left\\{-\frac{\omega\_n}{2}\left(\psi\_n^2 - 2\psi\_n\frac{\kappa\_n}{\omega\_n}\right)\right\\}}
+p(y_n | \omega_n, \boldsymbol{\beta}) = 
+\frac{1}{2} \exp{\left\{-\frac{\omega_n}{2}\left(\psi_n^2 - 2\psi_n\frac{\kappa_n}{\omega_n}\right)\right\}}
 $$
-where $\kappa\_n = y\_n - \frac{1}{2}$ and $\psi\_n = \boldsymbol{\beta}^{\top} \boldsymbol{\phi}\_n$
-for $\boldsymbol{\phi}\_n = \phi(\mathbf{x}\_n)$.
+where $\kappa_n = y_n - \frac{1}{2}$ and $\psi_n = \boldsymbol{\beta}^{\top} \boldsymbol{\phi}_n$
+for $\boldsymbol{\phi}_n = \phi(\mathbf{x}_n)$.
 
 > [!NOTE]
 > Recall that, crucially, we recover the standard Bernoulli likelihood by 
@@ -149,39 +149,39 @@ Approximate posterior $p(\boldsymbol{\beta}, \boldsymbol{\omega} | \mathbf{y})$
 ### Variational distribution
 $$
 q(\boldsymbol{\beta}, \boldsymbol{\omega}; \boldsymbol{\xi}) = 
-q(\boldsymbol{\beta}) \prod\_{n=1}^N q(\omega\_n; \xi\_n)
+q(\boldsymbol{\beta}) \prod_{n=1}^N q(\omega_n; \xi_n)
 $$
 
 variational distribution with local variational parameter $\xi$
 $$
-q(\omega\_n; \xi\_n) \doteq \mathrm{PG}(\omega\_n | 1, \xi\_n)
-\doteq \cosh{\left(\frac{\xi\_n}{2}\right)} \exp{\left(-\frac{\xi\_n^2}{2}\omega\_n\right)} \mathrm{PG}(\omega\_n | 1, 0) 
+q(\omega_n; \xi_n) \doteq \mathrm{PG}(\omega_n | 1, \xi_n)
+\doteq \cosh{\left(\frac{\xi_n}{2}\right)} \exp{\left(-\frac{\xi_n^2}{2}\omega_n\right)} \mathrm{PG}(\omega_n | 1, 0) 
 $$
 
 > [!NOTE]
 > Note the first moment of the Polya-gamma $\mathrm{PG}(\omega | b, c)$ 
 > distribution is related to the function $\lambda$ defined above
 > $$
-> \mathbb{E}\_{\mathrm{PG}(\omega | b, c)}[\omega] = \frac{b}{2c} \tanh{\left(\frac{c}{2}\right)} = b \cdot \lambda(c).
+> \mathbb{E}_{\mathrm{PG}(\omega | b, c)}[\omega] = \frac{b}{2c} \tanh{\left(\frac{c}{2}\right)} = b \cdot \lambda(c).
 > $$
 > In particular, note that
 > $$
-> \mathbb{E}\_{\mathrm{PG}(\omega | 1, c)}[\omega] = \lambda(c).
+> \mathbb{E}_{\mathrm{PG}(\omega | 1, c)}[\omega] = \lambda(c).
 > $$
 
 Minimize $\mathrm{KL}[q(\boldsymbol{\beta}, \boldsymbol{\omega}; \boldsymbol{\xi}) || p(\boldsymbol{\beta}, \boldsymbol{\omega} | \mathbf{y})]$ through maximization of the evidence lower bound (ELBO).
 
 $$
-\mathcal{L}(\xi\_n) \doteq 
-\mathbb{E}\_{q(\boldsymbol{\beta}, \omega\_n; \xi\_n)}[\log{p(y\_n | \omega\_n, \boldsymbol{\beta})}] - 
-\mathrm{KL}[q(\boldsymbol{\beta}, \omega\_n; \xi\_n) || p(\boldsymbol{\beta}, \omega\_n)]
+\mathcal{L}(\xi_n) \doteq 
+\mathbb{E}_{q(\boldsymbol{\beta}, \omega_n; \xi_n)}[\log{p(y_n | \omega_n, \boldsymbol{\beta})}] - 
+\mathrm{KL}[q(\boldsymbol{\beta}, \omega_n; \xi_n) || p(\boldsymbol{\beta}, \omega_n)]
 $$
 
 We can write 
 
 $$
-\mathcal{L}(\xi\_n) = \mathbb{E}\_{q(\boldsymbol{\beta})}[
-  \log{h(y\_n, \xi\_n, \boldsymbol{\beta})} + \log{p(\boldsymbol{\beta})} - 
+\mathcal{L}(\xi_n) = \mathbb{E}_{q(\boldsymbol{\beta})}[
+  \log{h(y_n, \xi_n, \boldsymbol{\beta})} + \log{p(\boldsymbol{\beta})} - 
   \log{q(\boldsymbol{\beta})}]
 $$
 where
@@ -191,26 +191,26 @@ $$
 and
 $$
 H(y, \xi, \boldsymbol{\beta}) \doteq 
-\mathbb{E}\_{q(\omega;\xi)}[\log{p(y | \omega, \boldsymbol{\beta})}] - \mathrm{KL}[q(\omega;\xi) || p(\omega)]
+\mathbb{E}_{q(\omega;\xi)}[\log{p(y | \omega, \boldsymbol{\beta})}] - \mathrm{KL}[q(\omega;\xi) || p(\omega)]
 $$
 
 
 $$
 \begin{align}
   H(y, \xi, \boldsymbol{\beta})
-  &= \mathbb{E}\_{q(\omega;\xi)}[\log{p(y | \omega, \boldsymbol{\beta})} + \log{p(\omega)} - \log{q(\omega;\xi)}] \newline
-  &= \mathbb{E}\_{q(\omega;\xi)}
+  &= \mathbb{E}_{q(\omega;\xi)}[\log{p(y | \omega, \boldsymbol{\beta})} + \log{p(\omega)} - \log{q(\omega;\xi)}] \newline
+  &= \mathbb{E}_{q(\omega;\xi)}
   \left [ - \frac{\omega}{2} \left( \psi^2 - 2\psi\frac{\kappa}{\omega}\right) - \log{2}
           + \log{\mathrm{PG}(1, 0)} - \log{\mathrm{PG}(1, 0)} + \frac{\xi^2}{2} \omega - \log{\cosh{\left(\frac{\xi}{2}\right)}} 
   \right] \newline
-  &= \mathbb{E}\_{q(\omega;\xi)}
+  &= \mathbb{E}_{q(\omega;\xi)}
   \left [ - \frac{\omega}{2} \left( \psi^2 - 2\psi\frac{\kappa}{\omega}\right) 
           + \frac{\xi^2}{2} \omega + \log{\sigma(\xi)} - \frac{\xi}{2}
   \right ] \newline
-  &= \mathbb{E}\_{q(\omega;\xi)}
+  &= \mathbb{E}_{q(\omega;\xi)}
   \left [ y \psi - \frac{\psi + \xi}{2} - \frac{\omega}{2} (\psi^2 - \xi^2) + \log{\sigma(\xi)} \right ] \newline
   &= y \psi - \frac{\psi + \xi}{2}
-    - \frac{1}{2} (\psi^2 - \xi^2) \mathbb{E}\_{q(\omega;\xi)}[\omega]  
+    - \frac{1}{2} (\psi^2 - \xi^2) \mathbb{E}_{q(\omega;\xi)}[\omega]  
     + \log{\sigma(\xi)} \newline
   &= y \psi - \frac{\psi + \xi}{2}
     - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)
@@ -245,17 +245,17 @@ $$
 
 Let
 $$
-\boldsymbol{\Lambda} = \mathrm{diag}(\lambda(\xi\_1) \cdots \lambda(\xi\_N))
+\boldsymbol{\Lambda} = \mathrm{diag}(\lambda(\xi_1) \cdots \lambda(\xi_N))
 $$
 
 $$
 \begin{align}
 \log{[p(y | \boldsymbol{\beta}) p(\boldsymbol{\beta})]} & \geq 
 \log{[h(y, \xi, \boldsymbol{\beta}) p(\boldsymbol{\beta})]} \newline & =
-\log{p(\boldsymbol{\beta})} + \sum\_{n=1}^N \\{ y\_n \psi\_n - \frac{\psi\_n + \xi\_n}{2} - \frac{\lambda(\xi\_n)}{2} (\psi\_n^2 - \xi\_n^2) + \log{\sigma(\xi\_n)} \\} \newline & =
-\log{p(\boldsymbol{\beta})} + \sum\_{n=1}^N \\{ \psi\_n \kappa\_n - \frac{\lambda(\xi\_n)}{2} \psi\_n^2 \\} + \mathrm{const} \newline & =
-\log{p(\boldsymbol{\beta})} + \sum\_{n=1}^N \\{ \boldsymbol{\beta}^{\top} \boldsymbol{\phi}\_n \kappa\_n - 
-\frac{\lambda(\xi\_n)}{2} \boldsymbol{\beta}^{\top} \left(\boldsymbol{\phi}\_n \boldsymbol{\phi}\_n^{\top}\right) \boldsymbol{\beta} \\} + \mathrm{const} \newline & = - 
+\log{p(\boldsymbol{\beta})} + \sum_{n=1}^N \{ y_n \psi_n - \frac{\psi_n + \xi_n}{2} - \frac{\lambda(\xi_n)}{2} (\psi_n^2 - \xi_n^2) + \log{\sigma(\xi_n)} \} \newline & =
+\log{p(\boldsymbol{\beta})} + \sum_{n=1}^N \{ \psi_n \kappa_n - \frac{\lambda(\xi_n)}{2} \psi_n^2 \} + \mathrm{const} \newline & =
+\log{p(\boldsymbol{\beta})} + \sum_{n=1}^N \{ \boldsymbol{\beta}^{\top} \boldsymbol{\phi}_n \kappa_n - 
+\frac{\lambda(\xi_n)}{2} \boldsymbol{\beta}^{\top} \left(\boldsymbol{\phi}_n \boldsymbol{\phi}_n^{\top}\right) \boldsymbol{\beta} \} + \mathrm{const} \newline & = - 
 \frac{1}{2} (\boldsymbol{\beta} - \mathbf{m})^{\top} \mathbf{S}^{-1} (\boldsymbol{\beta} - \mathbf{m}) + \boldsymbol{\beta}^{\top} \boldsymbol{\Phi}^{\top} \kappa - 
 \frac{1}{2} \boldsymbol{\beta}^{\top} \left(\boldsymbol{\Phi}^{\top} \boldsymbol{\Lambda} \boldsymbol{\Phi}\right) \boldsymbol{\beta} + \mathrm{const} \newline & = - 
 \frac{1}{2} \boldsymbol{\beta}^{\top} \left(\mathbf{S}^{-1} + \boldsymbol{\Phi}^{\top} \boldsymbol{\Lambda} \boldsymbol{\Phi}\right) \boldsymbol{\beta} +
@@ -291,7 +291,7 @@ $$
 
 $$
 h(y, \xi, \boldsymbol{\beta}) \propto 
-\exp{\left\\{-\frac{\lambda(\xi)}{2}\left(\psi - \frac{\kappa}{\lambda(\xi)}\right)^2\right\\}}
+\exp{\left\{-\frac{\lambda(\xi)}{2}\left(\psi - \frac{\kappa}{\lambda(\xi)}\right)^2\right\}}
 $$
 
 
@@ -300,11 +300,11 @@ $$
 Second, let us define a prior over auxiliary variables $\boldsymbol{\omega}$ that 
 factorize as
 $$
-p(\boldsymbol{\omega}) = \prod\_{n=1}^N p(\omega\_n) 
+p(\boldsymbol{\omega}) = \prod_{n=1}^N p(\omega_n) 
 $$
-where each factor $p(\omega\_n)$ is a Pólya-gamma density
+where each factor $p(\omega_n)$ is a Pólya-gamma density
 $$
-p(\omega\_n) = \mathrm{PG}(\omega\_n | 1, 0),
+p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0),
 $$
 defined as an infinite [convolution](https://en.wikipedia.org/wiki/Convolution_of_probability_distributions#See_also) of gamma distributions :
 
@@ -314,19 +314,19 @@ defined as an infinite [convolution](https://en.wikipedia.org/wiki/Convolution_o
 > A random variable $\omega$ has a Pólya-gamma distribution with parameters $b > 0$ 
 > and $c \in \mathbb{R}$, denoted $\omega \sim \mathrm{PG}(b, c)$, if
 > $$
-> \mathrm{PG}(b, c) = \frac{1}{2 \pi^2} \sum\_{k=1}^{\infty} 
-> \frac{g\_k}{\left (k - \frac{1}{2} \right )^2 + \left ( \frac{c}{2\pi} \right )^2}
+> \mathrm{PG}(b, c) = \frac{1}{2 \pi^2} \sum_{k=1}^{\infty} 
+> \frac{g_k}{\left (k - \frac{1}{2} \right )^2 + \left ( \frac{c}{2\pi} \right )^2}
 > $$
-> where the $g\_k \sim \mathrm{Ga}(b, 1)$ are independent gamma random variables.
+> where the $g_k \sim \mathrm{Ga}(b, 1)$ are independent gamma random variables.
 
 #### Property I: Recovering the original model
 
-First we show that we can recover the original likelihood $p(y\_n | f\_n)$ 
+First we show that we can recover the original likelihood $p(y_n | f_n)$ 
 by integrating out $\boldsymbol{\omega}$.
-Before we proceed, note that the $p(y\_n | f\_n)$ can be expressed more 
+Before we proceed, note that the $p(y_n | f_n)$ can be expressed more 
 succinctly as
 $$
-p(y\_n | f\_n) = \frac{e^{y\_n f\_n}}{1 + e^{f\_n}}.
+p(y_n | f_n) = \frac{e^{y_n f_n}}{1 + e^{f_n}}.
 $$
 Refer to [Appendix I]({{< relref "#i" >}}) for derivations.
 Next, note the following property of Pólya-gamma variables:
@@ -339,36 +339,36 @@ Next, note the following property of Pólya-gamma variables:
 > $$
 > \frac{\left (e^{u} \right )^a}{\left (1 + e^{u} \right )^b} = 
 > \frac{1}{2^b} \exp{(\kappa u)} \
-> \int\_0^\infty \exp{\left ( - \frac{u^2}{2} \omega \right )} 
+> \int_0^\infty \exp{\left ( - \frac{u^2}{2} \omega \right )} 
 > p(\omega) d\omega,
 > $$
 > where $\kappa = a - \frac{b}{2}$ and $p(\omega) = \mathrm{PG}(\omega | b, 0)$.
 
-Therefore, by substituting $\kappa = \kappa\_n, a = y\_n, b = 1$ and $u = f\_n$ 
+Therefore, by substituting $\kappa = \kappa_n, a = y_n, b = 1$ and $u = f_n$ 
 we get
 $$
 \begin{align}
-\int p(y\_n, \omega\_n | f\_n) d\omega\_n &=
-\int p(y\_n | f\_n, \omega\_n) p(\omega\_n) d\omega\_n \newline &= 
-\frac{1}{2} \int \exp{\left \\{ - \frac{\omega\_n}{2} \left (f\_n^2 - 
-                             2 f\_n \frac{\kappa\_n}{\omega\_n} \right ) \right \\}} p(\omega\_n) d\omega\_n \newline &= 
-\frac{1}{2} \exp{(\kappa\_n f\_n)} 
-\int \exp{\left ( - \frac{f\_n^2}{2} \omega\_n \right )} p(\omega\_n) d\omega\_n \newline &= 
-\frac{\left (e^{f\_n} \right )^{y\_n}}{1 + e^{f\_n}} = p(y\_n | f\_n)
+\int p(y_n, \omega_n | f_n) d\omega_n &=
+\int p(y_n | f_n, \omega_n) p(\omega_n) d\omega_n \newline &= 
+\frac{1}{2} \int \exp{\left \{ - \frac{\omega_n}{2} \left (f_n^2 - 
+                             2 f_n \frac{\kappa_n}{\omega_n} \right ) \right \}} p(\omega_n) d\omega_n \newline &= 
+\frac{1}{2} \exp{(\kappa_n f_n)} 
+\int \exp{\left ( - \frac{f_n^2}{2} \omega_n \right )} p(\omega_n) d\omega_n \newline &= 
+\frac{\left (e^{f_n} \right )^{y_n}}{1 + e^{f_n}} = p(y_n | f_n)
 \end{align}
 $$
 as required.
 
 #### Property II: Gaussian-Gaussian conjugacy
 
-Let us define the diagonal matrix $\boldsymbol{\Omega} = \mathrm{diag}(\omega\_1 \cdots \omega\_n)$ and vector $\mathbf{z} = \boldsymbol{\Omega}^{-1} \boldsymbol{\kappa}$. 
-More simply, $\mathbf{z}$ is the vector with $n$th element $z\_n = {\kappa\_n} / {\omega\_n}$.
+Let us define the diagonal matrix $\boldsymbol{\Omega} = \mathrm{diag}(\omega_1 \cdots \omega_n)$ and vector $\mathbf{z} = \boldsymbol{\Omega}^{-1} \boldsymbol{\kappa}$. 
+More simply, $\mathbf{z}$ is the vector with $n$th element $z_n = {\kappa_n} / {\omega_n}$.
 Hence, by [completing the square](https://mathworld.wolfram.com/CompletingtheSquare.html), 
-the per-datapoint conditional likelihood $p(y\_n | f\_n, \omega\_n)$ above can be written as
+the per-datapoint conditional likelihood $p(y_n | f_n, \omega_n)$ above can be written as
 $$
 \begin{align}
-p(y\_n | f\_n, \omega\_n) & \propto
-\exp{\left \\{ - \frac{\omega\_n}{2} \left (f\_n - \frac{\kappa\_n}{\omega\_n} \right )^2 \right \\}} \newline & = \exp{\left \\{ - \frac{\omega\_n}{2} \left (f\_n - z\_n \right )^2 \right \\}}
+p(y_n | f_n, \omega_n) & \propto
+\exp{\left \{ - \frac{\omega_n}{2} \left (f_n - \frac{\kappa_n}{\omega_n} \right )^2 \right \}} \newline & = \exp{\left \{ - \frac{\omega_n}{2} \left (f_n - z_n \right )^2 \right \}}
 \end{align}
 $$
 Importantly, this implies that the conditional likelihood over all 
@@ -499,49 +499,49 @@ It would, however, have been rather tedious and mundane.
 > To make this more concrete, let us revisit the Gaussian process prior we 
 > discussed earlier, namely,
 > $$
-> p(\mathbf{f} | \mathbf{X}) = \mathcal{N}(\mathbf{m}, \mathbf{K}\_X).
+> p(\mathbf{f} | \mathbf{X}) = \mathcal{N}(\mathbf{m}, \mathbf{K}_X).
 > $$
-> By substituting $\mathbf{S}^{-1} = \mathbf{K}\_X$ from before, we obtain
+> By substituting $\mathbf{S}^{-1} = \mathbf{K}_X$ from before, we obtain
 > $$
 > p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}) = 
-> \mathcal{N}(\mathbf{f} | \boldsymbol{\Sigma} \left ( \mathbf{K}\_X^{-1} \mathbf{m} + \boldsymbol{\kappa} \right ), \boldsymbol{\Sigma}),
+> \mathcal{N}(\mathbf{f} | \boldsymbol{\Sigma} \left ( \mathbf{K}_X^{-1} \mathbf{m} + \boldsymbol{\kappa} \right ), \boldsymbol{\Sigma}),
 > $$
-> where $\boldsymbol{\Sigma} = \left (\mathbf{K}\_X^{-1} + \boldsymbol{\Omega} \right )^{-1}.$
+> where $\boldsymbol{\Sigma} = \left (\mathbf{K}_X^{-1} + \boldsymbol{\Omega} \right )^{-1}.$
 
 #### Posterior over auxiliary variables
 
 The posterior over the auxiliary latent variables $\boldsymbol{\omega}$ 
 conditioned on the latent function values $\mathbf{f}$ factorizes as
 $$
-p(\boldsymbol{\omega}| \mathbf{f}) = \prod\_{n=1}^{N} p(\omega\_n | f\_n),
+p(\boldsymbol{\omega}| \mathbf{f}) = \prod_{n=1}^{N} p(\omega_n | f_n),
 $$
 where each factor
 $$
-p(\omega\_n | f\_n) = 
-\frac{p(f\_n, \omega\_n)}{\int p(f\_n, \omega\_n) d\omega\_n} \propto 
-p(f\_n, \omega\_n).
+p(\omega_n | f_n) = 
+\frac{p(f_n, \omega_n)}{\int p(f_n, \omega_n) d\omega_n} \propto 
+p(f_n, \omega_n).
 $$
-Now, the joint factorizes as $p(f\_n, \omega\_n) = p(f\_n | \omega\_n) p(\omega\_n)$ where
+Now, the joint factorizes as $p(f_n, \omega_n) = p(f_n | \omega_n) p(\omega_n)$ where
 $$
-p(f\_n | \omega\_n) = \exp{\left (-\frac{f\_n^2}{2}\omega\_n \right )},
+p(f_n | \omega_n) = \exp{\left (-\frac{f_n^2}{2}\omega_n \right )},
 \quad
 \text{and}
 \quad
-p(\omega\_n) = \mathrm{PG}(\omega\_n | 1, 0).
+p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0).
 $$
 Finally, by the [exponential-tilting property](https://en.wikipedia.org/wiki/Exponential_tilting) 
 of the Pólya-gamma distribution, we have
 $$
-p(f\_n, \omega\_n) = 
-\mathrm{PG}(\omega\_n | 1, 0) \times
-\exp{\left (-\frac{f\_n^2}{2}\omega\_n \right )} = 
-\mathrm{PG}(\omega\_n | 1, f\_n).
+p(f_n, \omega_n) = 
+\mathrm{PG}(\omega_n | 1, 0) \times
+\exp{\left (-\frac{f_n^2}{2}\omega_n \right )} = 
+\mathrm{PG}(\omega_n | 1, f_n).
 $$
 Hence, all in all, we have
 $$
-p(\omega\_n | f\_n) \propto \mathrm{PG}(\omega\_n | 1, f\_n).
+p(\omega_n | f_n) \propto \mathrm{PG}(\omega_n | 1, f_n).
 $$
-We have omitted the normalizing constant $\int p(f\_n, \omega\_n) d\omega\_n$
+We have omitted the normalizing constant $\int p(f_n, \omega_n) d\omega_n$
 from our discussion for the sake of brevity since it is not required to carry 
 out inference using Gibbs sampling.
 If you're interested in calculating it, 
@@ -631,10 +631,10 @@ thus providing a ground-truth yardstick by which to measure the quality of our
 resulting predictions.
 
 The class-membership probability $p(y = 1 | x)$ is shown in the figure below as
-the black curve, along with the dataset $\mathcal{D}\_N = \\{(\mathbf{x}\_n, y\_n)\\}\_{n=1}^N$
+the black curve, along with the dataset $\mathcal{D}_N = \{(\mathbf{x}_n, y_n)\}_{n=1}^N$
 where positive instances are colored red and negative instances are colored blue.
 
-{{< figure src="figures/class_prob_true_paper_1500x927.png" title="Classification dataset $\mathcal{D}\_N = \\{(\mathbf{x}\_n, y\_n)\\}\_{n=1}^N$ and the true class-posterior probability." numbered="true" >}}
+{{< figure src="figures/class_prob_true_paper_1500x927.png" title="Classification dataset $\mathcal{D}_N = \{(\mathbf{x}_n, y_n)\}_{n=1}^N$ and the true class-posterior probability." numbered="true" >}}
 
 ### Prior 
 
@@ -643,7 +643,7 @@ function $\phi: \mathbb{R}^{D} \to \mathbb{R}^{K}$ that projects
 $D$-dimensional input vectors into a $K$-dimensional vector space. 
 Accordingly, we introduce matrix $\boldsymbol{\Phi} \in \mathbb{R}^{N \times K}$ 
 such that the $n$th column of $\boldsymbol{\Phi}^{\top}$ consists of the 
-vector $\phi(\mathbf{x}\_n)$.
+vector $\phi(\mathbf{x}_n)$.
 Hence, we assume *a priori* that the latent function is of the form  
 $$
 f(\mathbf{x}) = \boldsymbol{\beta}^{\top} \phi(\mathbf{x}),
@@ -676,7 +676,7 @@ p(\boldsymbol{\beta}) = \mathcal{N}(\mathbf{0}, \alpha^{-1} \mathbf{I}),
 $$
 and the prior over each local auxiliary latent variable as before,
 $$
-p(\omega\_n) = \mathrm{PG}(\omega\_n | 1, 0).
+p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0).
 $$
 Since we have analytic forms for the conditional posteriors, we don't need to
 implement the priors explicitly. 
@@ -754,12 +754,12 @@ def gassian_sample(mean, cov, random_state=None):
 
 #### Posterior over auxiliary variables
 
-The conditional posterior over the local auxiliary variable $\omega\_n$ is 
+The conditional posterior over the local auxiliary variable $\omega_n$ is 
 defined as before, except we instead condition on weights $\boldsymbol{\beta}$ 
-and substitute occurrences of $f\_n$ with $\boldsymbol{\beta}^{\top} \phi(\mathbf{x}\_n)$,
+and substitute occurrences of $f_n$ with $\boldsymbol{\beta}^{\top} \phi(\mathbf{x}_n)$,
 $$
-p(\omega\_n | \boldsymbol{\beta}) \propto 
-\mathrm{PG}(\omega\_n | 1, \boldsymbol{\beta}^{\top} \phi(\mathbf{x}\_n)).
+p(\omega_n | \boldsymbol{\beta}) \propto 
+\mathrm{PG}(\omega_n | 1, \boldsymbol{\beta}^{\top} \phi(\mathbf{x}_n)).
 $$
 
 Let us implement a function to compute the parameters of the posterior 
@@ -831,21 +831,21 @@ counter $t$ along a perceptually uniform colormap.
 
 First, we show the sampled weight vector $\boldsymbol{\beta}^{(t)} \in \mathbb{R}^K$ 
 where we have set $K = 3$.
-We plot the $i$th entry $\beta\_i^{(t)}$ against the $j$th entry $\beta\_j^{(t)}$ 
+We plot the $i$th entry $\beta_i^{(t)}$ against the $j$th entry $\beta_j^{(t)}$ 
 for all $i < j$ and $0 < j < K$.
 {{< figure src="figures/beta_paper_600x600.png" title="Parameter $\boldsymbol{\beta}^{(t)}$ samples as Gibbs sampling iteration $t$ increases." numbered="true" >}}
-We find a strong correlation between $\beta\_1$ and $\beta\_2$, the 
+We find a strong correlation between $\beta_1$ and $\beta_2$, the 
 coefficients associated with the linear and quadratic terms of our augmented 
 feature representation, respectively. 
-Furthermore, we find $\beta\_1$ to consistently have a relatively large 
+Furthermore, we find $\beta_1$ to consistently have a relatively large 
 magnitude.
 
 Second, we show the sampled auxiliary latent variables $\boldsymbol{\omega}^{(t)}$ by 
-plotting the pairs $(x\_n, \omega\_n^{(t)})$.
+plotting the pairs $(x_n, \omega_n^{(t)})$.
 
-{{< figure src="figures/omega_paper_1500x927.png" title="Auxiliary variable $\omega\_n^{(t)}$ samples as Gibbs sampling iteration $t$ increases. For visualization purposes, each $\omega\_n^{(t)}$ is placed at its corresponding input location $x\_n$ along the  horizontal axis." numbered="true" >}}
+{{< figure src="figures/omega_paper_1500x927.png" title="Auxiliary variable $\omega_n^{(t)}$ samples as Gibbs sampling iteration $t$ increases. For visualization purposes, each $\omega_n^{(t)}$ is placed at its corresponding input location $x_n$ along the  horizontal axis." numbered="true" >}}
 
-As expected, we find longer-tailed distributions in the variables $\omega\_n$ 
+As expected, we find longer-tailed distributions in the variables $\omega_n$ 
 that are associated with negative examples.
 
 Finally, we plot the sampled class-membership probability predictions
@@ -1055,14 +1055,14 @@ $$
 Therefore, we have
 $$
 \begin{align}
-p(y\_n | f\_n) &= 
-\left ( \frac{e^{f\_n}}{1+e^{f\_n}} \right )^{y\_n}
-\left ( \frac{\left (1+e^{f\_n} \right ) - e^{f\_n}}{1+e^{f\_n}} \right )^{1-y\_n} \newline &= 
-\left ( \frac{e^{f\_n}}{1+e^{f\_n}} \right )^{y\_n}
-\left ( \frac{1}{1+e^{f\_n}} \right )^{1-y\_n} \newline &= 
-\left (e^{f\_n} \right )^{y\_n} \left ( \frac{1}{1+e^{f\_n}} \right )^{y\_n}
-\left ( \frac{1}{1+e^{f\_n}} \right )^{1-y\_n} \newline &= 
-\frac{e^{y\_n f\_n}}{1 + e^{f\_n}}
+p(y_n | f_n) &= 
+\left ( \frac{e^{f_n}}{1+e^{f_n}} \right )^{y_n}
+\left ( \frac{\left (1+e^{f_n} \right ) - e^{f_n}}{1+e^{f_n}} \right )^{1-y_n} \newline &= 
+\left ( \frac{e^{f_n}}{1+e^{f_n}} \right )^{y_n}
+\left ( \frac{1}{1+e^{f_n}} \right )^{1-y_n} \newline &= 
+\left (e^{f_n} \right )^{y_n} \left ( \frac{1}{1+e^{f_n}} \right )^{y_n}
+\left ( \frac{1}{1+e^{f_n}} \right )^{1-y_n} \newline &= 
+\frac{e^{y_n f_n}}{1 + e^{f_n}}
 \end{align}
 $$
 

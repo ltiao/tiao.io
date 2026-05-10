@@ -38,25 +38,25 @@ To illustrate, 1k samples randomly drawn from this distribution are shown below:
 ![Banana distribution samples](banana_samples.svg)
 
 The underlying process that generates samples 
-$\tilde{\mathbf{y}} \sim p\_{Y}(\mathbf{y})$ is simple to describe, 
+$\tilde{\mathbf{y}} \sim p_{Y}(\mathbf{y})$ is simple to describe, 
 and is of the general form,
 
 $$
-\tilde{\mathbf{y}} \sim p\_{Y}(\mathbf{y}) \quad 
+\tilde{\mathbf{y}} \sim p_{Y}(\mathbf{y}) \quad 
 \Leftrightarrow \quad 
 \tilde{\mathbf{y}} = G(\tilde{\mathbf{x}}), 
-\quad \tilde{\mathbf{x}} \sim p\_{X}(\mathbf{x}).
+\quad \tilde{\mathbf{x}} \sim p_{X}(\mathbf{x}).
 $$
 
 In other words, a sample $\tilde{\mathbf{y}}$ is the output of a transformation
 $G$, given a sample $\tilde{\mathbf{x}}$ drawn from some underlying
-base distribution $p\_{X}(\mathbf{x})$.
+base distribution $p_{X}(\mathbf{x})$.
 
 However, it is not as straightforward to compute an analytical expression for 
-density $p\_{Y}(\mathbf{y})$. 
+density $p_{Y}(\mathbf{y})$. 
 In fact, this is only possible if $G$ is a *differentiable* and *invertible* 
 transformation (a *diffeomorphism*[^1]), and if there is an analytical 
-expression for $p\_{X}(\mathbf{x})$. 
+expression for $p_{X}(\mathbf{x})$. 
 
 Transformations that fail to satisfy these conditions (which includes something 
 as simple as a multi-layer perceptron with non-linear activations) give rise to 
@@ -130,8 +130,8 @@ def _forward(x):
     return tf.concat([y_0, y_1, y_tail], axis=-1)
 ```
 
-We can now use this to generate samples from $p\_{Y}(\mathbf{y})$. 
-To do this we first sample from the base distribution $p\_{X}(\mathbf{x})$ by 
+We can now use this to generate samples from $p_{Y}(\mathbf{y})$. 
+To do this we first sample from the base distribution $p_{X}(\mathbf{x})$ by 
 calling `p_x.sample`. For this illustration, we generate 1k samples, which is 
 specified through the `sample_shape` argument. We then transform these samples 
 through $G$ by calling `_forward` on them.
@@ -217,10 +217,10 @@ remaining *two* of **three** operations needed to fully specify a `Bijector`
 Indeed, calling `p_y.prob` at this stage would simply raise a 
 `NotImplementedError` exception. So what else do we need to define? 
 
-Recall the probability density of $p\_{Y}(\mathbf{y})$ is given by:
+Recall the probability density of $p_{Y}(\mathbf{y})$ is given by:
 
 $$
-p\_{Y}(\mathbf{y}) = p\_{X}(G^{-1}(\mathbf{y})) \mathrm{det} 
+p_{Y}(\mathbf{y}) = p_{X}(G^{-1}(\mathbf{y})) \mathrm{det} 
 \left ( \frac{\partial}{\partial\mathbf{y}} G^{-1}(\mathbf{y}) \right )
 $$
 

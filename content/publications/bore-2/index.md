@@ -190,22 +190,22 @@ Let's break this down a bit:
 2. Next, we train the classifier to discriminate between these instances. This 
    classifier should converge towards
    $$
-   \pi^{\*}(\mathbf{x}) = \frac{\gamma \ell(\mathbf{x})}{\gamma \ell(\mathbf{x}) + (1-\gamma) g(\mathbf{x})},
+   \pi^{*}(\mathbf{x}) = \frac{\gamma \ell(\mathbf{x})}{\gamma \ell(\mathbf{x}) + (1-\gamma) g(\mathbf{x})},
    $$
    where $\ell(\mathbf{x})$ and $g(\mathbf{x})$ are the unknown distributions of 
    instances belonging to the positive and negative classes, respectively, and 
    $\gamma$ is the class balance-rate and, by construction, simply the quantile 
    we specified (i.e. $\gamma=0.25$).
-3. Once the classifier is a decent approximation to $\pi^{\*}(\mathbf{x})$, we 
+3. Once the classifier is a decent approximation to $\pi^{*}(\mathbf{x})$, we 
    propose the maximizer of this classifier as the next input to evaluate. 
    In other words, we are now using the classifier *itself* as the acquisition 
    function.
 
    How is it justifiable to use this in lieu of EI, or some other acquisition 
    function we're used to?
-   And what is so special about $\pi^{\*}(\mathbf{x})$? 
+   And what is so special about $\pi^{*}(\mathbf{x})$? 
 
-   *Well, as it turns out, $\pi^{\*}(\mathbf{x})$ is equivalent to EI, up to some 
+   *Well, as it turns out, $\pi^{*}(\mathbf{x})$ is equivalent to EI, up to some 
    constant factors.*
 
    The remainder of the loop should now be self-explanatory. Namely, we
@@ -227,7 +227,7 @@ that $\Phi(y) = 0.25$, i.e. $\tau = \Phi^{-1}(0.25)$.
 
 The instances below this horizontal line are assigned binary label $z=1$, while 
 those above are assigned $z=0$. This is visualized in the bottom pane, 
-alongside the probabilistic classifier $\pi\_{\boldsymbol{\theta}}(\mathbf{x})$ 
+alongside the probabilistic classifier $\pi_{\boldsymbol{\theta}}(\mathbf{x})$ 
 represented by the solid gray curve, which is trained to discriminate between 
 these instances.
 

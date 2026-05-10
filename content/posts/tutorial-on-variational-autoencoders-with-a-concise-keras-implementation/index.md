@@ -100,14 +100,14 @@ $\mathbf{z}$ its corresponding local latent variable, with joint
 distribution 
 
 $$
-p\_{\theta}(\mathbf{x}, \mathbf{z}) 
-\= p\_{\theta}(\mathbf{x} | \mathbf{z}) p(\mathbf{z}).
+p_{\theta}(\mathbf{x}, \mathbf{z}) 
+= p_{\theta}(\mathbf{x} | \mathbf{z}) p(\mathbf{z}).
 $$
 
 In Bayesian modelling, we assume the distribution of observed variables to be 
 governed by the latent variables. Latent variables are drawn from a prior 
 density $p(\mathbf{z})$ and related to the observations through the 
-likelihood $p\_{\theta}(\mathbf{x} | \mathbf{z})$.
+likelihood $p_{\theta}(\mathbf{x} | \mathbf{z})$.
 Deep latent Gaussian models (DLGMs) are a general class of models where the 
 observed variable is governed by a *hierarchy* of latent variables, and the
 latent variables at each level of the hierarchy are Gaussian *a priori* 
@@ -121,29 +121,29 @@ p(\mathbf{z}) = \mathcal{N}(\mathbf{0}, \mathbf{I}).
 $$
 
 Now, each local latent variable is related to its corresponding observation 
-through the likelihood $p\_{\theta}(\mathbf{x} | \mathbf{z})$, which can 
+through the likelihood $p_{\theta}(\mathbf{x} | \mathbf{z})$, which can 
 be viewed as a *probabilistic* decoder. Given a hidden lower-dimensional 
 representation (or "code") $\mathbf{z}$, it "decodes" it into a 
 *distribution* over the observation $\mathbf{x}$.
 
 ## Decoder
 
-In this example, we define $p\_{\theta}(\mathbf{x} | \mathbf{z})$ to be a 
+In this example, we define $p_{\theta}(\mathbf{x} | \mathbf{z})$ to be a 
 multivariate Bernoulli whose probabilities are computed from $\mathbf{z}$ using 
 a fully-connected neural network with a single hidden layer,
 
 $$
-\begin{align\*}
-  p\_{\theta}(\mathbf{x} | \mathbf{z})
-  & = \mathrm{Bern}( \sigma( \mathbf{W}\_2 \mathbf{h} + \mathbf{b}\_2 ) ), \newline
+\begin{align*}
+  p_{\theta}(\mathbf{x} | \mathbf{z})
+  & = \mathrm{Bern}( \sigma( \mathbf{W}_2 \mathbf{h} + \mathbf{b}_2 ) ), \newline
   \mathbf{h} 
-  & = h(\mathbf{W}\_1 \mathbf{z} + \mathbf{b}\_1),
-\end{align\*}
+  & = h(\mathbf{W}_1 \mathbf{z} + \mathbf{b}_1),
+\end{align*}
 $$
 
 where $\sigma$ is the logistic sigmoid function, $h$ is some non-linearity, and 
 the model parameters 
-$\theta = \\{ \mathbf{W}\_1, \mathbf{W}\_2, \mathbf{b}\_1, \mathbf{b}\_2 \\}$
+$\theta = \{ \mathbf{W}_1, \mathbf{W}_2, \mathbf{b}_1, \mathbf{b}_2 \}$
 consist of the weights and biases of this neural network.
 
 It is straightforward to implement this in Keras with the 
@@ -166,7 +166,7 @@ the diagrams look like.
 
 ![Decoder architecture](decoder.svg)
 
-Note that by fixing $\mathbf{W}\_1$, $\mathbf{b}\_1$ and $h$ to be the identity 
+Note that by fixing $\mathbf{W}_1$, $\mathbf{b}_1$ and $h$ to be the identity 
 matrix, the zero vector, and the identity function, respectively (or 
 equivalently dropping the first `Dense` layer in the snippet above 
 altogether), we recover *logistic factor analysis*.
@@ -176,7 +176,7 @@ family of DLGMs, which include *non-linear factor analysis*,
 others [^rezende2014].
 
 Having specified how the probabilities are computed, we can now define the 
-negative log likelihood of a Bernoulli $- \log p\_{\theta}(\mathbf{x}|\mathbf{z})$, which is in fact equivalent to the [binary cross-entropy loss](https://en.wikipedia.org/wiki/Cross_entropy):
+negative log likelihood of a Bernoulli $- \log p_{\theta}(\mathbf{x}|\mathbf{z})$, which is in fact equivalent to the [binary cross-entropy loss](https://en.wikipedia.org/wiki/Cross_entropy):
 
 ```python
 def nll(y_true, y_pred):
@@ -226,10 +226,10 @@ Having specified the generative process, we would now like to perform inference
 on the latent variables and model parameters $\mathbf{z}$ and $\theta$, 
 respectively.
 In particular, our goal is to compute the posterior 
-$p\_{\theta}(\mathbf{z} | \mathbf{x})$, the conditional density of the latent 
+$p_{\theta}(\mathbf{z} | \mathbf{x})$, the conditional density of the latent 
 variable $\mathbf{z}$ given observed variable $\mathbf{x}$.
 Additionally, we wish to optimize the model parameters $\theta$ with respect to 
-the marginal likelihood $p\_{\theta}(\mathbf{x})$. 
+the marginal likelihood $p_{\theta}(\mathbf{x})$. 
 Both depend on the marginal likelihood, whose calculation requires marginalizing 
 out the latent variables $\mathbf{z}$. In general, this is computational 
 intractable, requiring exponential time to compute, or it is analytically 
@@ -239,14 +239,14 @@ Bernoulli likelihood.
 
 To circumvent this intractability we turn to *variational inference*, which 
 formulates inference as an optimization problem. It seeks an approximate
-posterior $q\_{\phi}(\mathbf{z} | \mathbf{x})$ closest in Kullback-Leibler 
+posterior $q_{\phi}(\mathbf{z} | \mathbf{x})$ closest in Kullback-Leibler 
 (KL) divergence to the true posterior. More precisely, the approximate posterior 
 is parameterized by *variational parameters* $\phi$, and we seek a setting
 of these parameters that minimizes the aforementioned KL divergence,
 
 $$
-  \phi^\* = \mathrm{argmin}\_{\phi} 
-  \mathrm{KL} [q\_{\phi}(\mathbf{z} | \mathbf{x}) || p\_{\theta}(\mathbf{z} | \mathbf{x}) ]
+  \phi^* = \mathrm{argmin}_{\phi} 
+  \mathrm{KL} [q_{\phi}(\mathbf{z} | \mathbf{x}) || p_{\theta}(\mathbf{z} | \mathbf{x}) ]
 $$
 
 With the luck we've had so far, it shouldn't come as a surprise anymore that 
@@ -256,19 +256,19 @@ first place. Instead, we *maximize* an alternative objective function, the
 *evidence lower bound* (ELBO), which is expressed as
 
 $$
-\begin{align\*}
+\begin{align*}
   \mathrm{ELBO}(q) 
   & = 
-  \mathbb{E}\_{q\_{\phi}(\mathbf{z} | \mathbf{x})} [
+  \mathbb{E}_{q_{\phi}(\mathbf{z} | \mathbf{x})} [
     \log p_{\theta}(\mathbf{x} | \mathbf{z}) + 
     \log p(\mathbf{z}) -
-    \log q\_{\phi}(\mathbf{z} | \mathbf{x})
+    \log q_{\phi}(\mathbf{z} | \mathbf{x})
   ] \newline
   & = 
-  \mathbb{E}\_{q\_{\phi}(\mathbf{z} | \mathbf{x})} 
-  \[ \log p\_{\theta}(\mathbf{x} | \mathbf{z}) \]
-  \- \mathrm{KL} \[ q\_{\phi}(\mathbf{z} | \mathbf{x}) || p(\mathbf{z}) \].
-\end{align\*}
+  \mathbb{E}_{q_{\phi}(\mathbf{z} | \mathbf{x})} 
+  [ \log p_{\theta}(\mathbf{x} | \mathbf{z}) ]
+  - \mathrm{KL} [ q_{\phi}(\mathbf{z} | \mathbf{x}) || p(\mathbf{z}) ].
+\end{align*}
 $$
 
 Importantly, the ELBO is a lower bound to the log marginal likelihood. 
@@ -276,15 +276,15 @@ Therefore, maximizing it with respect to the model parameters $\theta$
 approximately maximizes the log marginal likelihood. 
 Additionally, maximizing it with respect to variational parameters $\phi$ can 
 be shown to minimize
-$\mathrm{KL} [q\_{\phi}(\mathbf{z} | \mathbf{x}) || p_{\theta}(\mathbf{z} | \mathbf{x}) ]$. 
+$\mathrm{KL} [q_{\phi}(\mathbf{z} | \mathbf{x}) || p_{\theta}(\mathbf{z} | \mathbf{x}) ]$. 
 Also, it turns out that the KL divergence determines the tightness of the lower 
 bound, where we have equality iff the KL divergence is zero, which happens iff 
-$q\_{\phi}(\mathbf{z} | \mathbf{x}) = p\_{\theta}(\mathbf{z} | \mathbf{x})$.
+$q_{\phi}(\mathbf{z} | \mathbf{x}) = p_{\theta}(\mathbf{z} | \mathbf{x})$.
 Hence, simultaneously maximizing it with respect to $\theta$ and $\phi$ gets us 
 two birds with one stone.
 
 Next we discuss the form of the approximate posterior 
-$q\_{\phi}(\mathbf{z} | \mathbf{x})$, which can be viewed as a 
+$q_{\phi}(\mathbf{z} | \mathbf{x})$, which can be viewed as a 
 *probabilistic* encoder. Its role is opposite to that of the decoder. 
 Given an observation $\mathbf{x}$, it "encodes" it into a *distribution* 
 over its hidden lower-dimensional representations.
@@ -295,16 +295,16 @@ For each local observed variable $\mathbf{x}_n$, we wish to approximate
 the true posterior distribution $p(\mathbf{z}_n|\mathbf{x}_n)$ over its 
 corresponding local latent variables $\mathbf{z}_n$. A common approach is to 
 approximate it using a *variational distribution* 
-$q\_{\lambda_n}(\mathbf{z}_n)$, specified as a diagonal 
+$q_{\lambda_n}(\mathbf{z}_n)$, specified as a diagonal 
 Gaussian, where the *local* variational parameters 
-$\lambda_n = \\{ \boldsymbol{\mu}_n, \boldsymbol{\sigma}_n \\}$ are the mean and 
+$\lambda_n = \{ \boldsymbol{\mu}_n, \boldsymbol{\sigma}_n \}$ are the mean and 
 standard deviation of this approximating distribution,
 $$
-  q\_{\lambda\_n}(\mathbf{z}\_n) = 
+  q_{\lambda_n}(\mathbf{z}_n) = 
   \mathcal{N}(
-    \mathbf{z}\_n | 
-    \boldsymbol{\mu}\_n, 
-    \mathrm{diag}(\boldsymbol{\sigma}\_n^2)
+    \mathbf{z}_n | 
+    \boldsymbol{\mu}_n, 
+    \mathrm{diag}(\boldsymbol{\sigma}_n^2)
   ).
 $$
 This approach has a number of shortcomings. First, the number of local 
@@ -321,16 +321,16 @@ We *amortize* the cost of inference by introducing an *inference network* which
 approximates the local variational parameters $\lambda_n$ for a given local
 observed variable $\textbf{x}_n$. 
 For our approximating distribution in particular, given $\textbf{x}_n$ the 
-inference network yields two vector-valued outputs $\boldsymbol{\mu}\_{\phi}(\textbf{x}_n)$ and 
-$\boldsymbol{\sigma}\_{\phi}(\textbf{x}_n)$, which we use to approximate its local 
+inference network yields two vector-valued outputs $\boldsymbol{\mu}_{\phi}(\textbf{x}_n)$ and 
+$\boldsymbol{\sigma}_{\phi}(\textbf{x}_n)$, which we use to approximate its local 
 variational parameters $\boldsymbol{\mu}_n$ and $\boldsymbol{\sigma}_n$, respectively. 
 Our approximate posterior distribution now becomes
 $$
-  q\_{\phi}(\mathbf{z}_n | \mathbf{x}_n) 
-  \= 
+  q_{\phi}(\mathbf{z}_n | \mathbf{x}_n) 
+  = 
   \mathcal{N}(\mathbf{z}_n 
-  | \boldsymbol{\mu}\_{\phi}(\mathbf{x}_n), 
-    \mathrm{diag}(\boldsymbol{\sigma}\_{\phi}^2(\mathbf{x}_n))
+  | \boldsymbol{\mu}_{\phi}(\mathbf{x}_n), 
+    \mathrm{diag}(\boldsymbol{\sigma}_{\phi}^2(\mathbf{x}_n))
   ).
 $$
 Instead of learning *local* variational parameters $\lambda_n$ for each data-point, 
@@ -339,8 +339,8 @@ constitute the parameters (i.e. weights) of the inference network.
 Moreover, this approximation allows statistical strength to be shared across 
 observed data-points and also generalize to unseen test points.
 
-We specify the mean $\boldsymbol{\mu}\_{\phi}(\mathbf{x})$ and log variance 
-$\log \boldsymbol{\sigma}\_{\phi}^2(\mathbf{x})$ of this distribution as the output of 
+We specify the mean $\boldsymbol{\mu}_{\phi}(\mathbf{x})$ and log variance 
+$\log \boldsymbol{\sigma}_{\phi}^2(\mathbf{x})$ of this distribution as the output of 
 an inference network. For this post, we keep the architecture of the network 
 simple, with only a single hidden layer and two fully-connected output layers. 
 Again, this is simple to define in Keras:
@@ -396,11 +396,11 @@ Having specified all the ingredients necessary to carry out variational
 inference (namely, the prior, likelihood and approximate posterior), we next
 focus on finalizing the definition of the (negative) ELBO as our loss function 
 in Keras. As written earlier, the ELBO can be decomposed into two terms, 
-$\mathbb{E}\_{q\_{\phi}(\mathbf{z} | \mathbf{x})} [ \log p\_{\theta}(\mathbf{x} | \mathbf{z}) ]$
-the expected log likelihood (ELL) over $q\_{\phi}(\mathbf{z} | \mathbf{x})$,
-and $- \mathrm{KL} [q\_{\phi}(\mathbf{z} | \mathbf{x}) || p(\mathbf{z}) ]$
+$\mathbb{E}_{q_{\phi}(\mathbf{z} | \mathbf{x})} [ \log p_{\theta}(\mathbf{x} | \mathbf{z}) ]$
+the expected log likelihood (ELL) over $q_{\phi}(\mathbf{z} | \mathbf{x})$,
+and $- \mathrm{KL} [q_{\phi}(\mathbf{z} | \mathbf{x}) || p(\mathbf{z}) ]$
 the negative KL divergence between prior $p(\mathbf{z})$ and approximate 
-posterior $q\_{\phi}(\mathbf{z} | \mathbf{x})$. We first turn our attention
+posterior $q_{\phi}(\mathbf{z} | \mathbf{x})$. We first turn our attention
 to the KL divergence term.
 
 ### KL Divergence
@@ -409,16 +409,16 @@ Intuitively, maximizing the negative KL divergence term encourages approximate
 posterior densities that place its mass on configurations of the latent 
 variables which are closest to the prior. Effectively, this regularizes the 
 complexity of latent space. Now, since both the prior $p(\mathbf{z})$ and 
-approximate posterior $q\_{\phi}(\mathbf{z} | \mathbf{x})$ are Gaussian, 
+approximate posterior $q_{\phi}(\mathbf{z} | \mathbf{x})$ are Gaussian, 
 the KL divergence can actually be calculated with the closed-form expression,
 
 $$
-  \mathrm{KL} [ q\_{\phi}(\mathbf{z} | \mathbf{x}) || p(\mathbf{z}) ]
+  \mathrm{KL} [ q_{\phi}(\mathbf{z} | \mathbf{x}) || p(\mathbf{z}) ]
   = - \frac{1}{2} \sum_{k=1}^K \{ 1 + \log \sigma_k^2 - \mu_k^2 - \sigma_k^2 \}
 $$
 
 where $\mu_k$ and $\sigma_k$ are the $k$-th components of output vectors 
-$\mu\_{\phi}(\mathbf{x})$ and $\sigma\_{\phi}(\mathbf{x})$, respectively.
+$\mu_{\phi}(\mathbf{x})$ and $\sigma_{\phi}(\mathbf{x})$, respectively.
 This is not too difficult to derive, and I would recommend verifying this as an 
 exercise. You can also find a derivation in the appendix of Kingma and Welling's 
 (2014) paper [^kingma2014].
@@ -492,7 +492,7 @@ Additionally, we could also extend the divergence layer to use an auxiliary
 density ratio estimator function, instead of evaluating the KL divergence in 
 the analytical form above. 
 This relaxes the requirement on approximate posterior 
-$q\_{\phi}(\mathbf{z}|\mathbf{x})$ (and incidentally also prior $p(\mathbf{z})$) 
+$q_{\phi}(\mathbf{z}|\mathbf{x})$ (and incidentally also prior $p(\mathbf{z})$) 
 to yield tractable densities, at the cost of maximizing a cruder estimate of the 
 ELBO. 
 This is known as Adversarial Variational Bayes[^mescheder2017], and is an 
@@ -517,34 +517,34 @@ techniques. However, MC gradient estimates based on the reparameterization trick
 known as the *reparameterization gradients*, have be shown to have the lowest 
 variance among competing estimators for continuous latent variables[^rezende2014].
 The reparameterization trick is a straightforward change of variables that 
-expresses the random variable $\mathbf{z} \sim q\_{\phi}(\mathbf{z} | \mathbf{x})$
-as a deterministic transformation $g\_{\phi}$ of another random variable 
+expresses the random variable $\mathbf{z} \sim q_{\phi}(\mathbf{z} | \mathbf{x})$
+as a deterministic transformation $g_{\phi}$ of another random variable 
 $\boldsymbol{\epsilon}$ and input $\mathbf{x}$, with parameters $\phi$,
 
 $$
-z = g\_{\phi}(\mathbf{x}, \boldsymbol{\epsilon}), \quad 
+z = g_{\phi}(\mathbf{x}, \boldsymbol{\epsilon}), \quad 
     \boldsymbol{\epsilon} \sim p(\boldsymbol{\epsilon}).
 $$
 
 Note that $p(\boldsymbol{\epsilon})$ is simpler base distribution which is 
 parameter-free and independent of $\mathbf{x}$ or $\phi$. 
 To prevent clutter, we write the ELBO as an expectation of the function 
-$f(\mathbf{x}, \mathbf{z}) = \log p\_{\theta}(\mathbf{x} , \mathbf{z}) - 
-\log q\_{\phi}(\mathbf{z} | \mathbf{x})$ over distribution 
-$q\_{\phi}(\mathbf{z} | \mathbf{x})$. 
+$f(\mathbf{x}, \mathbf{z}) = \log p_{\theta}(\mathbf{x} , \mathbf{z}) - 
+\log q_{\phi}(\mathbf{z} | \mathbf{x})$ over distribution 
+$q_{\phi}(\mathbf{z} | \mathbf{x})$. 
 Now, for any function $f(\mathbf{x}, \mathbf{z})$, taking the gradient of the 
 expectation with respect to $\phi$, and substituting all occurrences of 
-$\mathbf{z}$ with $g\_{\phi}(\mathbf{x}, \boldsymbol{\epsilon})$, we have
+$\mathbf{z}$ with $g_{\phi}(\mathbf{x}, \boldsymbol{\epsilon})$, we have
 
 $$
-\begin{align\*}
-  \nabla\_{\phi} \mathbb{E}\_{q\_{\phi}(\mathbf{z} | \mathbf{x})}
+\begin{align*}
+  \nabla_{\phi} \mathbb{E}_{q_{\phi}(\mathbf{z} | \mathbf{x})}
   [ f(\mathbf{x}, \mathbf{z}) ]
-  & = \nabla\_{\phi} \mathbb{E}\_{p(\boldsymbol{\epsilon})} 
-  \[ f(\mathbf{x}, g\_{\phi}(\mathbf{x}, \boldsymbol{\epsilon})) \] \newline
-  & = \mathbb{E}\_{p(\mathbf{\epsilon})} 
-  \[ \nabla\_{\phi} f(\mathbf{x}, g\_{\phi}(\mathbf{x}, \boldsymbol{\epsilon})) \].
-\end{align\*}
+  & = \nabla_{\phi} \mathbb{E}_{p(\boldsymbol{\epsilon})} 
+  [ f(\mathbf{x}, g_{\phi}(\mathbf{x}, \boldsymbol{\epsilon})) ] \newline
+  & = \mathbb{E}_{p(\mathbf{\epsilon})} 
+  [ \nabla_{\phi} f(\mathbf{x}, g_{\phi}(\mathbf{x}, \boldsymbol{\epsilon})) ].
+\end{align*}
 $$
 
 In other words, this simple reparameterization allows the gradient and the 
@@ -555,23 +555,23 @@ from $p(\boldsymbol{\epsilon})$.
 ---
 
 To recover the diagonal Gaussian approximation we specified earlier
-$q\_{\phi}(\mathbf{z}_n | \mathbf{x}_n) = \mathcal{N}(\mathbf{z}_n | 
-\boldsymbol{\mu}\_{\phi}(\mathbf{x}_n), \mathrm{diag}(\boldsymbol{\sigma}\_{\phi}^2(\mathbf{x}_n)))$, 
+$q_{\phi}(\mathbf{z}_n | \mathbf{x}_n) = \mathcal{N}(\mathbf{z}_n | 
+\boldsymbol{\mu}_{\phi}(\mathbf{x}_n), \mathrm{diag}(\boldsymbol{\sigma}_{\phi}^2(\mathbf{x}_n)))$, 
 we draw noise from the Normal base distribution, and specify a simple 
 location-scale transformation 
 
 
 $$
 \mathbf{z} 
-= g\_{\phi}(\mathbf{x}, \boldsymbol{\epsilon}) 
-= \mu\_{\phi}(\mathbf{x}) + 
-  \sigma\_{\phi}(\mathbf{x}) \odot 
+= g_{\phi}(\mathbf{x}, \boldsymbol{\epsilon}) 
+= \mu_{\phi}(\mathbf{x}) + 
+  \sigma_{\phi}(\mathbf{x}) \odot 
   \boldsymbol{\epsilon}, \quad
   \boldsymbol{\epsilon} 
 \sim \mathcal{N}(\mathbf{0}, \mathbf{I}),
 $$
 
-where $\mu\_{\phi}(\mathbf{x})$ and $\sigma\_{\phi}(\mathbf{x})$ are the outputs 
+where $\mu_{\phi}(\mathbf{x})$ and $\sigma_{\phi}(\mathbf{x})$ are the outputs 
 of the inference network defined earlier with parameters $\phi$, and $\odot$ 
 denotes the elementwise product. In Keras, we explicitly make the noise vector 
 an input to the model by defining an Input layer for it. We then implement the 
@@ -597,7 +597,7 @@ Furthermore, the size of their first dimension (i.e. batch size) are required
 to be the same. 
 This corresponds to using a exactly one Monte Carlo sample to approximate the 
 expected log likelihood, drawing a single sample $\mathbf{z}_n$ from 
-$q\_{\phi}(\mathbf{z}_n | \mathbf{x}_n)$ for each data-point $\mathbf{x}_n$ in 
+$q_{\phi}(\mathbf{z}_n | \mathbf{x}_n)$ for each data-point $\mathbf{x}_n$ in 
 the batch. Although you might find an MC sample size of 1 surprisingly small, 
 it is actually adequate for a sufficiently large batch size (~100) [^kingma2014].
 In a [follow-up post](http://louistiao.me/posts/inference-in-variational-autoencoders-with-different-monte-carlo-sample-sizes/), 
@@ -787,7 +787,7 @@ Next, we will extend the divergence layer to use an auxiliary density ratio
 estimator function, instead of evaluating the KL divergence in the analytical 
 form above. 
 This relaxes the requirement on approximate posterior 
-$q\_{\phi}(\mathbf{z}|\mathbf{x})$ (and incidentally also prior $p(\mathbf{z})$) 
+$q_{\phi}(\mathbf{z}|\mathbf{x})$ (and incidentally also prior $p(\mathbf{z})$) 
 to yield tractable densities, at the cost of maximizing a cruder estimate of the 
 ELBO. 
 This is known as Adversarial Variational Bayes[^mescheder2017], and is an 
