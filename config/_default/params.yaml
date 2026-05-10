@@ -198,13 +198,13 @@ hugoblox:
   # User comments system
   # ────────────────────────────────────────────────────────────────────────────
   comments:
-    enable: false
-    provider: ""                        # giscus | disqus
+    enable: true
+    provider: "giscus"                  # giscus | disqus
     giscus:
-      repo: ""
-      repo_id: ""
-      category: ""
-      category_id: ""
+      repo: "ltiao/tiao.io"
+      repo_id: "R_kgDOSEwBBw"
+      category: "Comments"
+      category_id: "DIC_kwDOSEwBB84C8vNX"
     disqus:
       shortname: ""
 
