@@ -17,12 +17,10 @@ sections:
       text: |-
         Hi, I'm Louis. I'm a research scientist at Meta on the [Adaptive
         Experimentation](/tags/adaptive-experimentation/) team within Central
-        Applied Science (CAS), based in New York City. My research is in
-        probabilistic machine learning — approximate Bayesian inference,
-        [Gaussian processes](/tags/gaussian-processes/), and [Bayesian
-        optimization](/tags/bayesian-optimization/). I obtained my PhD at
-        the [University of Sydney](https://www.sydney.edu.au/), advised
-        by [Edwin Bonilla](#) and [Fabio Ramos](#).
+        Applied Science (CAS), based in New York City. I work on [Bayesian
+        optimization](/tags/bayesian-optimization/), [Gaussian
+        processes](/tags/gaussian-processes/), and sample-efficient methods
+        for [automated machine learning](/tags/automl/).
       # Show a call-to-action button under your biography? (optional)
       button:
         text: Curriculum Vitae (CV)
@@ -50,8 +48,8 @@ sections:
       title: 'My Research'
       subtitle: ''
       text: |-
-        I work on probabilistic machine learning, with particular focus on
-        approximate Bayesian inference and [Gaussian
+        My research is in probabilistic machine learning, with particular
+        focus on approximate Bayesian inference and [Gaussian
         processes](/tags/gaussian-processes/), and their applications to
         [Bayesian optimization](/tags/bayesian-optimization/). More
         broadly, my interests extend to [automated machine learning
@@ -62,6 +60,11 @@ sections:
         learning](/tags/graph-representation-learning/),
         [GANs](/tags/generative-adversarial-networks/), and [implicit
         generative models](/tags/generative-models/).
+
+        I completed my PhD at the [University of
+        Sydney](https://www.sydney.edu.au/) under [Edwin Bonilla](#) and
+        [Fabio Ramos](#), with research recognized at NeurIPS and ICML
+        through Oral and Spotlight presentations.
     design:
       columns: '1'
   - block: collection

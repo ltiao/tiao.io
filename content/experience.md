@@ -16,14 +16,14 @@ sections:
       subtitle: ''
       text: |-
         I'm a research scientist at Meta on the [Adaptive
-        Experimentation](/tags/adaptive-experimentation/) team in New York
-        City, where I work on [Bayesian
-        optimization](/tags/bayesian-optimization/), [Gaussian
+        Experimentation](/tags/adaptive-experimentation/) team within Central
+        Applied Science (CAS), based in New York City. My work focuses on
+        [Bayesian optimization](/tags/bayesian-optimization/), [Gaussian
         processes](/tags/gaussian-processes/), and sample-efficient methods
-        for [automated machine learning](/tags/automl/). I completed my PhD
-        at the [University of Sydney](https://www.sydney.edu.au/), with
-        research recognized at NeurIPS and ICML through Oral and Spotlight
-        presentations.
+        for [automated machine learning](/tags/automl/) and deep learning
+        applications. I completed my PhD at the [University of
+        Sydney](https://www.sydney.edu.au/), with research recognized at
+        NeurIPS and ICML through Oral and Spotlight presentations.
 
         I began my career as a research software engineer at
         [National ICT Australia (NICTA)](https://en.wikipedia.org/wiki/NICTA) and
@@ -59,10 +59,10 @@ sections:
         - **Eytan Bakshy** — Research Director, Meta CAS (Adaptive Experimentation)
         - **Max Balandat** — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
         - **Sam Daulton** — Research Scientist, Meta CAS (Adaptive Experimentation)
-        - **Nicolas Durrande** — formerly Director of Research, Secondmind (preceded Victor Picheny) · now Research Lead, Shift Lab
+        - **Nicolas Durrande** — formerly Director of Research, Secondmind · now Research Lead, Shift Lab
         - **Vincent Dutordoir** — formerly Research Scientist, Secondmind · now Google DeepMind
         - **David Eriksson** — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
-        - **Aaron Klein** — formerly Applied Scientist, AWS Berlin · now leading a research group at the ELLIS Institute Tübingen as part of OpenEuroLLM, a European initiative developing foundation models for European languages · [aaronkl.github.io](https://aaronkl.github.io/)
+        - **Aaron Klein** — formerly Applied Scientist, AWS Berlin · now Research Group Leader, ELLIS Institute Tübingen · [aaronkl.github.io](https://aaronkl.github.io/)
         - **Victor Picheny** — Director of Research, Secondmind
         - **Matthias Seeger** — Principal Applied Scientist, AWS Berlin · [mseeger.github.io](https://mseeger.github.io/)
     design:
