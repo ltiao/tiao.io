@@ -54,17 +54,17 @@ sections:
         Adaptive Experimentation team, and the researchers who hosted me at Amazon
         and Secondmind during my PhD.
 
-        - **Sebastian Ament** — Research Scientist, Meta CAS (Adaptive Experimentation)
-        - **Cédric Archambeau** — formerly Principal Applied Scientist, AWS Berlin · now Director of Artificial Intelligence, Helsing · [archambeau.com](https://archambeau.com)
-        - **Eytan Bakshy** — Research Director, Meta CAS (Adaptive Experimentation)
+        - [**Matthias Seeger**](https://mseeger.github.io/) — Principal Applied Scientist, AWS Berlin
+        - [**Eytan Bakshy**](https://eytan.github.io/) — Research Director, Meta CAS (Adaptive Experimentation)
+        - [**Cédric Archambeau**](https://archambeau.com) — formerly Principal Applied Scientist, AWS Berlin · now Director of Artificial Intelligence, Helsing
         - **Max Balandat** — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
-        - **Sam Daulton** — Research Scientist, Meta CAS (Adaptive Experimentation)
-        - **Nicolas Durrande** — formerly Director of Research, Secondmind · now Research Lead, Shift Lab
-        - **Vincent Dutordoir** — formerly Research Scientist, Secondmind · now Google DeepMind
-        - **David Eriksson** — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
-        - **Aaron Klein** — formerly Applied Scientist, AWS Berlin · now Research Group Leader, ELLIS Institute Tübingen · [aaronkl.github.io](https://aaronkl.github.io/)
-        - **Victor Picheny** — Director of Research, Secondmind
-        - **Matthias Seeger** — Principal Applied Scientist, AWS Berlin · [mseeger.github.io](https://mseeger.github.io/)
+        - [**David Eriksson**](https://dme65.github.io/) — Research Scientist Manager, Meta CAS (Adaptive Experimentation)
+        - [**Victor Picheny**](https://sites.google.com/site/victorpicheny/) — Director of Research, Secondmind
+        - [**Nicolas Durrande**](https://sites.google.com/site/nicolasdurrandehomepage/) — formerly Director of Research, Secondmind · now Research Lead, Shift Lab
+        - [**Aaron Klein**](https://aaronkl.github.io/) — formerly Applied Scientist, AWS Berlin · now Research Group Leader, ELLIS Institute Tübingen
+        - [**Sam Daulton**](https://sdaulton.github.io/) — Research Scientist, Meta CAS (Adaptive Experimentation)
+        - [**Sebastian Ament**](https://sebastianament.github.io/) — Research Scientist, Meta CAS (Adaptive Experimentation)
+        - [**Vincent Dutordoir**](https://vdutor.github.io/) — formerly Research Scientist, Secondmind · now Google DeepMind
     design:
       columns: '1'
   - block: resume-skills

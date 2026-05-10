@@ -59,7 +59,7 @@ education:
 
 experience:
   - role: Research Scientist
-    org: Meta
+    org: Meta · New York, NY
     location: New York, NY, United States
     start: 2024-08-05
     summary: |
@@ -71,7 +71,7 @@ experience:
       capacity management for large-scale Ads ranking models. Co-first author on
       *Ax: A Platform for Adaptive Experimentation* (AutoML 2025).
   - role: Applied Scientist Intern
-    org: Amazon Web Services
+    org: Amazon Web Services · Cambridge, UK
     location: Cambridge, United Kingdom
     start: 2022-05-30
     end: 2022-09-16
@@ -82,7 +82,7 @@ experience:
       larger ones. Reunited with Aaron Klein, Matthias Seeger, and Cédric
       Archambeau from my earlier AWS Berlin internship.
   - role: Doctoral Student Researcher
-    org: Secondmind
+    org: Secondmind · Cambridge, UK
     location: Cambridge, United Kingdom
     start: 2021-09-20
     end: 2022-04-30
@@ -95,7 +95,7 @@ experience:
       Processes* (ICML 2023, Oral). Worked closely with Vincent Dutordoir and
       Victor Picheny.
   - role: Applied Scientist Intern
-    org: Amazon Web Services
+    org: Amazon Web Services · Berlin, Germany
     location: Berlin, Germany
     start: 2019-06-01
     end: 2019-12-01
@@ -108,7 +108,7 @@ experience:
       formed the basis of [SyneTune](https://github.com/awslabs/syne-tune).
       Worked with Matthias Seeger, Cédric Archambeau, and Aaron Klein.
   - role: Teaching Assistant
-    org: University of New South Wales (UNSW)
+    org: University of New South Wales (UNSW) · Sydney, Australia
     location: Sydney, Australia
     start: 2017-08-01
     end: 2018-11-30
@@ -117,7 +117,7 @@ experience:
       Learning, a postgraduate course covering probabilistic graphical models,
       approximate inference, and Bayesian methods.
   - role: Software Engineer
-    org: CSIRO's Data61
+    org: CSIRO's Data61 · Sydney, Australia
     location: Sydney, Australia
     start: 2016-06-01
     end: 2019-04-30
@@ -129,7 +129,7 @@ experience:
       Engineering team led to research on graph representation learning, resulting
       in a NeurIPS spotlight paper.
   - role: Software Engineer
-    org: National ICT Australia (NICTA)
+    org: National ICT Australia (NICTA) · Sydney, Australia
     location: Sydney, Australia
     start: 2015-06-01
     end: 2016-06-30
@@ -139,7 +139,7 @@ experience:
       developing and releasing open-source libraries for applying Bayesian ML at
       scale. NICTA later merged into CSIRO's Data61.
   - role: Research Intern
-    org: Commonwealth Scientific and Industrial Research Organisation (CSIRO)
+    org: Commonwealth Scientific and Industrial Research Organisation (CSIRO) · Sydney, Australia
     location: Sydney, Australia
     start: 2013-11-01
     end: 2014-02-01
