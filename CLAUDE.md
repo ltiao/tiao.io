@@ -131,3 +131,78 @@ correct.
 
 When the user provides a URL in chat, treat it as authoritative and add it
 exactly as given.
+
+## "About Me" content is split — preserve the boundaries
+
+The site's About Me content is intentionally fragmented across **four
+content sections** plus **one easter-egg blurb**, each with its own purpose,
+scope, and constraints. Don't consolidate them, don't migrate text between
+them, and don't "fix" the easter egg.
+
+| # | Location | Purpose |
+|---|----------|---------|
+| 1 | `content/_index.md` → `resume-biography-3` block `text:` | Bio basics (homepage About) |
+| 2 | `content/_index.md` → markdown block "My Research" | Research mission + collaboration invite |
+| 3 | `content/experience.md` → top block "Career Summary" | LinkedIn-style overview |
+| 4 | `content/experience.md` → block "Collaborators" | Mentor/colleague acknowledgements |
+| 5 | `data/authors/me.yaml` → `bio:` field | Humorous easter egg (NOT a placeholder) |
+
+**Cross-cutting register**: subtle dry deadpan; understated over zany;
+don't undercut achievements. Recognition statements should land as
+factual observations, not personal brags.
+
+### 1. Homepage About (`content/_index.md` resume-biography-3 `text:`)
+
+Crisp and concise — 2–3 sentences max. Mostly: name → role → workplace
+→ location → one-line research focus. Do **NOT** include PhD,
+supervisors, or recognition — those live in sections 2 and 3.
+
+### 2. Homepage "My Research" (`content/_index.md` markdown block)
+
+Open with **"My research is in…"** (avoids duplicating the About's
+"I work on…"). Tag-link key terms via `/tags/<slug>/`. End the research
+paragraph with one dry sentence surfacing Oral/Spotlight recognition,
+framed as the work's *reception* rather than personal accolade — e.g.
+"Some of this work has appeared as Orals and Spotlights at NeurIPS and
+ICML." Close with a brief collaboration invite linked to `#contact`. Do
+**NOT** include a PhD/supervisors paragraph here — Career Summary owns
+that.
+
+### 3. Career Summary (`content/experience.md` top "Career Summary" block)
+
+LinkedIn profile-summary style, first person. **Not outdated** — avoid
+"over X years" claims that age out. Two paragraphs: (a) current position
++ work focus + PhD + Oral/Spotlight recognition; (b) career trajectory
+(NICTA → Data61 → industrial PhD appointments at Amazon Berlin/Cambridge
+UK + Secondmind Cambridge). This is where comprehensive
+recognition+supervisors data live; other sections defer to it.
+
+### 4. Collaborators (`content/experience.md` "Collaborators" block)
+
+Opens with the line *"I owe a great deal to the people below — colleagues
+and mentors who shaped how I approach research."* Followed by a bulleted
+list with the format `**Name** — Title, Organization · [personal site]`.
+Skip extra detail (no "preceded X" lineage notes; no organization mission
+statements; no expansive role descriptions). Liberal cross-linking to
+personal sites where they exist.
+
+### 5. ⚠️ Easter-egg bio (`data/authors/me.yaml` `bio:` field)
+
+**This is a deliberate humorous easter egg, NOT a placeholder.** Do not
+rewrite as a generic bio.
+
+Current value:
+
+> My name is Louis Tiao, and I graduated from one of Australia's top
+> engineering schools with really good grades. Now, I'm using my knowledge
+> to help up-and-coming tech companies make it in this competitive world.
+
+The joke: the reader knows Louis works at Meta. Describing Meta as "an
+up-and-coming tech company that needs help making it in this competitive
+world" is intentional dry-deadpan understatement — Big Tech reframed as a
+plucky underdog. The reader's "wait, *Meta*?" reaction is the joke;
+deleting or rewriting this destroys it.
+
+This bio surfaces on author profile pages (e.g. `/authors/me/`), not the
+homepage — the homepage About block uses a `text:` override that
+supersedes this field. The easter egg is for readers who dig deeper.
