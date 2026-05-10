@@ -57,14 +57,12 @@ sections:
         optimization](/tags/hyperparameter-optimization/) and adaptive
         resource allocation techniques such as early stopping and
         scaling laws. Past work includes [graph representation
-        learning](/tags/graph-representation-learning/),
-        [GANs](/tags/generative-adversarial-networks/), and [implicit
-        generative models](/tags/generative-models/).
+        learning](/tags/graph-representation-learning/) and [deep
+        generative models](/tags/generative-models/). Some of this work
+        has appeared as Orals and Spotlights at NeurIPS and ICML.
 
-        I completed my PhD at the [University of
-        Sydney](https://www.sydney.edu.au/) under [Edwin Bonilla](#) and
-        [Fabio Ramos](#), with research recognized at NeurIPS and ICML
-        through Oral and Spotlight presentations.
+        Always happy to hear from people working on related problems —
+        [get in touch](#contact).
     design:
       columns: '1'
   - block: collection

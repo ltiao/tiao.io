@@ -12,7 +12,7 @@ design:
 sections:
   - block: markdown
     content:
-      title: 'Summary'
+      title: 'Career Summary'
       subtitle: ''
       text: |-
         I'm a research scientist at Meta on the [Adaptive
@@ -71,10 +71,6 @@ sections:
     content:
       title: Skills
       username: me
-  - block: resume-languages
-    content:
-      title: Languages
-      username: me
   - block: markdown
     id: service
     content:
@@ -89,4 +85,8 @@ sections:
 
         **Journal reviewing**: [TMLR](https://www.jmlr.org/tmlr/) (2022–);
         IEEE [TPAMI](https://www.computer.org/csdl/journal/tp) (2019–).
+  - block: resume-languages
+    content:
+      title: Languages
+      username: me
 ---
