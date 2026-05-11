@@ -184,11 +184,10 @@ q_{\boldsymbol{\phi}}(f(\mathbf{x})) = \mathcal{GP}(\mu(\mathbf{x}), \sigma(\mat
 $$
 with mean and covariance functions,
 $$
-\mu(\mathbf{x}) = \boldsymbol{\psi}_\mathbf{u}^\top(\mathbf{x}) \mathbf{b},
-\quad
-\text{and}
-\quad
-\sigma(\mathbf{x}, \mathbf{x}') = \kappa_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\psi}_\mathbf{u}^\top(\mathbf{x}) (\mathbf{K}_\mathbf{uu} - \mathbf{W}\mathbf{W}^{\top}) \boldsymbol{\psi}_\mathbf{u}(\mathbf{x}').
+\begin{aligned}
+\mu(\mathbf{x}) &= \boldsymbol{\psi}_\mathbf{u}^\top(\mathbf{x}) \mathbf{b}, \\
+\sigma(\mathbf{x}, \mathbf{x}') &= \kappa_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\psi}_\mathbf{u}^\top(\mathbf{x}) (\mathbf{K}_\mathbf{uu} - \mathbf{W}\mathbf{W}^{\top}) \boldsymbol{\psi}_\mathbf{u}(\mathbf{x}').
+\end{aligned}
 $$
 {{< /callout >}}
 
@@ -225,15 +224,17 @@ Refer to [Appendix I]({{< relref "#i" >}}) for derivations.
 #### Gaussian process notation
 The mean and covariance functions are now
 $$
-\mu(\mathbf{x}) = \boldsymbol{\lambda}^\top(\mathbf{x}) \mathbf{b}',
-\quad
-\text{and}
-\quad
-\sigma(\mathbf{x}, \mathbf{x}') = k_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\lambda}^\top(\mathbf{x}) (\mathbf{I}_M - \mathbf{W}' {\mathbf{W}'}^{\top}) \boldsymbol{\lambda}(\mathbf{x}'),
+\begin{aligned}
+\mu(\mathbf{x}) &= \boldsymbol{\lambda}^\top(\mathbf{x}) \mathbf{b}', \\
+\sigma(\mathbf{x}, \mathbf{x}') &= k_{\theta}(\mathbf{x}, \mathbf{x}') - \boldsymbol{\lambda}^\top(\mathbf{x}) (\mathbf{I}_M - \mathbf{W}' {\mathbf{W}'}^{\top}) \boldsymbol{\lambda}(\mathbf{x}'),
+\end{aligned}
 $$
 where
 $$
-\boldsymbol{\lambda}(\mathbf{x}) \triangleq \mathbf{L}^{\top} \boldsymbol{\psi}_\mathbf{u}(\mathbf{x}) = \mathbf{L}^{-1} \mathbf{k}_\mathbf{u}(\mathbf{x}).
+\begin{aligned}
+\boldsymbol{\lambda}(\mathbf{x}) &\triangleq \mathbf{L}^{\top} \boldsymbol{\psi}_\mathbf{u}(\mathbf{x}) \\
+&= \mathbf{L}^{-1} \mathbf{k}_\mathbf{u}(\mathbf{x}).
+\end{aligned}
 $$
 {{< /callout >}}
 
@@ -299,9 +300,11 @@ $$
 where $\mathcal{Z} \triangleq \int \Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u}) \,\mathrm{d}\mathbf{u}$.
 Plugging this back into the ELBO, we get
 $$
-\mathrm{ELBO}(\boldsymbol{\phi}^{\star}, \mathbf{Z}) = 
-\int \log{\left (\bcancel{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}  \frac{\mathcal{Z}}{\bcancel{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}} \right )} q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u}
-= \log{\mathcal{Z}}.
+\begin{aligned}
+\mathrm{ELBO}(\boldsymbol{\phi}^{\star}, \mathbf{Z}) 
+&= \int \log{\left (\bcancel{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}  \frac{\mathcal{Z}}{\bcancel{\Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u})}} \right )} q_{\boldsymbol{\phi}}(\mathbf{u}) \,\mathrm{d}\mathbf{u} \\
+&= \log{\mathcal{Z}}.
+\end{aligned}
 $$
 
 ### Gaussian Likelihoods -- Sparse Gaussian Process Regression (SGPR)
@@ -344,13 +347,13 @@ Refer to [Appendix V]({{< relref "#v" >}}) for complete derivations.
 
 This leads to the predictive distribution
 $$
-\begin{align*}
-q_{\boldsymbol{\phi}^{\star}}(\mathbf{f}) & =
-  \mathcal{N}\left(\beta \boldsymbol{\Psi}^\top \mathbf{K}_\mathbf{uu} \mathbf{M}^{-1} \mathbf{K}_\mathbf{uu} \boldsymbol{\Psi} \mathbf{y}, 
-                   \mathbf{K}_\mathbf{ff} - \boldsymbol{\Psi}^\top (\mathbf{K}_\mathbf{uu} - \mathbf{K}_\mathbf{uu} \mathbf{M}^{-1} \mathbf{K}_\mathbf{uu} ) \boldsymbol{\Psi} \right) \\\\ & = 
-  \mathcal{N}\left(\beta \mathbf{K}_\mathbf{fu} \mathbf{M}^{-1} \mathbf{K}_\mathbf{uf} \mathbf{y}, 
-                   \mathbf{K}_\mathbf{ff} - \mathbf{K}_\mathbf{fu} (\mathbf{K}_\mathbf{uu}^{-1} - \mathbf{M}^{-1}) \mathbf{K}_\mathbf{uf} \right).
-\end{align*}
+\begin{aligned}
+q_{\boldsymbol{\phi}^{\star}}(\mathbf{f}) 
+&= \mathcal{N}\bigl(\beta \boldsymbol{\Psi}^\top \mathbf{K}_\mathbf{uu} \mathbf{M}^{-1} \mathbf{K}_\mathbf{uu} \boldsymbol{\Psi} \mathbf{y}, \\
+&\qquad\qquad \mathbf{K}_\mathbf{ff} - \boldsymbol{\Psi}^\top (\mathbf{K}_\mathbf{uu} - \mathbf{K}_\mathbf{uu} \mathbf{M}^{-1} \mathbf{K}_\mathbf{uu} ) \boldsymbol{\Psi} \bigr) \\
+&= \mathcal{N}\bigl(\beta \mathbf{K}_\mathbf{fu} \mathbf{M}^{-1} \mathbf{K}_\mathbf{uf} \mathbf{y}, \\
+&\qquad\qquad \mathbf{K}_\mathbf{ff} - \mathbf{K}_\mathbf{fu} (\mathbf{K}_\mathbf{uu}^{-1} - \mathbf{M}^{-1}) \mathbf{K}_\mathbf{uf} \bigr).
+\end{aligned}
 $$
 
 The ELBO is given by
@@ -412,8 +415,10 @@ $$
 $$
 This comes from the fact that
 $$
-\mathrm{KL}\left[\mathcal{N}(\mathbf{A} \boldsymbol{\mu}_0, \mathbf{A} \boldsymbol{\Sigma}_0 \mathbf{A}^\top) || \mathcal{N}(\mathbf{A} \boldsymbol{\mu}_1, \mathbf{A} \boldsymbol{\Sigma}_1 \mathbf{A}^\top) \right] =
-\mathrm{KL}\left[\mathcal{N}(\boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0) || \mathcal{N}(\boldsymbol{\mu}_1, \boldsymbol{\Sigma}_1) \right]
+\begin{aligned}
+&\mathrm{KL}\left[\mathcal{N}(\mathbf{A} \boldsymbol{\mu}_0, \mathbf{A} \boldsymbol{\Sigma}_0 \mathbf{A}^\top) \,\|\, \mathcal{N}(\mathbf{A} \boldsymbol{\mu}_1, \mathbf{A} \boldsymbol{\Sigma}_1 \mathbf{A}^\top) \right] \\
+&\qquad = \mathrm{KL}\left[\mathcal{N}(\boldsymbol{\mu}_0, \boldsymbol{\Sigma}_0) \,\|\, \mathcal{N}(\boldsymbol{\mu}_1, \boldsymbol{\Sigma}_1) \right]
+\end{aligned}
 $$
 where we set $\boldsymbol{\mu}_0 = \mathbf{b}, \boldsymbol{\Sigma}_0 = \mathbf{W} \mathbf{W}^\top, \boldsymbol{\mu}_1 = \mathbf{0}, \boldsymbol{\Sigma}_1 = \mathbf{I}$ and $\mathbf{A} = \mathbf{L}$ where $\mathbf{L}$ is the Cholesky factor of $\mathbf{K}_\mathbf{uu}$, i.e. the lower triangular matrix such that $\mathbf{L}\mathbf{L}^\top = \mathbf{K}_\mathbf{uu}$.
 
@@ -518,7 +523,12 @@ We take the following steps:
    
    *Note:* 
    $$
-   \boldsymbol{\lambda}^\top(\mathbf{x}) \boldsymbol{\lambda}(\mathbf{x}) = \mathbf{k}_\mathbf{u}^\top(\mathbf{x}) \mathbf{L}^{-\top} \mathbf{L}^{-1} \mathbf{k}_\mathbf{u}(\mathbf{x}) = \mathbf{k}_\mathbf{u}^\top(\mathbf{x}) \mathbf{K}_\mathbf{uu}^{-1} \mathbf{k}_\mathbf{u}(\mathbf{x}) = \boldsymbol{\psi}_\mathbf{u}^\top(\mathbf{x}) \mathbf{K}_\mathbf{uu} \boldsymbol{\psi}_\mathbf{u}(\mathbf{x}).
+   \begin{aligned}
+   \boldsymbol{\lambda}^\top(\mathbf{x}) \boldsymbol{\lambda}(\mathbf{x})
+   &= \mathbf{k}_\mathbf{u}^\top(\mathbf{x}) \mathbf{L}^{-\top} \mathbf{L}^{-1} \mathbf{k}_\mathbf{u}(\mathbf{x}) \\
+   &= \mathbf{k}_\mathbf{u}^\top(\mathbf{x}) \mathbf{K}_\mathbf{uu}^{-1} \mathbf{k}_\mathbf{u}(\mathbf{x}) \\
+   &= \boldsymbol{\psi}_\mathbf{u}^\top(\mathbf{x}) \mathbf{K}_\mathbf{uu} \boldsymbol{\psi}_\mathbf{u}(\mathbf{x}).
+   \end{aligned}
    $$
 4. For **whitened parameterization**:
    1. $\mu \triangleq \boldsymbol{\lambda}^\top(\mathbf{x}) \mathbf{b}'$
@@ -561,7 +571,13 @@ arbitary number of index points $\mathbf{X}$:
 
    *Note:* 
    $$
-   \boldsymbol{\Lambda}^{\top} \boldsymbol{\Lambda} = \mathbf{K}_\mathbf{fu} \mathbf{L}^{-\top} \mathbf{L}^{-1} \mathbf{K}_\mathbf{uf} = \mathbf{K}_\mathbf{fu} \mathbf{K}_\textbf{uu}^{-1} \mathbf{K}_\mathbf{uf} = \mathbf{K}_\mathbf{fu} \mathbf{K}_\textbf{uu}^{-1} (\mathbf{K}_\textbf{uu}) \mathbf{K}_\textbf{uu}^{-1} \mathbf{K}_\mathbf{uf} = \boldsymbol{\Psi}^\top \mathbf{K}_\textbf{uu} \boldsymbol{\Psi}.
+   \begin{aligned}
+   \boldsymbol{\Lambda}^{\top} \boldsymbol{\Lambda}
+   &= \mathbf{K}_\mathbf{fu} \mathbf{L}^{-\top} \mathbf{L}^{-1} \mathbf{K}_\mathbf{uf} \\
+   &= \mathbf{K}_\mathbf{fu} \mathbf{K}_\textbf{uu}^{-1} \mathbf{K}_\mathbf{uf} \\
+   &= \mathbf{K}_\mathbf{fu} \mathbf{K}_\textbf{uu}^{-1} (\mathbf{K}_\textbf{uu}) \mathbf{K}_\textbf{uu}^{-1} \mathbf{K}_\mathbf{uf} \\
+   &= \boldsymbol{\Psi}^\top \mathbf{K}_\textbf{uu} \boldsymbol{\Psi}.
+   \end{aligned}
    $$
 4. For **whitened parameterization**:
    1. $\boldsymbol{\mu} \triangleq \boldsymbol{\Lambda}^\top \mathbf{b}'$
@@ -666,11 +682,14 @@ $$
 \begin{align*}
 \log{\Phi(\mathbf{y}, \mathbf{u})} & = 
 \int \log{\mathcal{N}(\mathbf{y} | \mathbf{f}, \beta^{-1} \mathbf{I})} \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \,\mathrm{d}\mathbf{f} 
-\newline & = - \frac{1}{2\sigma^2} \int (\mathbf{y} - \mathbf{f})^{\top} (\mathbf{y} - \mathbf{f}) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
-\newline & = - \frac{1}{2\sigma^2} \int \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{f}^{\top} + \mathbf{f}\mathbf{f}^{\top} \right) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \,\mathrm{d}\mathbf{f} - \frac{N}{2}\log{(2\pi\sigma^2)} 
-\newline & = - \frac{1}{2\sigma^2} \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{m}^{\top} + \mathbf{S} + \mathbf{m} \mathbf{m}^{\top} \right) - 
-\frac{N}{2}\log{(2\pi\sigma^2)}
-\newline & = - \frac{1}{2\sigma^2} (\mathbf{y} - \mathbf{m})^{\top} (\mathbf{y} - \mathbf{m}) - \frac{N}{2}\log{(2\pi\sigma^2)} - \frac{1}{2\sigma^2} \mathrm{tr}(\mathbf{S})
+\newline & = - \frac{1}{2\sigma^2} \int (\mathbf{y} - \mathbf{f})^{\top} (\mathbf{y} - \mathbf{f}) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \,\mathrm{d}\mathbf{f}
+\newline & \quad - \frac{N}{2}\log{(2\pi\sigma^2)} 
+\newline & = - \frac{1}{2\sigma^2} \int \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{f}^{\top} + \mathbf{f}\mathbf{f}^{\top} \right) \mathcal{N}(\mathbf{f} | \mathbf{m}, \mathbf{S}) \,\mathrm{d}\mathbf{f} 
+\newline & \quad - \frac{N}{2}\log{(2\pi\sigma^2)} 
+\newline & = - \frac{1}{2\sigma^2} \mathrm{tr} \left (\mathbf{y}\mathbf{y}^{\top} - 2 \mathbf{y}\mathbf{m}^{\top} + \mathbf{S} + \mathbf{m} \mathbf{m}^{\top} \right) 
+\newline & \quad - \frac{N}{2}\log{(2\pi\sigma^2)}
+\newline & = - \frac{1}{2\sigma^2} (\mathbf{y} - \mathbf{m})^{\top} (\mathbf{y} - \mathbf{m}) - \frac{N}{2}\log{(2\pi\sigma^2)}
+\newline & \quad - \frac{1}{2\sigma^2} \mathrm{tr}(\mathbf{S})
 \newline & = \log{\mathcal{N}(\mathbf{y} | \mathbf{m}, \beta^{-1} \mathbf{I} )} - \frac{1}{2\sigma^2} \mathrm{tr}(\mathbf{S}).
 \end{align*}
 $$
@@ -726,7 +745,8 @@ $$
 \mathrm{ELBO}(\boldsymbol{\phi}^{\star}, \mathbf{Z}) & = 
 \log \mathcal{Z} \\\\ & = 
 \log \int \Phi(\mathbf{y}, \mathbf{u}) p(\mathbf{u}) \,\mathrm{d}\mathbf{u} \\\\ & =  
-\log \left [ \exp{\left(-\frac{\beta}{2} \mathrm{tr}(\mathbf{S})\right)} \int \mathcal{N}(\mathbf{y} | \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) p(\mathbf{u}) \,\mathrm{d}\mathbf{u} \right ] \\\\ & =  
+\log \biggl[ \exp{\left(-\frac{\beta}{2} \mathrm{tr}(\mathbf{S})\right)}
+\newline & \qquad \cdot \int \mathcal{N}(\mathbf{y} | \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) p(\mathbf{u}) \,\mathrm{d}\mathbf{u} \biggr] \\\\ & =  
 \log \int \mathcal{N}(\mathbf{y} \mid \boldsymbol{\Psi}^{\top} \mathbf{u}, \beta^{-1} \mathbf{I}) \mathcal{N}(\mathbf{u} \mid \mathbf{0}, \mathbf{K}_\mathbf{uu}) \,\mathrm{d}\mathbf{u} - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}) \\\\ & = 
 \log \mathcal{N}(\mathbf{y} \mid \mathbf{0}, \beta^{-1} \mathbf{I} + \boldsymbol{\Psi}^{\top} \mathbf{K}_\textbf{uu} \boldsymbol{\Psi}) - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}) \\\\ & = 
 \log \mathcal{N}(\mathbf{y} \mid \mathbf{0}, \mathbf{Q}_\mathbf{ff} + \beta^{-1} \mathbf{I}) - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}).
@@ -745,8 +765,9 @@ the *inverse* and the *determinant* of $\mathbf{Q}_\mathbf{ff} + \beta^{-1} \mat
 More specifically, we have
 $$
 \begin{split}
-\mathrm{ELBO}(\boldsymbol{\phi}^{\star}, \mathbf{Z}) & = - 
-\frac{1}{2} \left( \log  \det \left ( \mathbf{Q}_\mathbf{ff} + \beta^{-1} \mathbf{I} \right ) + \mathbf{y}^\top \left ( \mathbf{Q}_\mathbf{ff} + \beta^{-1} \mathbf{I} \right )^{-1} \mathbf{y} + N \log {2\pi} \right) \\\\ & \qquad - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}).
+\mathrm{ELBO}(\boldsymbol{\phi}^{\star}, \mathbf{Z}) & = - \frac{1}{2} \Bigl( \log \det \left ( \mathbf{Q}_\mathbf{ff} + \beta^{-1} \mathbf{I} \right ) \\\\
+& \qquad + \mathbf{y}^\top \left ( \mathbf{Q}_\mathbf{ff} + \beta^{-1} \mathbf{I} \right )^{-1} \mathbf{y} + N \log {2\pi} \Bigr) \\\\
+& \qquad - \frac{\beta}{2} \mathrm{tr}(\mathbf{S}).
 \end{split}
 $$
 It turns out that many of the required terms can be expressed in terms of the 
