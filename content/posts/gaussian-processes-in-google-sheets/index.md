@@ -83,12 +83,12 @@ That's 20 more hardcoded formulas.
 
 ### The 200-Point Posterior
 
-To draw the beautiful blue prediction curve and confidence bands, we need to evaluate the posterior mean $\mu^*$ and variance $\sigma^{2*}$ at a dense grid of test points.
+To draw the beautiful blue prediction curve and confidence bands, we need to evaluate the posterior mean $\mu^*$ and variance $\sigma_*^2$ at a dense grid of test points.
 
 I chose 200 test points. For each test point $x^*$, we need:
 1. A 10-element cross-kernel vector $\mathbf{k}^* = k(x^*, X)$
 2. The mean $\mu^* = \mathbf{k}^{*\top} \boldsymbol{\alpha}$
-3. The variance $\sigma^{2*} = k(x^*, x^*) - \mathbf{v}^\top \mathbf{v}$, where $\mathbf{v} = L^{-1} \mathbf{k}^*$
+3. The variance $\sigma_*^2 = k(x^*, x^*) - \mathbf{v}^\top \mathbf{v}$, where $\mathbf{v} = L^{-1} \mathbf{k}^*$
 
 Solving $L \mathbf{v} = \mathbf{k}^*$ requires *another* forward substitution for every single test point.
 
@@ -320,4 +320,4 @@ I'm not sure what the takeaway is. Maybe it's that agentic coding has gotten sur
 
 *This is the first entry in an ongoing series on implementing numerical linear algebra in the worst possible environments. Next up: SVD in Minecraft redstone? Bayesian inference in PostScript, so your printer can compute posterior distributions? Or a forced "Magic: The Gathering" combat phase[^mtg] that, when allowed to resolve, computes a posterior covariance as a side effect? Stay tuned.*
 
-[^mtg]: Churchill, A., Biderman, S., & Herrick, A. (2019). *Magic: The Gathering is Turing Complete.* arXiv:1904.09828.
+[^mtg]: Churchill, A., Biderman, S., & Herrick, A. (2019). *Magic: The Gathering is Turing Complete.* [arXiv:1904.09828](https://arxiv.org/abs/1904.09828).
