@@ -31,8 +31,6 @@ It is not dynamic. It is not efficient. It is a completely unrolled computation 
 
 And it is glorious.
 
-![Google Sheets GP pipeline overview](screenshot-01-overview.png "The full GP pipeline in a single Google Sheets tab: kernel and Cholesky heatmaps, posterior chart, and the LML sweep panel.")
-
 ## The Architecture of a Bad Idea
 
 The math behind Gaussian Process regression is elegant but computationally demanding. Given some noisy observations $\mathbf{y}$ at locations $X$, we want to predict the distribution of the latent function $f$ at new test points $X^*$.
@@ -282,7 +280,7 @@ It is a fully automatic, gradient-optimized Bayesian inference pipeline running 
 
 To prove it actually works, I pulled the 100 steps of optimization data directly from the spreadsheet and plotted the convergence:
 
-![Convergence Plots](convergence_plots.png)
+![Convergence of the 100-step gradient ascent](convergence_plots.png "Convergence over 100 steps of gradient ascent: log marginal likelihood, hyperparameters, and gradient magnitude — all pulled directly from the spreadsheet.")
 
 The log marginal likelihood climbs monotonically, the hyperparameters ($\ell$ and $\sigma_n^2$) smoothly approach the L-BFGS-B optimum, and the gradient magnitude decays exponentially. All of this is happening live, in a spreadsheet, triggered by a single cell edit.
 
