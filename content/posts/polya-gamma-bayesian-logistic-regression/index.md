@@ -48,7 +48,7 @@ In [Part I]({{< relref "/posts/polya-gamma-basic-relationships" >}}) we
 collected a curious set of identities: the logistic sigmoid can be written
 in terms of the hyperbolic cosine, the hyperbolic cosine is the Laplace
 transform of the Pólya-gamma distribution, and the sigmoid is therefore an
-average of Gaussian kernels. In this post those identities earn their keep.
+average of Gaussian kernels. In this post we put those identities to work.
 We attach them to an actual model, Bayesian logistic regression, where the
 observed variable is a binary label and the quadratic exponent that was
 merely suggestive in Part I delivers conditional conjugacy, culminating in
@@ -78,7 +78,7 @@ are related to $\mathbf{f}$, the column vector of latent
 variables $\mathbf{f} = [f_1, \dotsc, f_N]^{\top}$, 
 through the likelihood, or observation model, defined as
 $$
-p(\mathbf{y} | \mathbf{f}) \doteq \prod_{n=1}^N p(y_n | f_n),
+p(\mathbf{y} | \mathbf{f}) \triangleq \prod_{n=1}^N p(y_n | f_n),
 $$
 where
 $$
@@ -194,7 +194,7 @@ p(\mathbf{y} | \mathbf{f}, \boldsymbol{\omega}) =
 $$
 where each factor is defined as
 $$
-p(y_n | f_n, \omega_n) \doteq 
+p(y_n | f_n, \omega_n) \triangleq 
 \frac{1}{2} \exp{\left \{ - \frac{\omega_n}{2} \left ( f_n^2 - 
                              2 f_n \frac{\kappa_n}{\omega_n} \right ) \right \}}
 $$

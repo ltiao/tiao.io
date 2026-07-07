@@ -198,7 +198,7 @@ side is *quadratic in $u$*.
 
 To see the quadratic structure clearly, give the integrand a name,
 $$
-k(u, \omega) \doteq \frac{1}{2} \exp{ \left (\frac{u}{2} - \frac{u^2}{2} \omega \right )},
+k(u, \omega) \triangleq \frac{1}{2} \exp{ \left (\frac{u}{2} - \frac{u^2}{2} \omega \right )},
 $$
 so that
 $$

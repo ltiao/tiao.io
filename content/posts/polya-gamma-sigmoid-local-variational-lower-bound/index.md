@@ -100,7 +100,7 @@ For inputs $\mathbf{x}_n$ with binary targets $y_n \in \{0, 1\}$, let
 $\boldsymbol{\phi}_n = \phi(\mathbf{x}_n)$ be the feature vector of the
 $n$th input and let
 $$
-\psi_n \doteq \boldsymbol{\beta}^{\top} \boldsymbol{\phi}_n
+\psi_n \triangleq \boldsymbol{\beta}^{\top} \boldsymbol{\phi}_n
 $$
 be the corresponding value of the latent function. We place a Gaussian
 prior on the weights, written in terms of its precision matrix $\mathbf{S}$,
@@ -155,7 +155,7 @@ $$
 and maximize the evidence lower bound (ELBO)
 $$
 \log p(\mathbf{y}) \geq 
-\mathcal{L}(q) \doteq 
+\mathcal{L}(q) \triangleq 
 \mathbb{E}_{q(\boldsymbol{\beta}, \boldsymbol{\omega})}
 [\log p(\mathbf{y}, \boldsymbol{\omega}, \boldsymbol{\beta}) - \log q(\boldsymbol{\beta}, \boldsymbol{\omega})],
 $$
@@ -166,7 +166,7 @@ For each auxiliary factor we adopt the family of *exponentially tilted*
 Pólya-gamma distributions with parameter $\xi_n$,
 $$
 \begin{align*}
-q(\omega_n; \xi_n) &\doteq \mathrm{PG}(\omega_n | 1, \xi_n) \newline
+q(\omega_n; \xi_n) &\triangleq \mathrm{PG}(\omega_n | 1, \xi_n) \newline
 &= \cosh{\left(\frac{\xi_n}{2}\right)} \exp{\left(-\frac{\xi_n^2}{2}\omega_n\right)} \mathrm{PG}(\omega_n | 1, 0).
 \end{align*}
 $$
@@ -184,7 +184,7 @@ The first moment of the Pólya-gamma distribution $\mathrm{PG}(\omega | b, c)$ i
 $$
 \mathbb{E}_{\mathrm{PG}(\omega | b, c)}[\omega] = \frac{b}{2c} \tanh{\left(\frac{c}{2}\right)} = b \cdot \lambda(c),
 \qquad
-\lambda(c) \doteq \frac{1}{2c} \tanh{\left(\frac{c}{2}\right)},
+\lambda(c) \triangleq \frac{1}{2c} \tanh{\left(\frac{c}{2}\right)},
 $$
 so in particular $\mathbb{E}_{q(\omega; \xi)}[\omega] = \lambda(\xi)$.
 {{< /callout >}}
@@ -217,7 +217,7 @@ $$
 $$
 where the per-datapoint term collects everything involving $\omega_n$,
 $$
-H(y, \xi, \boldsymbol{\beta}) \doteq 
+H(y, \xi, \boldsymbol{\beta}) \triangleq 
 \mathbb{E}_{q(\omega;\xi)}[\log{p(y | \omega, \boldsymbol{\beta})}] - \mathrm{KL}[q(\omega;\xi) \, \| \, p(\omega)].
 $$
 Let us compute it. Writing the augmented likelihood as
@@ -252,7 +252,7 @@ $\log p(y_n | \boldsymbol{\beta})$ with $H(y_n, \xi_n, \boldsymbol{\beta})$.
 It is worth staring at what we just built. Define
 $$
 \begin{align*}
-h(y, \xi, \boldsymbol{\beta}) &\doteq \exp{H(y, \xi, \boldsymbol{\beta})} \newline
+h(y, \xi, \boldsymbol{\beta}) &\triangleq \exp{H(y, \xi, \boldsymbol{\beta})} \newline
 &= \sigma(\xi) \exp{\left(y \psi - \frac{\psi + \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)\right)}.
 \end{align*}
 $$
@@ -271,7 +271,7 @@ have just rederived.
 For any $\psi, \xi \in \mathbb{R}$,
 $$
 \begin{align*}
-\sigma(\psi) &\geq \ell(\psi, \xi) \doteq
+\sigma(\psi) &\geq \ell(\psi, \xi) \triangleq
 \sigma(\xi) \exp{\left(\frac{\psi - \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)\right)},
 \newline
 \lambda(\xi) &= \frac{1}{2\xi} \tanh{\left(\frac{\xi}{2}\right)},
@@ -374,7 +374,7 @@ $$
 The tilted family was never an assumption; it is forced by the model.
 
 The optimal weight factor follows the same recipe. With
-$\boldsymbol{\Lambda} \doteq \mathrm{diag}(\lambda(\xi_1), \dotsc, \lambda(\xi_N))$
+$\boldsymbol{\Lambda} \triangleq \mathrm{diag}(\lambda(\xi_1), \dotsc, \lambda(\xi_N))$
 collecting the expectations $\mathbb{E}_{q(\omega_n)}[\omega_n]$,
 $$
 \begin{align*}
@@ -577,7 +577,7 @@ Start from the decomposition
 $\log{\sigma(\psi)} = \frac{\psi}{2} - \log{\left(2\cosh{\left(\frac{\psi}{2}\right)}\right)}$
 and regard the awkward second term as a function of $t = \psi^2$:
 $$
-f(t) \doteq -\log{\left(2\cosh{\left(\frac{\sqrt{t}}{2}\right)}\right)}.
+f(t) \triangleq -\log{\left(2\cosh{\left(\frac{\sqrt{t}}{2}\right)}\right)}.
 $$
 A short calculation shows $f'(t) = -\frac{\lambda(\sqrt{t})}{2}$, and
 since $\lambda$ is strictly decreasing on $(0, \infty)$, $f'$ is
@@ -594,12 +594,12 @@ which is what makes it exponential-quadratic in $\psi$ and therefore
 conjugate to a Gaussian prior — the whole point of the exercise.
 
 Equivalently, one can state the result as an upper bound on the softplus
-function $\varsigma(\psi) \doteq \log{(1 + e^{\psi})}$, which is how it is
+function $\varsigma(\psi) \triangleq \log{(1 + e^{\psi})}$, which is how it is
 often deployed (and how it generalizes to the multi-class
 case[^bouchard2007efficient]):
 $$
 \varsigma(\psi) \leq 
-\frac{\psi - \xi}{2} + \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2) + \varsigma(\xi) \doteq
+\frac{\psi - \xi}{2} + \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2) + \varsigma(\xi) \triangleq
 g(\psi, \xi).
 $$
 
