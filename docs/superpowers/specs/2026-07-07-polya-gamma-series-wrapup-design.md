@@ -68,7 +68,7 @@ Narrative order (VI-first):
      function. Illustrated by the existing `samples_paper_1500x927.png`.
    - **New identity** (not in draft): for all ψ, ξ:
      `σ(ψ)/ℓ(ψ,ξ) = exp( KL[PG(1,ξ) ‖ PG(1,ψ)] )`, with
-     `KL[PG(1,ξ) ‖ PG(1,ψ)] = log cosh(ψ/2) − log cosh(ξ/2) + ((ψ²−ξ²)/2)λ(ξ)`.
+     `KL[PG(1,ξ) ‖ PG(1,ψ)] = log cosh(ξ/2) − log cosh(ψ/2) + ((ψ²−ξ²)/2)λ(ξ)`.
      The bound's multiplicative slack is exactly the exponentiated KL from the
      variational PG factor to the true PG conditional posterior
      `p(ω|y,ψ) = PG(1,ψ)`; tightness at `ξ = ±ψ` is now a statement about a

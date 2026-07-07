@@ -5,20 +5,22 @@ aliases:
 
 title: "A Primer on Pólya-gamma Random Variables - Part III: Local Variational Methods"
 subtitle: ""
-summary: "One weird trick to make exact inference in Bayesian logistic regression tractable."
+summary: "We swap Gibbs sampling for mean-field variational inference in the Pólya-Gamma augmented model and watch the classical Jaakkola-Jordan bound on the logistic sigmoid fall out, EM updates and all. The variational lens explains what the bound's λ function is, what its parameter ξ really parameterizes, and why the bound is tight exactly where it is."
 authors: 
 - me
 tags:
-- Machine Learning
+- Pólya-Gamma
+- Variational Inference
 - Bayesian Statistics
 - Probabilistic Models
-- Pólya-Gamma
-categories: []
+- Machine Learning
+categories:
+- technical
 date: 2021-05-11T17:20:53+01:00
-lastmod: 2021-05-11T17:20:53+01:00
+lastmod: 2026-07-07T15:32:37-04:00
 featured: false
 math: true
-draft: true
+draft: false
 
 # Featured image
 # To use, add an image named `featured.jpg/png` to your page's folder.
@@ -41,1010 +43,644 @@ projects: []
 > See also: [Part I — Basic Relationships]({{< relref "/posts/polya-gamma-basic-relationships" >}})
 > and [Part II — Bayesian Logistic Regression]({{< relref "/posts/polya-gamma-bayesian-logistic-regression" >}}).
 
-## Lower bound on the logistic sigmoid function
+{{< toc >}}
 
-(Jaakkola and Jordan, 2000[^jaakkola2000bayesian], Bouchard, 2007[^bouchard2007efficient])
+In [Part II]({{< relref "/posts/polya-gamma-bayesian-logistic-regression" >}})
+we augmented Bayesian logistic regression with Pólya-gamma auxiliary
+variables and recovered conjugacy: conditioned on the auxiliary
+variables $\boldsymbol{\omega}$, the posterior over the latent function is
+Gaussian, and conditioned on the latent function, the posterior over
+each $\omega_n$ is again Pólya-gamma. Cycling between the two conditionals
+gave us a Gibbs sampler whose draws converge to the exact posterior.
 
-In addition to being a popular activation function in deep neural networks, the 
-softplus function appears frequently throughout the machine learning literature.
-$$
-\varsigma(\psi) \doteq \log{(1 + e^{\psi})}
-$$
-Its derivative is the logistic sigmoid function, the logarithm of which can also 
-be related to the softplus.
+Exact is a fine quality in a posterior, but sampling has its costs. The
+draws are correlated and sequential, convergence is something you diagnose
+rather than prove, and every prediction requires dragging a bag of samples
+around. The standard deterministic alternative is *variational inference*
+(VI): pick a family of tractable distributions, and find the member closest
+in KL divergence to the posterior by maximizing a lower bound on the
+marginal likelihood. In this post we do the most pedestrian thing available:
+mean-field VI in the same augmented model, turning the crank without a
+single clever idea.
 
-Its multivariate generalization is the log-sum-exp and its derivate is the 
-softmax function for categorical / multi-class classification.
-$$
-\varsigma(\psi) \leq 
-\frac{\psi - \xi}{2} + \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2) + \varsigma(\xi) \doteq
-g(\psi, \xi)
-$$
+The method that falls out is older than the Pólya-gamma distribution by
+some fifteen years. It is the *local variational method* of Jaakkola and
+Jordan[^jaakkola2000bayesian], a staple of the approximate inference
+literature (Bishop's PRML devotes Section 10.6 to it[^bishop2006pattern])
+built on a quadratic lower bound to the logistic log-likelihood with one
+free parameter $\xi_n$ per datapoint. Their bound, their mysteriously
+specific coefficient function $\lambda(\xi)$, and their EM-style updates
+all reappear here, one for one. The correspondence is exact rather than
+merely analogical, a point made precise by Durante and
+Rigon[^durante2019conditionally].
 
-$$
-\lambda(\xi) \doteq \frac{1}{2\xi} \tanh{\left(\frac{\xi}{2}\right)}
-$$
+Seen through the variational lens, three small mysteries of the classical
+derivation resolve themselves:
 
-{{< figure src="figures/softplus_paper_1500x927.png" title="Softplus function." numbered="true" >}}
+1. the coefficient $\lambda(\xi)$ is the mean of a Pólya-gamma
+   distribution;
+2. the *local variational parameter* $\xi_n$ parameterizes a Pólya-gamma
+   variational factor $q(\omega_n)$, through exponential tilting;
+3. the slack in the bound is exactly a KL divergence, which is why the
+   bound touches the sigmoid precisely at $\psi = \pm \xi$ and nowhere
+   else.
 
+None of this is visible from the classical derivation, which we will also
+revisit toward the end, where the bound is produced by a convexity argument
+and its tightness pattern looks like a happy accident of calculus.
 
-$$
-\sigma(\psi) \doteq \frac{1}{1 + e^{-\psi}}
-$$
+## The Augmented Model, Briefly
 
-$$
-\sigma(\psi) \geq \sigma(\xi) \exp{\left(\frac{\psi - \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)\right)} 
-\doteq \ell(\psi, \xi)
-$$
+We work in the weight-space view with basis functions, which keeps us close
+to both the eventual implementation and the setting of Jaakkola and Jordan.
+Everything below goes through unchanged in the function-space view with
+$f_n$ in place of $\psi_n$ (see Part II).
 
-{{< figure src="figures/sigmoid_paper_1500x927.png" title="Sigmoid function." numbered="true" >}}
-
-The lower bound $\ell(\psi, \xi)$ is easy to derive given the upper bound $g(\psi, \xi)$ on $\varsigma(\psi)$.
-We simply note that $\log{\sigma(\psi)} = - \varsigma(- \psi)$ and 
-reverse the direction of the inequality accordingly to obtain the lower bound
-$$ 
-\begin{align}
-\log{\sigma(\psi)} = - \varsigma(- \psi) & \geq -g(-\psi, \xi) \newline & =
-\frac{\psi + \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2) - \varsigma(\xi) \newline & = 
-\frac{\psi - \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2) + \log{\sigma(\xi)}.
-\end{align}
+For inputs $\mathbf{x}_n$ with binary targets $y_n \in \{0, 1\}$, let
+$\boldsymbol{\phi}_n = \phi(\mathbf{x}_n)$ be the feature vector of the
+$n$th input and let
 $$
-In the last step above, we've used the fact 
-that $\frac{\xi}{2} - \varsigma(\xi) = - \frac{\xi}{2} - \varsigma(-\xi)$.
-Hence, by exponentiating both sides (and noting that the exponential function 
-is strictly increasing), we have
+\psi_n \doteq \boldsymbol{\beta}^{\top} \boldsymbol{\phi}_n
 $$
-\sigma(\psi) \geq \ell(\psi, \xi).
+be the corresponding value of the latent function. We place a Gaussian
+prior on the weights, written in terms of its precision matrix $\mathbf{S}$,
 $$
-
-## Polya-gamma Augmented Bayesian Logistic Regression Model
-
-The model joint factorizes as
+p(\boldsymbol{\beta}) = \mathcal{N}(\boldsymbol{\beta} | \mathbf{m}, \mathbf{S}^{-1}),
 $$
-\begin{align}
-p(\mathbf{y}, \boldsymbol{\omega}, \boldsymbol{\beta}) &= 
-\prod_{n=1}^N p(y_n, \omega_n, \boldsymbol{\beta}) \newline &=
-p(\boldsymbol{\beta}) \prod_{n=1}^N p(y_n | \omega_n, \boldsymbol{\beta}) p(\omega_n) 
-\end{align}
+and, following Part II, we replace each Bernoulli likelihood factor with
+its augmented counterpart
 $$
-
-### Priors
-
-The prior on weight parameters
+\begin{align*}
+p(y_n | \omega_n, \boldsymbol{\beta}) &= 
+\frac{1}{2} \exp{\left\{-\frac{\omega_n}{2}\left(\psi_n^2 - 2\psi_n\frac{\kappa_n}{\omega_n}\right)\right\}} \newline
+&= \frac{1}{2} \exp{\left( \kappa_n \psi_n - \frac{\psi_n^2}{2} \omega_n \right)},
+\end{align*}
 $$
-p(\boldsymbol{\beta}) = \mathcal{N}(\boldsymbol{\beta} | \mathbf{m}, \mathbf{S})
+where $\kappa_n = y_n - \frac{1}{2}$, together with the Pólya-gamma prior
 $$
-
-The prior on auxiliary variables
+p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0).
 $$
-p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0)
+The model joint then factorizes as
 $$
-
-### Likelihood
-
+p(\mathbf{y}, \boldsymbol{\omega}, \boldsymbol{\beta}) =
+p(\boldsymbol{\beta}) \prod_{n=1}^N p(y_n | \omega_n, \boldsymbol{\beta}) p(\omega_n).
 $$
-p(y_n | \omega_n, \boldsymbol{\beta}) = 
-\frac{1}{2} \exp{\left\{-\frac{\omega_n}{2}\left(\psi_n^2 - 2\psi_n\frac{\kappa_n}{\omega_n}\right)\right\}}
-$$
-where $\kappa_n = y_n - \frac{1}{2}$ and $\psi_n = \boldsymbol{\beta}^{\top} \boldsymbol{\phi}_n$
-for $\boldsymbol{\phi}_n = \phi(\mathbf{x}_n)$.
 
 {{< callout note >}}
-Recall that, crucially, we recover the standard Bernoulli likelihood by 
-marginalizing out the auxiliary variables
+Recall from Part II that marginalizing out the auxiliary variable recovers
+the original likelihood exactly,
 $$
-\begin{align}
+\begin{align*}
 p(y | \boldsymbol{\beta}) & =
 \int p(y | \omega, \boldsymbol{\beta}) p(\omega) \mathrm{d}\omega \newline & =
 \frac{e^{y \psi}}{1 + e^{\psi}} = 
-\sigma(\psi)^{y} (1-\sigma(\psi))^{1-y} \doteq 
-\mathrm{Bernoulli}(y | \psi)
-\end{align}
+\sigma(\psi)^{y} (1-\sigma(\psi))^{1-y} = 
+\mathrm{Bern}(y | \sigma(\psi)),
+\end{align*}
 $$
+so the augmented model is the same model, wearing more convenient clothes.
 {{< /callout >}}
 
-## Variational Inference
+In Part II we sampled from $p(\boldsymbol{\beta}, \boldsymbol{\omega} | \mathbf{y})$
+by Gibbs sampling. Here we approximate it instead.
 
-Approximate posterior $p(\boldsymbol{\beta}, \boldsymbol{\omega} | \mathbf{y})$
+## Mean-Field Variational Inference
 
-### Variational distribution
+We posit a variational distribution that factorizes between the weights and
+the auxiliary variables,
 $$
-q(\boldsymbol{\beta}, \boldsymbol{\omega}; \boldsymbol{\xi}) = 
-q(\boldsymbol{\beta}) \prod_{n=1}^N q(\omega_n; \xi_n)
+q(\boldsymbol{\beta}, \boldsymbol{\omega}) = 
+q(\boldsymbol{\beta}) \prod_{n=1}^N q(\omega_n; \xi_n),
 $$
+and maximize the evidence lower bound (ELBO)
+$$
+\log p(\mathbf{y}) \geq 
+\mathcal{L}(q) \doteq 
+\mathbb{E}_{q(\boldsymbol{\beta}, \boldsymbol{\omega})}
+[\log p(\mathbf{y}, \boldsymbol{\omega}, \boldsymbol{\beta}) - \log q(\boldsymbol{\beta}, \boldsymbol{\omega})],
+$$
+which is equivalent to minimizing
+$\mathrm{KL}[q(\boldsymbol{\beta}, \boldsymbol{\omega}) \, \| \, p(\boldsymbol{\beta}, \boldsymbol{\omega} | \mathbf{y})]$.
 
-variational distribution with local variational parameter $\xi$
+For each auxiliary factor we adopt the family of *exponentially tilted*
+Pólya-gamma distributions with parameter $\xi_n$,
 $$
-q(\omega_n; \xi_n) \doteq \mathrm{PG}(\omega_n | 1, \xi_n)
-\doteq \cosh{\left(\frac{\xi_n}{2}\right)} \exp{\left(-\frac{\xi_n^2}{2}\omega_n\right)} \mathrm{PG}(\omega_n | 1, 0) 
+\begin{align*}
+q(\omega_n; \xi_n) &\doteq \mathrm{PG}(\omega_n | 1, \xi_n) \newline
+&= \cosh{\left(\frac{\xi_n}{2}\right)} \exp{\left(-\frac{\xi_n^2}{2}\omega_n\right)} \mathrm{PG}(\omega_n | 1, 0).
+\end{align*}
 $$
+This is not an arbitrary choice. Part II showed that the exact conditional
+posterior is $p(\omega_n | \psi_n) = \mathrm{PG}(1, \psi_n)$, so the family
+contains the distribution we are trying to approximate; and, as we will
+verify later, the optimal mean-field factor lands in this family whether we
+ask for it or not.
+
+Two properties of the tilted family do all of the work in this post. The
+first is its mean.
 
 {{< callout note >}}
-Note the first moment of the Polya-gamma $\mathrm{PG}(\omega | b, c)$ 
-distribution is related to the function $\lambda$ defined above
+The first moment of the Pólya-gamma distribution $\mathrm{PG}(\omega | b, c)$ is
 $$
-\mathbb{E}_{\mathrm{PG}(\omega | b, c)}[\omega] = \frac{b}{2c} \tanh{\left(\frac{c}{2}\right)} = b \cdot \lambda(c).
+\mathbb{E}_{\mathrm{PG}(\omega | b, c)}[\omega] = \frac{b}{2c} \tanh{\left(\frac{c}{2}\right)} = b \cdot \lambda(c),
+\qquad
+\lambda(c) \doteq \frac{1}{2c} \tanh{\left(\frac{c}{2}\right)},
 $$
-In particular, note that
-$$
-\mathbb{E}_{\mathrm{PG}(\omega | 1, c)}[\omega] = \lambda(c).
-$$
+so in particular $\mathbb{E}_{q(\omega; \xi)}[\omega] = \lambda(\xi)$.
 {{< /callout >}}
 
-Minimize $\mathrm{KL}[q(\boldsymbol{\beta}, \boldsymbol{\omega}; \boldsymbol{\xi}) || p(\boldsymbol{\beta}, \boldsymbol{\omega} | \mathbf{y})]$ through maximization of the evidence lower bound (ELBO).
+{{< figure src="figures/samples_paper_1500x927.png" title="Samples $\omega \sim \mathrm{PG}(\omega | 1, c)$ with the mean function $\mathbb{E}[\omega] = \lambda(c)$ overlaid (dashed). Keep this function in mind; it is about to become famous." numbered="true" >}}
 
+The second is that the KL divergence from the tilted distribution to the
+prior is available in closed form, despite the Pólya-gamma density itself
+having no closed form. The log-ratio of the two densities is affine
+in $\omega$,
 $$
-\mathcal{L}(\xi_n) \doteq 
-\mathbb{E}_{q(\boldsymbol{\beta}, \omega_n; \xi_n)}[\log{p(y_n | \omega_n, \boldsymbol{\beta})}] - 
-\mathrm{KL}[q(\boldsymbol{\beta}, \omega_n; \xi_n) || p(\boldsymbol{\beta}, \omega_n)]
+\log \frac{q(\omega; \xi)}{p(\omega)} = 
+\log{\cosh{\left(\frac{\xi}{2}\right)}} - \frac{\xi^2}{2}\omega,
+$$
+so taking the expectation under $q$ costs us nothing more than the first
+moment:
+$$
+\mathrm{KL}[q(\omega; \xi) \, \| \, p(\omega)] = 
+\log{\cosh{\left(\frac{\xi}{2}\right)}} - \frac{\xi^2}{2} \lambda(\xi).
 $$
 
-We can write 
+## Grinding Through the ELBO
 
+Because the augmented likelihood factorizes across datapoints, the ELBO
+decomposes into per-datapoint contributions,
 $$
-\mathcal{L}(\xi_n) = \mathbb{E}_{q(\boldsymbol{\beta})}[
-  \log{h(y_n, \xi_n, \boldsymbol{\beta})} + \log{p(\boldsymbol{\beta})} - 
-  \log{q(\boldsymbol{\beta})}]
+\mathcal{L}(q) = \mathbb{E}_{q(\boldsymbol{\beta})}
+\left[ \sum_{n=1}^N H(y_n, \xi_n, \boldsymbol{\beta}) + 
+\log{p(\boldsymbol{\beta})} - \log{q(\boldsymbol{\beta})} \right],
 $$
-where
-$$
-h(y, \xi, \boldsymbol{\beta}) \doteq \exp{H(y, \xi, \boldsymbol{\beta})}
-$$
-and
+where the per-datapoint term collects everything involving $\omega_n$,
 $$
 H(y, \xi, \boldsymbol{\beta}) \doteq 
-\mathbb{E}_{q(\omega;\xi)}[\log{p(y | \omega, \boldsymbol{\beta})}] - \mathrm{KL}[q(\omega;\xi) || p(\omega)]
+\mathbb{E}_{q(\omega;\xi)}[\log{p(y | \omega, \boldsymbol{\beta})}] - \mathrm{KL}[q(\omega;\xi) \, \| \, p(\omega)].
 $$
-
-
+Let us compute it. Writing the augmented likelihood as
+$\log p(y | \omega, \boldsymbol{\beta}) = \kappa \psi - \frac{\psi^2}{2}\omega - \log 2$
+and using the affine log-ratio from the previous section,
 $$
-\begin{align}
+\begin{align*}
   H(y, \xi, \boldsymbol{\beta})
-  &= \mathbb{E}_{q(\omega;\xi)}[\log{p(y | \omega, \boldsymbol{\beta})} + \log{p(\omega)} - \log{q(\omega;\xi)}] \newline
+  &= \mathbb{E}_{q(\omega;\xi)}\left[\log{p(y | \omega, \boldsymbol{\beta})} + \log{p(\omega)} - \log{q(\omega;\xi)}\right] \newline
   &= \mathbb{E}_{q(\omega;\xi)}
-  \left [ - \frac{\omega}{2} \left( \psi^2 - 2\psi\frac{\kappa}{\omega}\right) - \log{2}
-          + \log{\mathrm{PG}(1, 0)} - \log{\mathrm{PG}(1, 0)} + \frac{\xi^2}{2} \omega - \log{\cosh{\left(\frac{\xi}{2}\right)}} 
-  \right] \newline
-  &= \mathbb{E}_{q(\omega;\xi)}
-  \left [ - \frac{\omega}{2} \left( \psi^2 - 2\psi\frac{\kappa}{\omega}\right) 
-          + \frac{\xi^2}{2} \omega + \log{\sigma(\xi)} - \frac{\xi}{2}
-  \right ] \newline
-  &= \mathbb{E}_{q(\omega;\xi)}
-  \left [ y \psi - \frac{\psi + \xi}{2} - \frac{\omega}{2} (\psi^2 - \xi^2) + \log{\sigma(\xi)} \right ] \newline
-  &= y \psi - \frac{\psi + \xi}{2}
-    -\frac{1}{2} (\psi^2 - \xi^2) \mathbb{E}_{q(\omega;\xi)}[\omega]  
-    + \log{\sigma(\xi)} \newline
-  &= y \psi - \frac{\psi + \xi}{2}
+  \left[ \kappa \psi - \frac{\psi^2}{2} \omega 
+          + \frac{\xi^2}{2} \omega \right] - \log{2} - \log{\cosh{\left(\frac{\xi}{2}\right)}} \newline
+  &= \kappa \psi
     -\frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)
-    + \log{\sigma(\xi)} \newline
-\end{align}
+    + \log{\sigma(\xi)} - \frac{\xi}{2},
+\end{align*}
+$$
+where the last step uses $\mathbb{E}_{q(\omega;\xi)}[\omega] = \lambda(\xi)$
+together with the identity
+$-\log{\left(2\cosh{\left(\frac{\xi}{2}\right)}\right)} = \log{\sigma(\xi)} - \frac{\xi}{2}$,
+which follows from Part I's expression of the sigmoid in terms of the
+hyperbolic cosine. Substituting $\kappa = y - \frac{1}{2}$ gives
+$$
+H(y, \xi, \boldsymbol{\beta}) = 
+y \psi - \frac{\psi + \xi}{2}
+    -\frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)
+    + \log{\sigma(\xi)}.
 $$
 
+The ELBO thus replaces each exact log-likelihood term
+$\log p(y_n | \boldsymbol{\beta})$ with $H(y_n, \xi_n, \boldsymbol{\beta})$.
+It is worth staring at what we just built. Define
 $$
-\begin{align}
-h(y, \xi, \boldsymbol{\beta}) & = 
-\sigma(\xi) \exp{\left(y \psi - \frac{\psi + \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)\right)} \newline & = 
-e^{y \psi} \ell(-\psi, \xi) \newline & \leq 
-e^{y \psi} \sigma(-\psi) = 
-\sigma(\psi)^{y} (1- \sigma(\psi))^{1-y} = p(y | \boldsymbol{\beta}) 
-\end{align}
+\begin{align*}
+h(y, \xi, \boldsymbol{\beta}) &\doteq \exp{H(y, \xi, \boldsymbol{\beta})} \newline
+&= \sigma(\xi) \exp{\left(y \psi - \frac{\psi + \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)\right)}.
+\end{align*}
+$$
+This is a *pseudo-likelihood*: a squashed-down stand-in for the Bernoulli
+factor, with the squashing controlled by $\xi$.
+
+## An Old Friend
+
+Readers who have met variational logistic regression before will have
+recognized $h$ already. For everyone else, here is the classical result we
+have just rederived.
+
+{{< callout note >}}
+#### The Jaakkola-Jordan bound (Jaakkola and Jordan, 2000)
+
+For any $\psi, \xi \in \mathbb{R}$,
+$$
+\begin{align*}
+\sigma(\psi) &\geq \ell(\psi, \xi) \doteq
+\sigma(\xi) \exp{\left(\frac{\psi - \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2)\right)},
+\newline
+\lambda(\xi) &= \frac{1}{2\xi} \tanh{\left(\frac{\xi}{2}\right)},
+\end{align*}
+$$
+with equality if and only if $\xi = \pm\psi$.
+{{< /callout >}}
+
+{{< figure src="figures/sigmoid_paper_1500x927.png" title="The logistic sigmoid function (dashed) and the family of Jaakkola-Jordan lower bounds $\ell(\psi, \xi)$, one curve per value of $\xi$. Each bound is exact at $\psi = \pm\xi$." numbered="true" >}}
+
+A line of algebra confirms that our per-datapoint pseudo-likelihood is
+exactly this bound, applied to the likelihood:
+$$
+h(y, \xi, \boldsymbol{\beta}) = e^{y\psi} \, \ell(-\psi, \xi) = \ell\left((2y - 1) \, \psi, \, \xi\right),
+$$
+which for $y = 1$ reads $\ell(\psi, \xi) \leq \sigma(\psi)$ and for $y = 0$
+reads $\ell(-\psi, \xi) \leq \sigma(-\psi)$; in both cases,
+$h(y, \xi, \boldsymbol{\beta}) \leq p(y | \boldsymbol{\beta})$.
+
+In other words: **the mean-field ELBO of the Pólya-gamma augmented model is
+the Jaakkola-Jordan objective.** Maximizing the ELBO over the variational
+parameters $\xi_n$ is the same computation as tightening the classical
+bounds; the "local variational parameter" attached to each datapoint is,
+from where we now stand, the tilting parameter of a Pólya-gamma variational
+factor $q(\omega_n) = \mathrm{PG}(1, \xi_n)$. And the coefficient
+$\lambda(\xi)$, which the classical derivation produces as the slope of a
+certain tangent line, is the posterior-mean function of the Pólya-gamma
+family — the dashed curve in Figure 1.[^lambda-convention]
+
+One small observation while we are here: the Pólya-gamma density
+$\mathrm{PG}(1, \xi)$ depends on $\xi$ only through $\xi^2$, so
+$q(\omega; \xi)$ and $q(\omega; -\xi)$ are the same distribution. The
+classical bound's indifference to the sign of $\xi$ stops being a
+curiosity; the two signs were never different objects to begin with.
+
+### The Slack in the Bound Is a KL Divergence
+
+The variational view owes us one more explanation: why is the bound exact
+at $\xi = \pm\psi$, exactly there, and nowhere else?
+
+For a fixed $\boldsymbol{\beta}$ (hence fixed $\psi$), the quantity
+$H(y, \xi, \boldsymbol{\beta})$ is itself a little ELBO for the
+one-dimensional latent variable $\omega$, and the generic ELBO identity
+applies: the gap to the true log-likelihood is the KL divergence from the
+variational factor to the exact conditional posterior. Part II computed
+that conditional: $p(\omega | y, \boldsymbol{\beta}) = \mathrm{PG}(1, \psi)$,
+independent of $y$. So
+$$
+\log{p(y | \boldsymbol{\beta})} - H(y, \xi, \boldsymbol{\beta}) = 
+\mathrm{KL}[\, \mathrm{PG}(1, \xi) \, \| \, \mathrm{PG}(1, \psi) \,],
+$$
+and because both distributions are exponential tiltings of the same base
+measure, this KL divergence is available in closed form (see
+[Appendix I]({{< relref "#i" >}})):
+$$
+\begin{align*}
+& \mathrm{KL}[\, \mathrm{PG}(1, \xi) \, \| \, \mathrm{PG}(1, \psi) \,] = \newline
+& \qquad \log{\cosh{\left(\frac{\xi}{2}\right)}} - \log{\cosh{\left(\frac{\psi}{2}\right)}} + \frac{\psi^2 - \xi^2}{2} \lambda(\xi).
+\end{align*}
+$$
+Specializing to $y = 1$ gives a pleasingly compact form of the classical
+bound's multiplicative slack:
+$$
+\frac{\sigma(\psi)}{\ell(\psi, \xi)} = 
+\exp{\left( \mathrm{KL}[\, \mathrm{PG}(1, \xi) \, \| \, \mathrm{PG}(1, \psi) \,] \right)}.
+$$
+The right-hand side is $\geq 1$ because KL divergences are nonnegative
+(there is the bound), and it equals $1$ precisely when the two
+distributions coincide, that is, when $\xi = \pm\psi$ (there is the
+tightness pattern). What the classical derivation presents as an accident
+of tangency is the statement that a KL divergence vanishes exactly when
+its two arguments are equal.
+
+These identities are checked numerically, to machine precision, by the
+script `verify_identities.py` in this post's source bundle.
+
+## Coordinate Ascent, and Why the Family Was Never a Choice
+
+So far we fixed the form of $q(\omega_n)$ by fiat. Coordinate ascent
+variational inference (CAVI) lets us drop even that: holding the other
+factors fixed, the optimal mean-field factor for any block is the
+exponentiated expected log of the joint. For $\omega_n$,
+$$
+\begin{align*}
+q^*(\omega_n) &\propto 
+p(\omega_n) \exp{\left( \mathbb{E}_{q(\boldsymbol{\beta})}[\log{p(y_n | \omega_n, \boldsymbol{\beta})}] \right)} \newline
+&\propto 
+p(\omega_n) \exp{\left( - \frac{\mathbb{E}_{q(\boldsymbol{\beta})}[\psi_n^2]}{2} \omega_n \right)},
+\end{align*}
+$$
+since the expected augmented log-likelihood is affine in $\omega_n$. An
+exponential tilting of $\mathrm{PG}(1, 0)$ is a Pólya-gamma distribution,
+so the optimum lands in our family automatically,
+$$
+q^*(\omega_n) = \mathrm{PG}(\omega_n | 1, \xi_n),
+\qquad
+\xi_n^2 = \mathbb{E}_{q(\boldsymbol{\beta})}[\psi_n^2] = 
+\boldsymbol{\phi}_n^{\top} \left( \boldsymbol{\Sigma} + \boldsymbol{\mu} \boldsymbol{\mu}^{\top} \right) \boldsymbol{\phi}_n.
+$$
+The tilted family was never an assumption; it is forced by the model.
+
+The optimal weight factor follows the same recipe. With
+$\boldsymbol{\Lambda} \doteq \mathrm{diag}(\lambda(\xi_1), \dotsc, \lambda(\xi_N))$
+collecting the expectations $\mathbb{E}_{q(\omega_n)}[\omega_n]$,
+$$
+\begin{align*}
+\log{q^*(\boldsymbol{\beta})} &= 
+\log{p(\boldsymbol{\beta})} + \sum_{n=1}^N \mathbb{E}_{q(\omega_n)}[\log{p(y_n | \omega_n, \boldsymbol{\beta})}] + \mathrm{const} \newline &=
+-\frac{1}{2} (\boldsymbol{\beta} - \mathbf{m})^{\top} \mathbf{S} (\boldsymbol{\beta} - \mathbf{m}) \newline &\qquad + 
+\sum_{n=1}^N \left( \kappa_n \psi_n - \frac{\lambda(\xi_n)}{2} \psi_n^2 \right) + \mathrm{const} \newline &= 
+-\frac{1}{2} \boldsymbol{\beta}^{\top} \left(\mathbf{S} + \boldsymbol{\Phi}^{\top} \boldsymbol{\Lambda} \boldsymbol{\Phi}\right) \boldsymbol{\beta} +
+\boldsymbol{\beta}^{\top} \left(\mathbf{S} \mathbf{m} + \boldsymbol{\Phi}^{\top} \boldsymbol{\kappa} \right) + \mathrm{const},
+\end{align*}
+$$
+which is the log of a Gaussian,
+$$
+\begin{align*}
+q^*(\boldsymbol{\beta}) &= \mathcal{N}(\boldsymbol{\beta} | \boldsymbol{\mu}, \boldsymbol{\Sigma}),
+\newline
+\boldsymbol{\mu} &= \boldsymbol{\Sigma} \left ( \mathbf{S} \mathbf{m} + \boldsymbol{\Phi}^{\top} \boldsymbol{\kappa} \right ),
+\qquad
+\boldsymbol{\Sigma} = \left( \mathbf{S} + \boldsymbol{\Phi}^{\top} \boldsymbol{\Lambda} \boldsymbol{\Phi} \right)^{-1}.
+\end{align*}
 $$
 
-$$
-\begin{align}
-H(y, \xi, \boldsymbol{\beta}) & = 
-  y \psi - g(\psi, \xi) \newline & \leq 
-  y \psi + \log{\sigma(-\psi)} = 
-  \log{p(y | \boldsymbol{\beta})}
-\end{align}
-$$
+CAVI alternates these two updates until convergence. Anyone who has
+implemented variational logistic regression from Bishop Section 10.6 will
+recognize both of them: the $q(\boldsymbol{\beta})$ update is Jaakkola and
+Jordan's "E-step" and the $\xi$ update
+$\xi_n^2 = \mathbb{E}[\psi_n^2]$ is their "M-step", derived there by
+maximizing the bound with respect to each $\xi_n$ directly. The two
+algorithms coincide, update for update. This is the equivalence formalized
+by Durante and Rigon[^durante2019conditionally]: Jaakkola and Jordan's
+local variational method *is* mean-field variational Bayes in the
+Pólya-gamma augmented model, fifteen years avant la lettre.
 
-$$
-p(y , \boldsymbol{\beta}) = p(y | \boldsymbol{\beta}) p(\boldsymbol{\beta}) 
-\geq
-h(y, \xi, \boldsymbol{\beta}) p(\boldsymbol{\beta}) 
-$$
+The correspondence with Part II's Gibbs sampler is equally mechanical:
 
-Let
-$$
-\boldsymbol{\Lambda} = \mathrm{diag}(\lambda(\xi_1) \cdots \lambda(\xi_N))
-$$
+| | Gibbs (Part II) | CAVI (this post) |
+|---|---|---|
+| $\omega$-step | draw $\omega_n \sim \mathrm{PG}(1, \psi_n)$ | set $q(\omega_n) = \mathrm{PG}(1, \xi_n)$, $\xi_n^2 = \mathbb{E}_q[\psi_n^2]$ |
+| $\beta$-step | draw $\boldsymbol{\beta} \sim \mathcal{N}(\boldsymbol{\mu}_{\boldsymbol{\omega}}, \boldsymbol{\Sigma}_{\boldsymbol{\omega}})$, $\enspace \boldsymbol{\Sigma}_{\boldsymbol{\omega}} = \left( \mathbf{S} + \boldsymbol{\Phi}^{\top} \boldsymbol{\Omega} \boldsymbol{\Phi} \right)^{-1}$ | set $q(\boldsymbol{\beta}) = \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$, $\enspace \boldsymbol{\Sigma} = \left( \mathbf{S} + \boldsymbol{\Phi}^{\top} \boldsymbol{\Lambda} \boldsymbol{\Phi} \right)^{-1}$ |
 
-$$
-\begin{align}
-\log{[p(y | \boldsymbol{\beta}) p(\boldsymbol{\beta})]} & \geq 
-\log{[h(y, \xi, \boldsymbol{\beta}) p(\boldsymbol{\beta})]} \newline & =
-\log{p(\boldsymbol{\beta})} + \sum_{n=1}^N \{ y_n \psi_n - \frac{\psi_n + \xi_n}{2} - \frac{\lambda(\xi_n)}{2} (\psi_n^2 - \xi_n^2) + \log{\sigma(\xi_n)} \} \newline & =
-\log{p(\boldsymbol{\beta})} + \sum_{n=1}^N \{ \psi_n \kappa_n - \frac{\lambda(\xi_n)}{2} \psi_n^2 \} + \mathrm{const} \newline & =
-\log{p(\boldsymbol{\beta})} + \sum_{n=1}^N \{ \boldsymbol{\beta}^{\top} \boldsymbol{\phi}_n \kappa_n - 
-\frac{\lambda(\xi_n)}{2} \boldsymbol{\beta}^{\top} \left(\boldsymbol{\phi}_n \boldsymbol{\phi}_n^{\top}\right) \boldsymbol{\beta} \} + \mathrm{const} \newline & = - 
-\frac{1}{2} (\boldsymbol{\beta} - \mathbf{m})^{\top} \mathbf{S}^{-1} (\boldsymbol{\beta} - \mathbf{m}) + \boldsymbol{\beta}^{\top} \boldsymbol{\Phi}^{\top} \kappa - 
-\frac{1}{2} \boldsymbol{\beta}^{\top} \left(\boldsymbol{\Phi}^{\top} \boldsymbol{\Lambda} \boldsymbol{\Phi}\right) \boldsymbol{\beta} + \mathrm{const} \newline & = - 
-\frac{1}{2} \boldsymbol{\beta}^{\top} \left(\mathbf{S}^{-1} + \boldsymbol{\Phi}^{\top} \boldsymbol{\Lambda} \boldsymbol{\Phi}\right) \boldsymbol{\beta} +
-\boldsymbol{\beta}^{\top} \left(\mathbf{S}^{-1} \mathbf{m} + \boldsymbol{\Phi}^{\top} \kappa \right) + \mathrm{const} \newline & = - 
-\frac{1}{2} 
-\left(\boldsymbol{\beta} - \boldsymbol{\mu} \right)^{\top} 
-\boldsymbol{\Sigma}^{-1}
-\left(\boldsymbol{\beta} - \boldsymbol{\mu}\right) + \mathrm{const} 
-\end{align}
-$$
-where
-$$
-\boldsymbol{\mu} = \boldsymbol{\Sigma} \left ( \mathbf{S}^{-1} \mathbf{m} + \boldsymbol{\Phi}^{\top} \boldsymbol{\kappa} \right )
-\quad
-\text{and}
-\quad
-\boldsymbol{\Sigma}^{-1} = \left( \mathbf{S}^{-1} + \boldsymbol{\Phi}^{\top} \boldsymbol{\Lambda} \boldsymbol{\Phi} \right).
-$$
-Hence, we adopt the following Gaussian approximation to the posterior
-$$
-q(\boldsymbol{\beta}; \boldsymbol{\xi}) = 
-\mathcal{N}(\boldsymbol{\beta} | \boldsymbol{\mu}, \boldsymbol{\Sigma}).
-$$
-
-
-$$
-\begin{align}
-  H(y, \xi, \boldsymbol{\beta}) & = - \frac{\lambda(\xi)}{2} \left ( \psi^2 - 2 \psi \frac{\kappa}{\lambda(\xi)} \right ) + 
-     \frac{\lambda(\xi)}{2} \xi^2 - \frac{\xi}{2} + \log{\sigma(\xi)} \newline
-  &= - \frac{\lambda(\xi)}{2} \left( \psi - \frac{\kappa}{\lambda(\xi)} \right)^2 + C(y, \xi)
-\end{align}
-$$
-
+Same two conditionals, with draws replaced by expectations:
+$\boldsymbol{\Lambda} = \mathbb{E}_q[\boldsymbol{\Omega}]$. Even the
+pseudo-observations survive the translation. Completing the square
+in $\psi$ shows that, up to constants in $\boldsymbol{\beta}$,
 $$
 h(y, \xi, \boldsymbol{\beta}) \propto 
-\exp{\left\{-\frac{\lambda(\xi)}{2}\left(\psi - \frac{\kappa}{\lambda(\xi)}\right)^2\right\}}
-$$
-
-
-### Prior over auxiliary variables
-
-Second, let us define a prior over auxiliary variables $\boldsymbol{\omega}$ that 
-factorize as
-$$
-p(\boldsymbol{\omega}) = \prod_{n=1}^N p(\omega_n) 
-$$
-where each factor $p(\omega_n)$ is a Pólya-gamma density
-$$
-p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0),
-$$
-defined as an infinite [convolution](https://en.wikipedia.org/wiki/Convolution_of_probability_distributions#See_also) of gamma distributions :
-
-{{< callout note >}}
-#### Pólya-gamma density (Polson et al. 2013)
-
-A random variable $\omega$ has a Pólya-gamma distribution with parameters $b > 0$ 
-and $c \in \mathbb{R}$, denoted $\omega \sim \mathrm{PG}(b, c)$, if
-$$
-\mathrm{PG}(b, c) = \frac{1}{2 \pi^2} \sum_{k=1}^{\infty} 
-\frac{g_k}{\left (k - \frac{1}{2} \right )^2 + \left ( \frac{c}{2\pi} \right )^2}
-$$
-where the $g_k \sim \mathrm{Ga}(b, 1)$ are independent gamma random variables.
-{{< /callout >}}
-
-#### Property I: Recovering the original model
-
-First we show that we can recover the original likelihood $p(y_n | f_n)$ 
-by integrating out $\boldsymbol{\omega}$.
-Before we proceed, note that the $p(y_n | f_n)$ can be expressed more 
-succinctly as
-$$
-p(y_n | f_n) = \frac{e^{y_n f_n}}{1 + e^{f_n}}.
-$$
-Refer to [Appendix I]({{< relref "#i" >}}) for derivations.
-Next, note the following property of Pólya-gamma variables:
-
-{{< callout note >}}
-#### Laplace transform of the Pólya-gamma density (Polson et al. 2013)
-
-Based on the [Laplace transform](https://mathworld.wolfram.com/LaplaceTransform.html) 
-of the Pólya-gamma density function, we can derive the following relationship:
-$$
-\frac{\left (e^{u} \right )^a}{\left (1 + e^{u} \right )^b} = 
-\frac{1}{2^b} \exp{(\kappa u)} \
-\int_0^\infty \exp{\left ( - \frac{u^2}{2} \omega \right )} 
-p(\omega) d\omega,
-$$
-where $\kappa = a - \frac{b}{2}$ and $p(\omega) = \mathrm{PG}(\omega | b, 0)$.
-{{< /callout >}}
-
-Therefore, by substituting $\kappa = \kappa_n, a = y_n, b = 1$ and $u = f_n$ 
-we get
-$$
-\begin{align}
-\int p(y_n, \omega_n | f_n) d\omega_n &=
-\int p(y_n | f_n, \omega_n) p(\omega_n) d\omega_n \newline &= 
-\frac{1}{2} \int \exp{\left \{ - \frac{\omega_n}{2} \left (f_n^2 - 
-                             2 f_n \frac{\kappa_n}{\omega_n} \right ) \right \}} p(\omega_n) d\omega_n \newline &= 
-\frac{1}{2} \exp{(\kappa_n f_n)} 
-\int \exp{\left ( - \frac{f_n^2}{2} \omega_n \right )} p(\omega_n) d\omega_n \newline &= 
-\frac{\left (e^{f_n} \right )^{y_n}}{1 + e^{f_n}} = p(y_n | f_n)
-\end{align}
-$$
-as required.
-
-#### Property II: Gaussian-Gaussian conjugacy
-
-Let us define the diagonal matrix $\boldsymbol{\Omega} = \mathrm{diag}(\omega_1 \cdots \omega_n)$ and vector $\mathbf{z} = \boldsymbol{\Omega}^{-1} \boldsymbol{\kappa}$. 
-More simply, $\mathbf{z}$ is the vector with $n$th element $z_n = {\kappa_n} / {\omega_n}$.
-Hence, by [completing the square](https://mathworld.wolfram.com/CompletingtheSquare.html), 
-the per-datapoint conditional likelihood $p(y_n | f_n, \omega_n)$ above can be written as
-$$
-\begin{align}
-p(y_n | f_n, \omega_n) & \propto
-\exp{\left \{ - \frac{\omega_n}{2} \left (f_n - \frac{\kappa_n}{\omega_n} \right )^2 \right \}} \newline & = \exp{\left \{ - \frac{\omega_n}{2} \left (f_n - z_n \right )^2 \right \}}
-\end{align}
-$$
-Importantly, this implies that the conditional likelihood over all 
-variables $p(\mathbf{y} | \mathbf{f}, \boldsymbol{\omega})$ is simply a 
-multivariate Gaussian distribution up to a constant factor
-$$
-p(\mathbf{y} | \mathbf{f}, \boldsymbol{\omega}) \propto \mathcal{N}\left (\boldsymbol{\Omega}^{-1} \boldsymbol{\kappa} | \mathbf{f}, \boldsymbol{\Omega}^{-1} \right ).
-$$
-Refer to [Appendix II]({{< relref "#ii" >}}) for derivations.
-Therefore, a Gaussian prior $p(\mathbf{f})$ is conjugate to the 
-conditional likelihood $p(\mathbf{y} | \mathbf{f}, \boldsymbol{\omega})$, which 
-leads to $p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega})$, the posterior 
-over $\mathbf{f}$ conditioned on the auxiliary latent 
-variables $\boldsymbol{\omega}$, also being a Gaussian---a property that will 
-prove crucial to us in the next section.
-
-### Inference (Gibbs sampling)
-
-We wish to compute the posterior 
-distribution $p(\mathbf{f}, \boldsymbol{\omega} | \mathbf{y})$, the 
-distribution over the hidden variables $(\mathbf{f}, \boldsymbol{\omega})$ 
-conditioned on the observed variables $\mathbf{y}$.
-To produce samples from this distribution 
-$$
-(\mathbf{f}^{(t)}, \boldsymbol{\omega}^{(t)}) \sim p(\mathbf{f}, \boldsymbol{\omega} | \mathbf{y}),
-$$
-we can readily apply Gibbs sampling[^geman1984stochastic], an MCMC 
-algorithm that can be seen as a special case of the Metropolis-Hastings algorithm.
-
-Each step of the Gibbs sampling procedure involves replacing the value of one 
-of the variables by a value drawn from the distribution of that variable 
-conditioned on the values of the remaining variables.
-Specifically, we proceed as follows. 
-At step $t$, we have values $\mathbf{f}^{(t-1)}, \boldsymbol{\omega}^{(t-1)}$
-sampled from the previous step. 
-
-1. We first replace $\mathbf{f}^{(t-1)}$ by a new
-value $\mathbf{f}^{(t)}$ by sampling from the conditional distribution $p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}^{(t-1)})$,
-$$
-\mathbf{f}^{(t)} \sim p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}^{(t-1)}).
-$$
-2. Then we replace $\boldsymbol{\omega}^{(t-1)}$ by $\boldsymbol{\omega}^{(t)}$ by sampling 
-from the conditional distribution $p(\boldsymbol{\omega}| \mathbf{f}^{(t)})$,
-$$
-\boldsymbol{\omega}^{(t)} \sim p(\boldsymbol{\omega}| \mathbf{f}^{(t)}),
-$$
-where we've used $\mathbf{f}^{(t)}$, the new value for $\mathbf{f}$ from step 1, 
-straight away in the current step. Note that we've dropped the conditioning 
-on $\mathbf{y}$, since $\boldsymbol{\omega}$ does not *a posteriori* depend 
-on this variable.
-
-We then proceed in like manner, cycling between the two variables in turn until 
-some convergence criterion is met.
-
-Suffice it to say, this requires us to first compute the conditional 
-posteriors $p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega})$ 
-and $p(\boldsymbol{\omega}| \mathbf{f})$, the calculation of which will be the
-subject of the next two subsections.
-
-#### Posterior over latent function values
-
-The posterior over the latent function values $\mathbf{f}$ conditioned on the 
-auxiliary latent variables $\boldsymbol{\omega}$ is
-$$
-p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}) = \mathcal{N}(\mathbf{f} | \boldsymbol{\mu}, \boldsymbol{\Sigma}),
-$$
-where
-$$
-\boldsymbol{\mu} = \boldsymbol{\Sigma} \left ( \mathbf{S} \mathbf{m} + \boldsymbol{\kappa} \right )
-\quad
-\text{and}
-\quad
-\boldsymbol{\Sigma} = \left (\mathbf{S} + \boldsymbol{\Omega} \right )^{-1}.
-$$
-
-We readily obtain $\boldsymbol{\mu}$ and $\boldsymbol{\Sigma}$ by noting,
-as alluded to earlier, that 
-$$
-p(\mathbf{f}) = \mathcal{N}(\mathbf{m}, \mathbf{S}^{-1}),
-\qquad
-\text{and}
-\qquad
-p(\mathbf{y} | \mathbf{f}, \boldsymbol{\omega}) \propto \mathcal{N}\left (\boldsymbol{\Omega}^{-1} \boldsymbol{\kappa} | \mathbf{f}, \boldsymbol{\Omega}^{-1} \right ).
-$$
-Thereafter, we can appeal to the following elementary properties of Gaussian 
-conditioning and perform some pattern-matching substitutions:
-
-{{< callout note >}}
-#### Marginal and Conditional Gaussians (Bishop, Section 2.3.3, pg. 93)
-
-Given a marginal Gaussian distribution for $\mathbf{b}$ and a conditional Gaussian 
-distribution for $\mathbf{a}$ given $\mathbf{b}$ in the form
-
-$$
-\begin{align}
-p(\mathbf{b}) & = 
-\mathcal{N}(\mathbf{b} | \mathbf{m}, \mathbf{S}^{-1}) \newline
-p(\mathbf{a} | \mathbf{b}) & = 
-\mathcal{N}(\mathbf{a} | \mathbf{W} \mathbf{b}, \boldsymbol{\Psi}^{-1})
-\end{align}
-$$
-the marginal distribution of $\mathbf{a}$ and the conditional distribution 
-of $\mathbf{b}$ given $\mathbf{a}$ are given by
-\begin{align}
-p(\mathbf{a}) & = 
-\mathcal{N}(\mathbf{a} | \mathbf{W} \mathbf{m}, \boldsymbol{\Psi}^{-1} + \mathbf{W} \mathbf{S}^{-1} \mathbf{W}^{\top}) \newline
-p(\mathbf{b} | \mathbf{a}) & = 
-\mathcal{N}(\mathbf{b} | \boldsymbol{\mu}, \boldsymbol{\Sigma})
-\end{align}
-where
-$$
-\boldsymbol{\mu} = \boldsymbol{\Sigma} \left ( \mathbf{W}^{\top} \boldsymbol{\Psi} \mathbf{a} + \mathbf{S} \mathbf{m} \right ),
-\quad
-\text{and}
-\quad
-\boldsymbol{\Sigma} = \left (\mathbf{S} + \mathbf{W}^{\top} \boldsymbol{\Psi} \mathbf{W}\right )^{-1}.
-$$
-{{< /callout >}}
-
-Note that we also could have derived this directly without resorting to 
-the formulae above by reducing the product of two exponential-quadratic 
-functions in $p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}) \propto p(\mathbf{y} | \mathbf{f}, \boldsymbol{\omega}) p(\mathbf{f})$ into a single exponential-quadratic function
-up to a constant factor. 
-It would, however, have been rather tedious and mundane.
-
-{{< callout note >}}
-#### Example: Gaussian process prior
-
-To make this more concrete, let us revisit the Gaussian process prior we 
-discussed earlier, namely,
-$$
-p(\mathbf{f} | \mathbf{X}) = \mathcal{N}(\mathbf{m}, \mathbf{K}_X).
-$$
-By substituting $\mathbf{S}^{-1} = \mathbf{K}_X$ from before, we obtain
-$$
-p(\mathbf{f} | \mathbf{y}, \boldsymbol{\omega}) = 
-\mathcal{N}(\mathbf{f} | \boldsymbol{\Sigma} \left ( \mathbf{K}_X^{-1} \mathbf{m} + \boldsymbol{\kappa} \right ), \boldsymbol{\Sigma}),
-$$
-where $\boldsymbol{\Sigma} = \left (\mathbf{K}_X^{-1} + \boldsymbol{\Omega} \right )^{-1}.$
-{{< /callout >}}
-
-#### Posterior over auxiliary variables
-
-The posterior over the auxiliary latent variables $\boldsymbol{\omega}$ 
-conditioned on the latent function values $\mathbf{f}$ factorizes as
-$$
-p(\boldsymbol{\omega}| \mathbf{f}) = \prod_{n=1}^{N} p(\omega_n | f_n),
-$$
-where each factor
-$$
-p(\omega_n | f_n) = 
-\frac{p(f_n, \omega_n)}{\int p(f_n, \omega_n) d\omega_n} \propto 
-p(f_n, \omega_n).
-$$
-Now, the joint factorizes as $p(f_n, \omega_n) = p(f_n | \omega_n) p(\omega_n)$ where
-$$
-p(f_n | \omega_n) = \exp{\left (-\frac{f_n^2}{2}\omega_n \right )},
-\quad
-\text{and}
-\quad
-p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0).
-$$
-Finally, by the [exponential-tilting property](https://en.wikipedia.org/wiki/Exponential_tilting) 
-of the Pólya-gamma distribution, we have
-$$
-p(f_n, \omega_n) = 
-\mathrm{PG}(\omega_n | 1, 0) \times
-\exp{\left (-\frac{f_n^2}{2}\omega_n \right )} = 
-\mathrm{PG}(\omega_n | 1, f_n).
-$$
-Hence, all in all, we have
-$$
-p(\omega_n | f_n) \propto \mathrm{PG}(\omega_n | 1, f_n).
-$$
-We have omitted the normalizing constant $\int p(f_n, \omega_n) d\omega_n$
-from our discussion for the sake of brevity since it is not required to carry 
-out inference using Gibbs sampling.
-If you're interested in calculating it, 
-refer to [Appendix III]({{< relref "#iii" >}}).
-
-## Implementation (Weight-space view)
-
-Having presented the general form of an augmented model for Bayesian logistic
-regression, we now derive a simple instance of this model to tackle a synthetic
-one-dimensional classification problem.
-In this particular implementation, we make the following choices: 
-(a) we incorporate a basis function to project inputs into a higher-dimensional feature space, and 
-(b) we consider an isotropic Gaussian prior on the weights.
-
-### Synthetic one-dimensional classification problem 
-
-First we synthesize a one-dimensional classification problem for which 
-the *true* class-membership probability $p(y = 1 | x)$ is both known and easy 
-to compute.
-To this end, let us introduce the following one-dimensional Gaussians,
-$$
-p(x) = \mathcal{N}(1, 1^2),
-\qquad
-\text{and}
-\qquad
-q(x) = \mathcal{N}(0, 2^2).
-$$
-
-In code we can specify these as:
-
-```python
-from scipy.stats import norm
-
-p = norm(loc=1.0, scale=1.0)
-q = norm(loc=0.0, scale=2.0)
-```
-
-We evenly draw a total of $N$ samples from both distributions:
-
-```python
->>> X_p, X_q = draw_samples(num_train, p, q, rate=0.5, random_state=random_state)
-```
-
-where the function `draw_samples` is defined as:
-
-```python
-def draw_samples(num_samples, p, q, rate=0.5, random_state=None):
-
-    num_top = int(num_samples * rate)
-    num_bot = num_samples - num_top
-
-    X_top = p.rvs(size=num_top, random_state=random_state)
-    X_bot = q.rvs(size=num_bot, random_state=random_state)
-
-    return X_top, X_bot
-```
-
-The densities of both distributions and their and samples are shown in the 
-figure below.
-
-{{< figure src="figures/density_paper_1500x927.png" title="Densities of two Gaussians and samples drawn from each." numbered="true" >}}
-
-From these samples, let us now construct a classification dataset by assigning 
-label $y = 1$ to inputs $x \sim p(x)$, and $y = 0$ to inputs $x \sim q(x)$.
-
-```python
->>> X_train, y_train = make_dataset(X_p, X_q)
-```
-
-where the function `make_dataset` is defined as:
-
-
-```python
-def make_dataset(X_pos, X_neg):
-
-    X = np.expand_dim(np.hstack([X_pos, X_neg]), axis=-1)
-    y = np.hstack([np.ones_like(X_pos), np.zeros_like(X_neg)])
-
-    return X, y
-```
-
-Crucially, the true class-membership probability is given exactly by
-$$
-p(y = 1 | x) = \frac{p(x)}{p(x) + q(x)},
-$$
-thus providing a ground-truth yardstick by which to measure the quality of our
-resulting predictions.
-
-The class-membership probability $p(y = 1 | x)$ is shown in the figure below as
-the black curve, along with the dataset $\mathcal{D}_N = \{(\mathbf{x}_n, y_n)\}_{n=1}^N$
-where positive instances are colored red and negative instances are colored blue.
-
-{{< figure src="figures/class_prob_true_paper_1500x927.png" title="Classification dataset $\mathcal{D}_N = \{(\mathbf{x}_n, y_n)\}_{n=1}^N$ and the true class-posterior probability." numbered="true" >}}
-
-### Prior 
-
-To increase the flexibility of our model, we introduce a basis 
-function $\phi: \mathbb{R}^{D} \to \mathbb{R}^{K}$ that projects 
-$D$-dimensional input vectors into a $K$-dimensional vector space. 
-Accordingly, we introduce matrix $\boldsymbol{\Phi} \in \mathbb{R}^{N \times K}$ 
-such that the $n$th column of $\boldsymbol{\Phi}^{\top}$ consists of the 
-vector $\phi(\mathbf{x}_n)$.
-Hence, we assume *a priori* that the latent function is of the form  
-$$
-f(\mathbf{x}) = \boldsymbol{\beta}^{\top} \phi(\mathbf{x}),
-$$
-and express vector of latent function values 
-as $\mathbf{f} = \boldsymbol{\Phi} \boldsymbol{\beta}$.
-In this example, we consider a simply polynomial basis function,
-$$
-\phi(x) = \begin{bmatrix} 1 & x & x^2 & \cdots & x^{K-1} \end{bmatrix}^{\top}.
-$$
-
-Therefore, we call:
-
-```python
->>> Phi = basis_function(X_train, degree=degree)
-```
-
-where the function `basis_function` is defined as:
-
-```python
-def basis_function(x, degree=3):
-    return np.power(x, np.arange(degree))
-```
-
-Let us define 
-the prior over weights as a simple isotropic Gaussian with 
-precision $\alpha > 0$,
-$$
-p(\boldsymbol{\beta}) = \mathcal{N}(\mathbf{0}, \alpha^{-1} \mathbf{I}),
-$$
-and the prior over each local auxiliary latent variable as before,
-$$
-p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0).
-$$
-Since we have analytic forms for the conditional posteriors, we don't need to
-implement the priors explicitly. 
-However, in order to initialize the Gibbs sampler, we may want to be able to 
-sample from the prior.
-Let us do this using the prior over weights:
-
-
-```python
-m = np.zeros(latent_dim)
-
-alpha = 2.0  # prior precision
-S_inv = np.eye(latent_dim) / alpha
-
-# initialize `beta`
-beta = random_state.multivariate_normal(mean=m, cov=S_inv)
-```
-
-or more simply:
-
-```python
-alpha = 2.0  # prior precision
-
-# initialize `beta`
-beta = random_state.normal(size=latent_dim, scale=1/np.sqrt(alpha))
-```
-
-### Conditional likelihood
-
-The conditional likelihood is defined like before, except we instead 
-condition on weights $\boldsymbol{\beta}$ and substitute occurrences 
-of $\mathbf{f}$ with $\boldsymbol{\Phi} \boldsymbol{\beta}$,
-$$
-p(\mathbf{y} | \boldsymbol{\beta}, \boldsymbol{\omega}) \propto \mathcal{N}\left (\boldsymbol{\Omega}^{-1} \boldsymbol{\kappa} | \boldsymbol{\Phi} \boldsymbol{\beta}, \boldsymbol{\Omega}^{-1} \right ).
-$$
-
-### Inference and Prediction  
-
-#### Posterior over latent function values
-
-The posterior over the latent weights $\boldsymbol{\beta}$ conditioned on the 
-auxiliary latent variables $\boldsymbol{\omega}$ is
-$$
-p(\boldsymbol{\beta} | \mathbf{y}, \boldsymbol{\omega}) = \mathcal{N}(\boldsymbol{\beta} | \boldsymbol{\Sigma} \boldsymbol{\Phi}^{\top} \boldsymbol{\kappa}, \boldsymbol{\Sigma}),
-$$
-where 
-$$
-\boldsymbol{\Sigma} = \left (\boldsymbol{\Phi}^{\top} \boldsymbol{\Omega} \boldsymbol{\Phi} + \alpha \mathbf{I} \right )^{-1}.
-$$
-
-Let us implement the function that computes the mean and covariance 
-of $p(\boldsymbol{\beta} | \mathbf{y}, \boldsymbol{\omega})$:
-
-```python
-def conditional_posterior_weights(Phi, kappa, alpha, omega):
-
-    latent_dim = Phi.shape[-1]
-
-    Sigma_inv = (omega * Phi.T) @ Phi + alpha * np.eye(latent_dim)
-
-    mu = np.linalg.solve(Sigma_inv, Phi.T @ kappa)
-    Sigma = np.linalg.solve(Sigma_inv, np.eye(latent_dim))
-
-    return mu, Sigma
-```
-
-and a function to return samples from the multivariate Gaussian parameterized
-by this mean and covariance:
-
-```python
-def gassian_sample(mean, cov, random_state=None):
-    random_state = check_random_state(random_state)
-    return random_state.multivariate_normal(mean=mean, cov=cov)
-```
-
-#### Posterior over auxiliary variables
-
-The conditional posterior over the local auxiliary variable $\omega_n$ is 
-defined as before, except we instead condition on weights $\boldsymbol{\beta}$ 
-and substitute occurrences of $f_n$ with $\boldsymbol{\beta}^{\top} \phi(\mathbf{x}_n)$,
-$$
-p(\omega_n | \boldsymbol{\beta}) \propto 
-\mathrm{PG}(\omega_n | 1, \boldsymbol{\beta}^{\top} \phi(\mathbf{x}_n)).
-$$
-
-Let us implement a function to compute the parameters of the posterior 
-Polya-gamma distribution:
-
-```python
-def conditional_posterior_auxiliary(Phi, beta):
-    c = Phi @ beta
-    b = np.ones_like(c)
-    return b, c
-```
-
-and accordingly a function to return samples from this distribution:
-
-```python
-def polya_gamma_sample(b, c, pg=PyPolyaGamma()):
-    assert b.shape == c.shape, "shape mismatch"
-    omega = np.empty_like(b)
-    pg.pgdrawv(b, c, omega)
-    return omega
-```
-
-where we have imported the `PyPolyaGamma` object from 
-the [pypolyagamma](https://github.com/slinderman/pypolyagamma) package:
-
-```
-from pypolyagamma import PyPolyaGamma
-```
-
-The `pypolyagamma` package can be installed via `pip` as usual: 
-
-```bash
-$ pip install pypolyagamma
-```
-
-To provide some context, this package is a [Cython](https://cython.org/) 
-port, created by S. Linderman, of the original 
-R package [BayesLogit](https://github.com/jwindle/BayesLogit) authored by J. Windle
-that implements the method described in their paper on the efficient sampling 
-of Pólya-gamma variables[^windle2014sampling].
-
-#### Gibbs sampling
-
-With these functions defined, we can define the Gibbs sampling procedure by the
-simple for-loop below:
-
-```python
-# preprocessing
-kappa = y_train - 0.5
-Phi = basis_function(X_train, degree=degree)
-
-# initialize `beta`
-latent_dim = Phi.shape[-1]
-beta = random_state.normal(size=latent_dim, scale=1/np.sqrt(alpha))
-
-for i in range(num_iterations):
-
-    b, c = conditional_posterior_auxiliary(Phi, beta)
-    omega = polya_gamma_sample(b, c, pg=pg)
-
-    mu, Sigma = conditional_posterior_weights(Phi, kappa, alpha, omega)
-    beta = gassian_sample(mu, Sigma, random_state=random_state)
-```
-
-We now visualize the samples $(\boldsymbol{\beta}^{(t)}, \boldsymbol{\omega}^{(t)})$ 
-produced by this procedure. 
-In the figures that follow, we set the hues to be proportional to the step 
-counter $t$ along a perceptually uniform colormap.
-
-First, we show the sampled weight vector $\boldsymbol{\beta}^{(t)} \in \mathbb{R}^K$ 
-where we have set $K = 3$.
-We plot the $i$th entry $\beta_i^{(t)}$ against the $j$th entry $\beta_j^{(t)}$ 
-for all $i < j$ and $0 < j < K$.
-{{< figure src="figures/beta_paper_600x600.png" title="Parameter $\boldsymbol{\beta}^{(t)}$ samples as Gibbs sampling iteration $t$ increases." numbered="true" >}}
-We find a strong correlation between $\beta_1$ and $\beta_2$, the 
-coefficients associated with the linear and quadratic terms of our augmented 
-feature representation, respectively. 
-Furthermore, we find $\beta_1$ to consistently have a relatively large 
-magnitude.
-
-Second, we show the sampled auxiliary latent variables $\boldsymbol{\omega}^{(t)}$ by 
-plotting the pairs $(x_n, \omega_n^{(t)})$.
-
-{{< figure src="figures/omega_paper_1500x927.png" title="Auxiliary variable $\omega_n^{(t)}$ samples as Gibbs sampling iteration $t$ increases. For visualization purposes, each $\omega_n^{(t)}$ is placed at its corresponding input location $x_n$ along the  horizontal axis." numbered="true" >}}
-
-As expected, we find longer-tailed distributions in the variables $\omega_n$ 
-that are associated with negative examples.
-
-Finally, we plot the sampled class-membership probability predictions
-$$
-\pi^{(t)}(\mathbf{x}) = \sigma(f^{(t)}(\mathbf{x})),
-\quad
-\text{where}
-\quad
-f^{(t)}(\mathbf{x}) = {\boldsymbol{\beta}^{(t)}}^{\top} \phi(\mathbf{x}),
-$$
-in the figure below:
-
-{{< figure src="figures/class_prob_pred_paper_1500x927.png" title="Predicted class-membership probability $\pi^{(t)}(\mathbf{x})$ as Gibbs sampling iteration $t$ increases." numbered="true" >}}
-
-At least qualitatively, we find that the sampling procedure produces 
-predictions that fit the true class-membership probability reasonably well.
-
-### Code
-
-The full code is reproduced below:
+\exp{\left\{-\frac{\lambda(\xi)}{2}\left(\psi - \frac{\kappa}{\lambda(\xi)}\right)^2\right\}},
+$$
+a Gaussian pseudo-likelihood with precision $\lambda(\xi_n)$ and
+pseudo-target $\kappa_n / \lambda(\xi_n)$, where Part II had precision
+$\omega_n$ and pseudo-target $z_n = \kappa_n / \omega_n$.
+
+One structural remark before we compute anything. In the exact posterior,
+the $\omega_n$ are already conditionally independent given
+$\boldsymbol{\beta}$, and our $q(\boldsymbol{\beta})$ is a full-covariance
+Gaussian. The *only* dependence the mean-field factorization severs is the
+one between $\boldsymbol{\beta}$ and $\boldsymbol{\omega}$. Whatever
+approximation error we observe below is attributable to that single cut.
+
+## Implementation
+
+A pleasant consequence of trading Gibbs for CAVI is that the Pólya-gamma
+sampler, the one piece of specialized machinery Part II depended on, is no
+longer needed. The algorithm only ever touches $\boldsymbol{\omega}$
+through the expectation $\lambda(\xi)$, which is one line of NumPy:
 
 ```python
 import numpy as np
 
-from scipy.stats import norm
-from pypolyagamma import PyPolyaGamma
 
-from .utils import (draw_samples, make_dataset, basis_function,
-                    conditional_posterior_auxiliary, polya_gamma_sample,
-                    conditional_posterior_weights, gassian_sample)
-
-# constants
-num_train = 128
-num_iterations = 1000
-degree = 3
-alpha = 2.0  # prior precision
-
-seed = 8888
-random_state = np.random.RandomState(seed)
-pg = PyPolyaGamma(seed=seed)
-
-# generate dataset
-p = norm(loc=1.0, scale=1.0)
-q = norm(loc=0.0, scale=2.0)
-
-X_p, X_q = draw_samples(num_train, p, q, rate=0.5, random_state=random_state)
-X_train, y_train = make_dataset(X_p, X_q)
-
-# preprocessing
-kappa = y_train - 0.5
-Phi = basis_function(X_train, degree=degree)
-
-# initialize `beta`
-latent_dim = Phi.shape[-1]
-beta = random_state.normal(size=latent_dim, scale=1/np.sqrt(alpha))
-
-for i in range(num_iterations):
-
-    b, c = conditional_posterior_auxiliary(Phi, beta)
-    omega = polya_gamma_sample(b, c, pg=pg)
-
-    mu, Sigma = conditional_posterior_weights(Phi, kappa, alpha, omega)
-    beta = gassian_sample(mu, Sigma, random_state=random_state)
+def lambd(xi):
+    return 0.5 * np.tanh(0.5 * xi) / xi
 ```
 
-where the module `utils.py` contains:
+The entire inference algorithm is barely a dozen more. We alternate the two
+updates from the previous section, with the isotropic prior
+$\mathbf{m} = \mathbf{0}$, $\mathbf{S} = \alpha \mathbf{I}$ from Part II:
 
 ```python
-import numpy as np
-from sklearn.utils import check_random_state
-from pypolyagamma import PyPolyaGamma
+def cavi(Phi, kappa, alpha, num_iterations=200, tol=1e-12):
 
-
-def draw_samples(num_samples, p, q, rate=0.5, random_state=None):
-    num_top = int(num_samples * rate)
-    num_bot = num_samples - num_top
-
-    X_top = p.rvs(size=num_top, random_state=random_state)
-    X_bot = q.rvs(size=num_bot, random_state=random_state)
-    return X_top, X_bot
-
-
-def make_dataset(X_pos, X_neg):
-    X = np.expand_dims(np.hstack([X_pos, X_neg]), axis=-1)
-    y = np.hstack([np.ones_like(X_pos), np.zeros_like(X_neg)])
-    return X, y
-
-
-def basis_function(x, degree=3):
-    return np.power(x, np.arange(degree))
-
-
-def polya_gamma_sample(b, c, pg=PyPolyaGamma()):
-    assert b.shape == c.shape, "shape mismatch"
-    omega = np.empty_like(b)
-    pg.pgdrawv(b, c, omega)
-    return omega
-
-
-def gassian_sample(mean, cov, random_state=None):
-    random_state = check_random_state(random_state)
-    return random_state.multivariate_normal(mean=mean, cov=cov)
-
-
-def conditional_posterior_weights(Phi, kappa, alpha, omega):
     latent_dim = Phi.shape[-1]
     eye = np.eye(latent_dim)
 
-    Sigma_inv = (omega * Phi.T) @ Phi + alpha * eye
+    xi = 1e-1 * np.ones(len(kappa))
 
-    mu = np.linalg.solve(Sigma_inv, Phi.T @ kappa)
-    Sigma = np.linalg.solve(Sigma_inv, eye)
-    return mu, Sigma
+    for _ in range(num_iterations):
 
+        # update q(beta) = N(mu, Sigma), with Lambda = diag(lambd(xi))
+        Sigma_inv = (lambd(xi) * Phi.T) @ Phi + alpha * eye
+        mu = np.linalg.solve(Sigma_inv, Phi.T @ kappa)
+        Sigma = np.linalg.solve(Sigma_inv, eye)
 
-def conditional_posterior_auxiliary(Phi, beta):
-    c = Phi @ beta
-    b = np.ones_like(c)
-    return b, c
+        # update q(omega_n) = PG(1, xi_n), with xi_n^2 = E[psi_n^2]
+        xi_new = np.sqrt(np.einsum('ij,ij->i', Phi @ (Sigma + np.outer(mu, mu)), Phi))
+        delta, xi = np.max(np.abs(xi_new - xi)), xi_new
+
+        if delta < tol:
+            break
+
+    return mu, Sigma, xi
 ```
 
-### Bonus: Gibbs sampling with mutual recursion and generator delegation
+We reuse the synthetic one-dimensional classification problem from Part II
+verbatim: $N = 128$ points drawn evenly from two Gaussians
+$p(x) = \mathcal{N}(1, 1^2)$ and $q(x) = \mathcal{N}(0, 2^2)$, labeled by
+provenance, with a degree-3 polynomial basis and prior precision
+$\alpha = 2$. The true class-membership probability
+$p(y = 1 | x) = p(x) / (p(x) + q(x))$ is available in closed form, which
+gives us a ground-truth yardstick.
 
-The Gibbs sampling procedure naturally lends itself to implementations based
-on [mutual recursion](https://en.wikipedia.org/wiki/Mutual_recursion).
-Combining this with the `yield from` expression for [generator delegation](https://docs.python.org/3/whatsnew/3.3.html#pep-380),
-we can succinctly replace the for-loop with the following mutually recursive 
-functions:
+{{< figure src="figures/class_prob_true_paper_1500x927.png" title="Classification dataset $\mathcal{D}_N = \{(\mathbf{x}_n, y_n)\}_{n=1}^N$ and the true class-posterior probability." numbered="true" >}}
+
+Running CAVI is then a matter of
+
 ```python
-def gibbs_sampler(beta, Phi, kappa, alpha, pg, random_state):
-    b, c = conditional_posterior_auxiliary(Phi, beta)
-    omega = polya_gamma_sample(b, c, pg=pg)
-    yield from gibbs_sampler_helper(omega, Phi, kappa, alpha, pg, random_state)
+kappa = y_train - 0.5
+Phi = basis_function(X_train, degree=3)
 
-
-def gibbs_sampler_helper(omega, Phi, kappa, alpha, pg, random_state):
-    mu, Sigma = conditional_posterior_weights(Phi, kappa, alpha, omega)
-    beta = gassian_sample(mu, Sigma, random_state=random_state)
-    yield beta, omega
-    yield from gibbs_sampler(beta, Phi, kappa, alpha, pg, random_state)
+mu, Sigma, xi = cavi(Phi, kappa, alpha=2.0)
 ```
 
-Now you can use `gibbs_sampler` as a [generator](https://wiki.python.org/moin/Generators), 
-for example, to explicitly iterate over it in a for-loop:
-```python
-for beta, omega in gibbs_sampler(beta, Phi, kappa, alpha, pg, random_state):
+The figures below trace the variational parameters over iterations, with
+hues progressing along a perceptually uniform colormap as in Part II.
+First, the local parameters $\xi_n$, plotted at their corresponding input
+locations $x_n$:
 
-    if stop_predicate:
-        break
+{{< figure src="figures/xi_paper_1500x927.png" title="Local variational parameters $\xi_n$ over CAVI iterations, placed at their input locations $x_n$. Since $\xi_n^2 = \mathbb{E}[\psi_n^2]$, the converged values track the (root-mean-square) magnitude of the latent function at each input." numbered="true" >}}
 
-    # do something
-    pass
-```
-or by making use of [itertools](https://docs.python.org/3/library/itertools.html) 
-and other [functional programming](https://docs.python.org/3/howto/functional.html) 
-primitives:
-```python
-from itertools import islice
+The corresponding expectations $\lambda(\xi_n) = \mathbb{E}_q[\omega_n]$,
+which play the role Part II's sampled $\omega_n$ played:
 
-# example: collect beta and omega samples into respective lists
-betas, omegas = zip(*islice(gibbs_sampler(beta, Phi, kappa, alpha, pg, random_state), num_iterations))
-```
-There are a few obvious drawbacks to this implementation. 
-First, while it may be a lot fun to write, it will probably not be as fun to 
-read when you revisit it later on down the line.
-Second, you may occasionally find yourself hitting the maximum recursion depth 
-before you have reached a sufficient number of iterations for the warm-up 
-or "burn-in" phase to have been completed.
-It goes without saying, the latter can make this implementation a non-starter.
+{{< figure src="figures/lambda_paper_1500x927.png" title="Variational means $\lambda(\xi_n) = \mathbb{E}_{q}[\omega_n]$ over CAVI iterations. Compare with the sampled $\omega_n$ in Part II: large where the classifier is uncertain, small where $|\psi_n|$ is large." numbered="true" >}}
+
+The trajectory of the variational mean $\boldsymbol{\mu}$, which (unlike
+its Gibbs counterpart) converges to a point:
+
+{{< figure src="figures/mu_paper_900x900.png" title="Trajectory of the variational mean $\boldsymbol{\mu}$ across CAVI iterations, shown pairwise for the three basis coefficients. The iterates march deterministically to a fixed point rather than bouncing around a posterior." numbered="true" >}}
+
+And the induced class-membership probability predictions over iterations:
+
+{{< figure src="figures/class_prob_pred_paper_1500x927.png" title="Predicted class-membership probability $\sigma(\phi(x)^{\top} \boldsymbol{\mu})$ as CAVI iterations progress." numbered="true" >}}
+
+Convergence takes a few dozen iterations, each costing one solve of a
+$K \times K$ linear system. There is no burn-in to diagnose and no seed to
+worry about; running it twice gives the same answer to machine precision.
+
+## Gibbs versus CAVI
+
+Since Parts II and III solve the same problem on the same data (same seed,
+even), we owe ourselves the comparison. The script `compare.py` in this
+post's source bundle runs both algorithms side by side: 5,000 Gibbs sweeps
+(1,000 discarded as burn-in) against CAVI run to convergence.
+
+The posterior means agree to about a percent:
+$\boldsymbol{\mu}_{\text{Gibbs}} = (0.144, 0.809, -0.272)$ versus
+$\boldsymbol{\mu}_{\text{CAVI}} = (0.146, 0.799, -0.267)$. The posterior
+*spreads* do not: coordinate-wise, the variational standard deviations are
+$0.95\times$, $0.68\times$ and $0.70\times$ their Gibbs counterparts.
+
+{{< figure src="figures/beta_posterior_compare_paper_2781x927.png" title="Posterior over the weights $\boldsymbol{\beta}$, pairwise: Gibbs samples (green) against the Gaussian $q(\boldsymbol{\beta})$ (purple; 1, 2 and 3 standard-deviation contours). The orientation is right and the location is right; the volume is not." numbered="true" >}}
+
+This is the textbook mean-field failure mode, and the structural remark
+from earlier tells us exactly whom to blame. The ellipses are correctly
+oriented because $q(\boldsymbol{\beta})$ carries a full covariance matrix;
+correlations between weights are represented. What the factorization
+discards is the coupling between $\boldsymbol{\beta}$
+and $\boldsymbol{\omega}$: the exact posterior accounts for uncertainty in
+the $\omega_n$ when spreading out $\boldsymbol{\beta}$, whereas the
+variational posterior conditions on their fixed expectations
+$\lambda(\xi_n)$, and is overconfident accordingly.
+
+{{< figure src="figures/class_prob_compare_paper_1500x927.png" title="Posterior predictive class probability: Gibbs (green, with 95% band) against CAVI (purple, dashed, with 95% band), and the true class probability (black). The predictive means are visually indistinguishable; the variational band is visibly narrower, most noticeably where the model extrapolates." numbered="true" >}}
+
+On predictions the story is the same in miniature. The two predictive
+means essentially coincide, and both track the truth about as well as a
+degree-3 polynomial classifier fit to 128 points has any right to. The
+variational credible band is narrower everywhere, most visibly in the
+extrapolation regions beyond the data, where the Gibbs posterior is
+honest about its ignorance and the mean-field posterior is not.
+
+Whether this trade is acceptable is problem-dependent. CAVI converged in a
+few dozen deterministic iterations; Gibbs needed thousands of sweeps, each
+requiring $N$ Pólya-gamma draws. On this toy problem both run in the blink
+of an eye, and the case for VI is aesthetic at best. The case becomes
+practical when $N$ grows (the ELBO admits stochastic optimization over
+mini-batches) or when the model is embedded in a larger system that needs
+gradients and determinism rather than samples.
+
+## The Classical Route
+
+None of the machinery above existed when the bound was first derived. The
+Pólya-gamma distribution entered the literature with Polson et al. in
+2013[^polson2013bayesian]; Jaakkola and Jordan published in 2000, with
+workshop versions circulating since the mid-1990s. Their route was convex
+analysis, and it is worth walking briefly, both for history and because it
+is genuinely slick.
+
+Start from the decomposition
+$\log{\sigma(\psi)} = \frac{\psi}{2} - \log{\left(2\cosh{\left(\frac{\psi}{2}\right)}\right)}$
+and regard the awkward second term as a function of $t = \psi^2$:
+$$
+f(t) \doteq -\log{\left(2\cosh{\left(\frac{\sqrt{t}}{2}\right)}\right)}.
+$$
+A short calculation shows $f'(t) = -\frac{\lambda(\sqrt{t})}{2}$, and
+since $\lambda$ is strictly decreasing on $(0, \infty)$, $f'$ is
+increasing; $f$ is convex in $t$. A convex function lies above its
+tangents, so taking the tangent at $t_0 = \xi^2$,
+$$
+f(t) \geq f(\xi^2) + f'(\xi^2) \, (t - \xi^2) = 
+f(\xi^2) - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2),
+$$
+and adding back $\frac{\psi}{2}$ yields precisely
+$\log{\sigma(\psi)} \geq \log{\ell(\psi, \xi)}$, with equality where the
+tangent touches, at $\psi^2 = \xi^2$. The bound is *linear in $\psi^2$*,
+which is what makes it exponential-quadratic in $\psi$ and therefore
+conjugate to a Gaussian prior — the whole point of the exercise.
+
+Equivalently, one can state the result as an upper bound on the softplus
+function $\varsigma(\psi) \doteq \log{(1 + e^{\psi})}$, which is how it is
+often deployed (and how it generalizes to the multi-class
+case[^bouchard2007efficient]):
+$$
+\varsigma(\psi) \leq 
+\frac{\psi - \xi}{2} + \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2) + \varsigma(\xi) \doteq
+g(\psi, \xi).
+$$
+
+{{< figure src="figures/softplus_paper_1500x927.png" title="The softplus function (dashed) and the family of quadratic upper bounds $g(\psi, \xi)$, one curve per value of $\xi$." numbered="true" >}}
+
+The two forms are related through
+$\log{\sigma(\psi)} = -\varsigma(-\psi)$: bounding one from above bounds
+the other from below,
+$$ 
+\begin{align*}
+\log{\sigma(\psi)} = - \varsigma(- \psi) & \geq -g(-\psi, \xi) \newline & =
+\frac{\psi + \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2) - \varsigma(\xi) \newline & = 
+\frac{\psi - \xi}{2} - \frac{\lambda(\xi)}{2} (\psi^2 - \xi^2) + \log{\sigma(\xi)} \newline & = 
+\log{\ell(\psi, \xi)},
+\end{align*}
+$$
+where the last step uses
+$\frac{\xi}{2} - \varsigma(\xi) = -\frac{\xi}{2} - \varsigma(-\xi) = \log{\sigma(\xi)} - \frac{\xi}{2}$,
+an identity from Part I.
+
+In Jaakkola and Jordan's paper the coefficient appears as
+$\lambda_{\text{JJ}}(\xi) = \frac{1}{2\xi}\left(\sigma(\xi) - \frac{1}{2}\right)$,
+and since $\sigma(\xi) - \frac{1}{2} = \frac{1}{2}\tanh{\left(\frac{\xi}{2}\right)}$,
+this is $\frac{1}{4\xi}\tanh{\left(\frac{\xi}{2}\right)} = \frac{\lambda(\xi)}{2}$:
+half the mean of a distribution that would not be described for another
+decade and a half. From the classical route, $\lambda$ is the derivative of
+a convex function and its form is a computation. From the variational
+route, it is the mean of the variational factor over $\omega$. Polson et
+al. supplied the missing distribution; Durante and Rigon supplied the
+missing sentence.
+
+## Where This Goes
+
+Everything in this post extends along the same lines as the augmentation
+itself. Likelihoods of the form
+$\frac{(e^{\psi})^a}{(1 + e^{\psi})^b}$ admit $\mathrm{PG}(b, \cdot)$
+auxiliary variables, which covers binomial counts and negative-binomial
+models. The multi-class softmax has its own quadratic
+bounds[^bouchard2007efficient] and its own augmentation strategies, such as
+the one-vs-each construction used for Gaussian process
+classification[^snell2020bayesian]. And replacing our fixed-form
+$q(\boldsymbol{\beta})$ updates with natural-gradient steps on mini-batches
+gives the scalable Gaussian process classifiers of Wenzel et
+al.[^wenzel2019efficient], which is the modern reason to care about any of
+this at scale.
+
+The general moral is worth carrying around: when a *local* variational
+bound with one parameter per datapoint appears in the literature, it is
+worth asking which augmented model it is secretly the mean-field ELBO of.
+For the logistic likelihood the answer took fifteen years to arrive. The
+next quadratic bound you meet may come with its explanation already
+attached.
 
 ## Links and Further Readings
 
 - Papers:
-  * Original paper (Polson et al., 2013)[^polson2013bayesian]
+  * The local variational method (Jaakkola & Jordan, 2000)[^jaakkola2000bayesian]
+  * The Pólya-gamma augmentation (Polson et al., 2013)[^polson2013bayesian]
+  * The formal equivalence between the two (Durante & Rigon, 2019)[^durante2019conditionally]
   * Extended to GP classification (Wenzel et al., 2019)[^wenzel2019efficient]
   * Few-shot classification with GPs and the one-vs-each likelihood (Snell et al., 2020)[^snell2020bayesian]
+- Book chapters:
+  * Bishop's PRML, Section 10.6 "Variational Logistic Regression"[^bishop2006pattern]
 - Blog posts: 
   * [Pólya-Gamma Augmentation](https://gregorygundersen.com/blog/2019/09/20/polya-gamma/) by G. Gundersen
 - Code:
-  * [pypolyagamma](https://github.com/slinderman/pypolyagamma): A Python package by S. Linderman
-  * [BayesLogit](https://github.com/jwindle/BayesLogit): An R package by J. Windle
+  * The scripts reproducing every figure in this post live in the post's
+    source bundle (`src/`); the comparison and verification scripts are
+    self-contained and run with `uv run`.
 
 ---
 
 Cite as:
 
 ```
-@article{tiao2021polyagamma,
-  title   = "{A} {P}rimer on {P}ólya-gamma {R}andom {V}ariables - {P}art II: {B}ayesian {L}ogistic {R}egression",
+@article{tiao2021polyagammalocal,
+  title   = "{A} {P}rimer on {P}ólya-gamma {R}andom {V}ariables - {P}art III: {L}ocal {V}ariational {M}ethods",
   author  = "Tiao, Louis C",
   journal = "tiao.io",
   year    = "2021",
-  url     = "https://tiao.io/post/polya-gamma-bayesian-logistic-regression/"
+  url     = "https://tiao.io/post/polya-gamma-sigmoid-local-variational-lower-bound/"
 }
 ```
 
@@ -1054,31 +690,54 @@ To receive updates on more posts like this, follow me on [Twitter] and [GitHub]!
 
 ### I
 
-First, note that the logistic function can be written as
+We derive the closed form of
+$\mathrm{KL}[\, \mathrm{PG}(1, \xi) \, \| \, \mathrm{PG}(1, \psi) \,]$
+and the slack identity. Both distributions are exponential tiltings of the
+base measure $\mathrm{PG}(\omega | 1, 0)$,
 $$
-\sigma(u) = \frac{1}{1+e^{-u}} = \frac{e^u}{1+e^u}
+\mathrm{PG}(\omega | 1, c) = \cosh{\left(\frac{c}{2}\right)} \exp{\left(-\frac{c^2}{2}\omega\right)} \mathrm{PG}(\omega | 1, 0),
 $$
-Therefore, we have
+so their log-ratio is affine in $\omega$,
 $$
-\begin{align}
-p(y_n | f_n) &= 
-\left ( \frac{e^{f_n}}{1+e^{f_n}} \right )^{y_n}
-\left ( \frac{\left (1+e^{f_n} \right ) - e^{f_n}}{1+e^{f_n}} \right )^{1-y_n} \newline &= 
-\left ( \frac{e^{f_n}}{1+e^{f_n}} \right )^{y_n}
-\left ( \frac{1}{1+e^{f_n}} \right )^{1-y_n} \newline &= 
-\left (e^{f_n} \right )^{y_n} \left ( \frac{1}{1+e^{f_n}} \right )^{y_n}
-\left ( \frac{1}{1+e^{f_n}} \right )^{1-y_n} \newline &= 
-\frac{e^{y_n f_n}}{1 + e^{f_n}}
-\end{align}
+\begin{align*}
+& \log \frac{\mathrm{PG}(\omega | 1, \xi)}{\mathrm{PG}(\omega | 1, \psi)} = \newline
+& \qquad \log{\cosh{\left(\frac{\xi}{2}\right)}} - \log{\cosh{\left(\frac{\psi}{2}\right)}} + \frac{\psi^2 - \xi^2}{2} \omega.
+\end{align*}
 $$
+Taking the expectation under $\mathrm{PG}(1, \xi)$, whose mean
+is $\lambda(\xi)$, gives
+$$
+\begin{align*}
+& \mathrm{KL}[\, \mathrm{PG}(1, \xi) \, \| \, \mathrm{PG}(1, \psi) \,] = \newline
+& \qquad \log{\cosh{\left(\frac{\xi}{2}\right)}} - \log{\cosh{\left(\frac{\psi}{2}\right)}} + \frac{\psi^2 - \xi^2}{2} \lambda(\xi).
+\end{align*}
+$$
+For the slack identity, expand $\log{\ell}$:
+$$
+\begin{align*}
+& \log{\sigma(\psi)} - \log{\ell(\psi, \xi)} \newline
+& \quad = \log{\sigma(\psi)} - \log{\sigma(\xi)} - \frac{\psi - \xi}{2} + \frac{\lambda(\xi)}{2}(\psi^2 - \xi^2) \newline
+& \quad = \log{\cosh{\left(\frac{\xi}{2}\right)}} - \log{\cosh{\left(\frac{\psi}{2}\right)}} + \frac{\psi^2 - \xi^2}{2} \lambda(\xi) \newline
+& \quad = \mathrm{KL}[\, \mathrm{PG}(1, \xi) \, \| \, \mathrm{PG}(1, \psi) \,],
+\end{align*}
+$$
+where the second equality applies
+$\log{\sigma(u)} = \frac{u}{2} - \log{\left(2\cosh{\left(\frac{u}{2}\right)}\right)}$
+(Part I) to both sigmoid terms: the resulting $\frac{\psi - \xi}{2}$ cancels
+against the $-\frac{\psi - \xi}{2}$ already present, and the two $\log 2$
+constants cancel each other. The same computation with $-\psi$ in place of $\psi$ covers the $y = 0$
+case, since the KL divergence depends on $\psi$ only through $\psi^2$; the
+gap $\log{p(y | \boldsymbol{\beta})} - H(y, \xi, \boldsymbol{\beta})$ is
+independent of $y$.
 
 [Twitter]: https://twitter.com/louistiao
 [GitHub]: https://github.com/ltiao
 
+[^jaakkola2000bayesian]: Jaakkola, T. S., & Jordan, M. I. (2000). [Bayesian Parameter Estimation via Variational Methods](https://link.springer.com/article/10.1023/A:1008932416310). Statistics and Computing, 10(1), 25-37.
 [^polson2013bayesian]: Polson, N. G., Scott, J. G., & Windle, J. (2013). [Bayesian Inference for Logistic Models using Pólya–Gamma Latent Variables](https://arxiv.org/abs/1205.0310). Journal of the American Statistical Association, 108(504), 1339-1349.
-[^windle2014sampling]: Windle, J., Polson, N. G., & Scott, J. G. (2014). [Sampling Pólya-gamma Random Variates: Alternate and Approximate Techniques](https://arxiv.org/abs/1405.0506). arXiv preprint arXiv:1405.0506.
+[^durante2019conditionally]: Durante, D., & Rigon, T. (2019). [Conditionally Conjugate Mean-Field Variational Bayes for Logistic Models](https://arxiv.org/abs/1711.06999). Statistical Science, 34(3), 472-485.
+[^bishop2006pattern]: Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer. Section 10.6.
+[^bouchard2007efficient]: Bouchard, G. (2007). Efficient Bounds for the Softmax Function, Applications to Inference in Hybrid Models. In Presentation at the Workshop for Approximate Bayesian Inference in Continuous/Hybrid Systems at NIPS2007.
 [^wenzel2019efficient]: Wenzel, F., Galy-Fajou, T., Donner, C., Kloft, M., & Opper, M. (2019, July). [Efficient Gaussian Process Classification using Pòlya-Gamma Data Augmentation](https://arxiv.org/abs/1802.06383). In Proceedings of the AAAI Conference on Artificial Intelligence (Vol. 33, No. 01, pp. 5417-5424).
 [^snell2020bayesian]: Snell, J., & Zemel, R. (2020). [Bayesian Few-Shot Classification with One-vs-Each Pólya-Gamma Augmented Gaussian Processes](https://arxiv.org/abs/2007.10417). arXiv preprint arXiv:2007.10417.
-
-[^jaakkola2000bayesian]: Jaakkola, T. S., & Jordan, M. I. (2000). [Bayesian Parameter Estimation via Variational Methods](https://link.springer.com/article/10.1023/A:1008932416310). Statistics and Computing, 10(1), 25-37.
-[^bouchard2007efficient]: Bouchard, G. (2007). Efficient Bounds for the Softmax Function, Applications to Inference in Hybrid Models. In Presentation at the Workshop for Approximate Bayesian Inference in Continuous/Hybrid Systems at NIPS2007.
+[^lambda-convention]: A convention warning for readers cross-referencing the original papers: Jaakkola and Jordan (and, following them, Bishop) define $\lambda_{\text{JJ}}(\xi) = \frac{1}{4\xi}\tanh{\left(\frac{\xi}{2}\right)}$, which is half of our $\lambda(\xi)$. Their exponent carries $\lambda_{\text{JJ}}(\xi)(\psi^2 - \xi^2)$ where ours carries $\frac{\lambda(\xi)}{2}(\psi^2 - \xi^2)$; the bounds are identical. We prefer this normalization because it makes $\lambda(\xi)$ exactly the Pólya-gamma mean $\mathbb{E}_{\mathrm{PG}(1,\xi)}[\omega]$.

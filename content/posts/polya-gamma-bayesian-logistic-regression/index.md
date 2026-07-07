@@ -9,14 +9,14 @@ summary: "We use one weird trick — Pólya-Gamma augmentation — to make exact
 authors: 
 - me
 tags:
-- Machine Learning
+- Pólya-Gamma
 - Bayesian Statistics
 - Probabilistic Models
-- Pólya-Gamma
+- Machine Learning
 categories:
 - technical
 date: 2021-04-20T17:20:53+01:00
-lastmod: 2021-04-20T17:20:53+01:00
+lastmod: 2026-07-07T15:32:37-04:00
 featured: false
 math: true
 
@@ -38,10 +38,21 @@ projects: []
 
 > [!NOTE]
 > This is **Part II** of a three-part series on Pólya-Gamma random variables.
-> Part I (Basic Relationships) and Part III (Local Variational Methods) are
-> in preparation.
+> See also:
+> [Part I — Basic Relationships]({{< relref "/posts/polya-gamma-basic-relationships" >}})
+> and [Part III — Local Variational Methods]({{< relref "/posts/polya-gamma-sigmoid-local-variational-lower-bound" >}}).
 
 {{< toc >}}
+
+In [Part I]({{< relref "/posts/polya-gamma-basic-relationships" >}}) we
+collected a curious set of identities: the logistic sigmoid can be written
+in terms of the hyperbolic cosine, the hyperbolic cosine is the Laplace
+transform of the Pólya-gamma distribution, and the sigmoid is therefore an
+average of Gaussian kernels. In this post those identities earn their keep.
+We attach them to an actual model, Bayesian logistic regression, where the
+observed variable is a binary label and the quadratic exponent that was
+merely suggestive in Part I delivers conditional conjugacy, culminating in
+an exact Gibbs sampler.
 
 ## Binary Classification
 
@@ -94,7 +105,7 @@ f(\mathbf{x}) = \boldsymbol{\beta}^{\top} \mathbf{x},
 \qquad 
 \boldsymbol{\beta} \sim \mathcal{N}(\mathbf{m}, \mathbf{S}^{-1}).
 $$
-In this case, we express vector of latent function 
+In this case, we express the vector of latent function 
 values as $\mathbf{f} = \mathbf{X} \boldsymbol{\beta}$
 and the prior over the weights 
 as $p(\boldsymbol{\beta}) = \mathcal{N}(\mathbf{m}, \mathbf{S}^{-1})$.
@@ -115,7 +126,7 @@ where $\mathbf{m} = m(\mathbf{X})$ and $\mathbf{K}_X = k(\mathbf{X}, \mathbf{X})
 
 Given some test input $\mathbf{x}_*$, we are interested in producing a probability 
 distribution over predictions $p(y_* |  \mathbf{X}, \mathbf{y}, \mathbf{x}_*)$. 
-As we shall see, the procedure for computing this distribition is rife with 
+As we shall see, the procedure for computing this distribution is rife with 
 intractabilities.
 
 Specifically, we first marginalize out the uncertainty about the associated 
@@ -144,7 +155,8 @@ to the Bernoulli likelihood.
 To overcome this intractability, one must typically resort to approximate 
 inference methods such as the 
 Laplace approximation[^mackay1992evidence], 
-variational inference (VI)[^jaakkola2000bayesian], 
+variational inference (VI)[^jaakkola2000bayesian] (to which we return in
+Part III), 
 expectation propagation (EP)[^minka2001expectation] 
 and sampling-based approximations such as Markov Chain Monte Carlo (MCMC). 
 
@@ -175,10 +187,10 @@ $$
 
 ### Likelihood conditioned on auxiliary variables
 
-First, let us define a conditional likelihood that factorize as 
+First, let us define a conditional likelihood that factorizes as 
 $$
 p(\mathbf{y} | \mathbf{f}, \boldsymbol{\omega}) = 
-\prod_{n=1}^n p(y_n | f_n, \omega_n),
+\prod_{n=1}^N p(y_n | f_n, \omega_n),
 $$
 where each factor is defined as
 $$
@@ -199,7 +211,7 @@ where each factor $p(\omega_n)$ is a Pólya-gamma density
 $$
 p(\omega_n) = \mathrm{PG}(\omega_n | 1, 0),
 $$
-defined as an infinite [convolution](https://en.wikipedia.org/wiki/Convolution_of_probability_distributions#See_also) of gamma distributions :
+defined as an infinite [convolution](https://en.wikipedia.org/wiki/Convolution_of_probability_distributions#See_also) of gamma distributions:
 
 {{< callout note >}}
 #### Pólya-gamma density (Polson et al. 2013)
@@ -218,13 +230,15 @@ where the $g_k \sim \mathrm{Ga}(b, 1)$ are independent gamma random variables
 
 First we show that we can recover the original likelihood $p(y_n | f_n)$ 
 by integrating out $\boldsymbol{\omega}$.
-Before we proceed, note that the $p(y_n | f_n)$ can be expressed more 
+Before we proceed, note that $p(y_n | f_n)$ can be expressed more 
 succinctly as
 $$
 p(y_n | f_n) = \frac{e^{y_n f_n}}{1 + e^{f_n}}.
 $$
 Refer to [Appendix I]({{< relref "#i" >}}) for derivations.
-Next, note the following property of Pólya-gamma variables:
+Next, note the following property of Pólya-gamma variables, a
+generalization of the Laplace-transform identity from
+[Part I]({{< relref "/posts/polya-gamma-basic-relationships" >}}):
 
 {{< callout note >}}
 #### Laplace transform of the Pólya-gamma density (Polson et al. 2013)
@@ -257,7 +271,7 @@ as required.
 
 #### Property II: Gaussian-Gaussian conjugacy
 
-Let us define the diagonal matrix $\boldsymbol{\Omega} = \mathrm{diag}(\omega_1 \cdots \omega_n)$ and vector $\mathbf{z} = \boldsymbol{\Omega}^{-1} \boldsymbol{\kappa}$. 
+Let us define the diagonal matrix $\boldsymbol{\Omega} = \mathrm{diag}(\omega_1 \cdots \omega_N)$ and vector $\mathbf{z} = \boldsymbol{\Omega}^{-1} \boldsymbol{\kappa}$. 
 More simply, $\mathbf{z}$ is the vector with $n$th element $z_n = {\kappa_n} / {\omega_n}$.
 Hence, by [completing the square](https://mathworld.wolfram.com/CompletingtheSquare.html), 
 the per-datapoint conditional likelihood $p(y_n | f_n, \omega_n)$ above can be written as
@@ -489,7 +503,7 @@ def draw_samples(num_samples, p, q, rate=0.5, random_state=None):
     return X_top, X_bot
 ```
 
-The densities of both distributions and their and samples are shown in the 
+The densities of both distributions and their samples are shown in the 
 figure below.
 
 {{< figure src="figures/density_paper_1500x927.png" title="Densities of two Gaussians and samples drawn from each." numbered="true" >}}
@@ -507,7 +521,7 @@ where the function `make_dataset` is defined as:
 ```python
 def make_dataset(X_pos, X_neg):
 
-    X = np.expand_dim(np.hstack([X_pos, X_neg]), axis=-1)
+    X = np.expand_dims(np.hstack([X_pos, X_neg]), axis=-1)
     y = np.hstack([np.ones_like(X_pos), np.zeros_like(X_neg)])
 
     return X, y
@@ -538,9 +552,9 @@ Hence, we assume *a priori* that the latent function is of the form
 $$
 f(\mathbf{x}) = \boldsymbol{\beta}^{\top} \phi(\mathbf{x}),
 $$
-and express vector of latent function values 
+and express the vector of latent function values 
 as $\mathbf{f} = \boldsymbol{\Phi} \boldsymbol{\beta}$.
-In this example, we consider a simply polynomial basis function,
+In this example, we consider a simple polynomial basis function,
 $$
 \phi(x) = \begin{bmatrix} 1 & x & x^2 & \cdots & x^{K-1} \end{bmatrix}^{\top}.
 $$
@@ -605,7 +619,7 @@ $$
 
 ### Inference and Prediction  
 
-#### Posterior over latent function values
+#### Posterior over weights
 
 The posterior over the latent weights $\boldsymbol{\beta}$ conditioned on the 
 auxiliary latent variables $\boldsymbol{\omega}$ is
@@ -637,7 +651,7 @@ and a function to return samples from the multivariate Gaussian parameterized
 by this mean and covariance:
 
 ```python
-def gassian_sample(mean, cov, random_state=None):
+def gaussian_sample(mean, cov, random_state=None):
     random_state = check_random_state(random_state)
     return random_state.multivariate_normal(mean=mean, cov=cov)
 ```
@@ -711,7 +725,7 @@ for i in range(num_iterations):
     omega = polya_gamma_sample(b, c, pg=pg)
 
     mu, Sigma = conditional_posterior_weights(Phi, kappa, alpha, omega)
-    beta = gassian_sample(mu, Sigma, random_state=random_state)
+    beta = gaussian_sample(mu, Sigma, random_state=random_state)
 ```
 
 We now visualize the samples $(\boldsymbol{\beta}^{(t)}, \boldsymbol{\omega}^{(t)})$ 
@@ -765,7 +779,7 @@ from pypolyagamma import PyPolyaGamma
 
 from .utils import (draw_samples, make_dataset, basis_function,
                     conditional_posterior_auxiliary, polya_gamma_sample,
-                    conditional_posterior_weights, gassian_sample)
+                    conditional_posterior_weights, gaussian_sample)
 
 # constants
 num_train = 128
@@ -798,7 +812,7 @@ for i in range(num_iterations):
     omega = polya_gamma_sample(b, c, pg=pg)
 
     mu, Sigma = conditional_posterior_weights(Phi, kappa, alpha, omega)
-    beta = gassian_sample(mu, Sigma, random_state=random_state)
+    beta = gaussian_sample(mu, Sigma, random_state=random_state)
 ```
 
 where the module `utils.py` contains:
@@ -835,7 +849,7 @@ def polya_gamma_sample(b, c, pg=PyPolyaGamma()):
     return omega
 
 
-def gassian_sample(mean, cov, random_state=None):
+def gaussian_sample(mean, cov, random_state=None):
     random_state = check_random_state(random_state)
     return random_state.multivariate_normal(mean=mean, cov=cov)
 
@@ -873,7 +887,7 @@ def gibbs_sampler(beta, Phi, kappa, alpha, pg, random_state):
 
 def gibbs_sampler_helper(omega, Phi, kappa, alpha, pg, random_state):
     mu, Sigma = conditional_posterior_weights(Phi, kappa, alpha, omega)
-    beta = gassian_sample(mu, Sigma, random_state=random_state)
+    beta = gaussian_sample(mu, Sigma, random_state=random_state)
     yield beta, omega
     yield from gibbs_sampler(beta, Phi, kappa, alpha, pg, random_state)
 ```
@@ -899,12 +913,24 @@ from itertools import islice
 betas, omegas = zip(*islice(gibbs_sampler(beta, Phi, kappa, alpha, pg, random_state), num_iterations))
 ```
 There are a few obvious drawbacks to this implementation. 
-First, while it may be a lot fun to write, it will probably not be as fun to 
+First, while it may be a lot of fun to write, it will probably not be as fun to 
 read when you revisit it later on down the line.
 Second, you may occasionally find yourself hitting the maximum recursion depth 
 before you have reached a sufficient number of iterations for the warm-up 
 or "burn-in" phase to have been completed.
 It goes without saying, the latter can make this implementation a non-starter.
+
+## What's Next
+
+Gibbs sampling gave us exact posterior samples, and exactness is a luxury.
+It is purchased with computation: thousands of sequential sweeps, each
+requiring $N$ fresh Pólya-gamma draws. In
+[Part III]({{< relref "/posts/polya-gamma-sigmoid-local-variational-lower-bound" >}}),
+we make the opposite trade in the very same augmented model, replacing the
+sampler with mean-field variational inference. The deterministic algorithm
+that falls out turns out to be an old acquaintance: the local variational
+method of Jaakkola and Jordan[^jaakkola2000bayesian], complete with its
+celebrated bound on the logistic sigmoid.
 
 ## Links and Further Readings
 
@@ -962,9 +988,9 @@ The conditional likelihood factorizes as
 $$
 \begin{align*}
 p(\mathbf{y} | \mathbf{f}, \boldsymbol{\omega}) &= 
-\prod_{i=1}^n p(y_n | f_n, \omega_n) \newline &\propto
-\prod_{i=1}^n \exp{\left ( - \frac{\omega_n}{2} \left (f_n - z_n \right )^2 \right )} \newline &= 
-\exp{\left ( - \frac{1}{2} \sum_{i=1}^n \omega_n \left (f_n - z_n \right )^2 \right )} \newline &= 
+\prod_{n=1}^N p(y_n | f_n, \omega_n) \newline &\propto
+\prod_{n=1}^N \exp{\left ( - \frac{\omega_n}{2} \left (f_n - z_n \right )^2 \right )} \newline &= 
+\exp{\left ( - \frac{1}{2} \sum_{n=1}^N \omega_n \left (f_n - z_n \right )^2 \right )} \newline &= 
 \exp{\left \{ - \frac{1}{2} (\mathbf{f} - \mathbf{z})^{\top} \boldsymbol{\Omega} (\mathbf{f} - \mathbf{z}) \right \}} \newline &\propto
 \mathcal{N}\left (\boldsymbol{\Omega}^{-1} \boldsymbol{\kappa} | \mathbf{f}, \boldsymbol{\Omega}^{-1} \right ) 
 \end{align*}
