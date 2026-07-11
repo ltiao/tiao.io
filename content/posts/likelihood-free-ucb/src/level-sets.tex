@@ -1,0 +1,44 @@
+\documentclass[border=8pt]{standalone}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{fontspec}
+\setmainfont{Source Serif 4}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\definecolor{qbase}{RGB}{31,86,160}
+\definecolor{winner}{RGB}{209,73,91}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12.5cm, height=9cm,
+  axis lines=left,
+  xlabel={$\sigma$}, ylabel={$\mu$},
+  xmin=0, xmax=3, ymin=-4.2, ymax=4.6,
+  label style={font=\large},
+  tick label style={font=\normalsize},
+  axis line style={gray!60},
+  clip=true,
+]
+% UCB level sets: mu = s - 2*sigma (parallel, slope -2)
+\foreach \s in {-1, 0.5, 3.5} {
+  \addplot[domain=0:3, samples=2, thick, qbase] {\s - 2*x};
+}
+% PI(tau=2) level sets: mu = 2 + c*sigma (fan through (0,2))
+\foreach \c in {-3.4, -1, 0.6, 1.4} {
+  \addplot[domain=0:3, samples=2, thick, winner!85] {2 + \c*x};
+}
+% the one shared line: c = -2 coincides with s = 2
+\addplot[domain=0:3, samples=2, very thick, dash pattern=on 5pt off 3pt, black!75] {2 - 2*x};
+% fan apex
+\addplot[only marks, mark=*, mark size=2.2pt, winner!85!black] coordinates {(0,2)};
+% annotations
+\node[qbase, font=\normalsize, anchor=west] at (axis cs:1.05,-3.55)
+  {level sets of $\mu + \sqrt{\beta}\sigma$: parallel};
+\node[winner!85!black, font=\normalsize, anchor=west] at (axis cs:0.55,4.25)
+  {level sets of $\mathbb{E}[u]$, $u = \mathbbm{1}(y > \tau)$: a fan through $(0, \tau)$};
+\node[black!75, font=\normalsize, anchor=south west, rotate=-26] at (axis cs:0.75,0.55)
+  {the only line they share};
+\end{axis}
+\end{tikzpicture}
+\end{document}

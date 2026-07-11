@@ -1,0 +1,54 @@
+\documentclass[border=8pt]{standalone}
+\usepackage{fontspec}
+\setmainfont{Source Serif 4}
+\usepackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=1.18}
+\definecolor{qbase}{RGB}{31,86,160}
+\definecolor{winner}{RGB}{209,73,91}
+\input{two_sigmas_data.tex}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  name=left,
+  width=8.6cm, height=6.8cm,
+  axis lines=left,
+  title={epistemic: GP posterior $\pm 2\sigma_f(\mathbf{x})$},
+  title style={font=\large, qbase!80!black},
+  xmin=0, xmax=1, ymin=-1.75, ymax=1.75,
+  xticklabels={}, xtick style={draw=none},
+  yticklabels={}, ytick style={draw=none},
+  xlabel={$\mathbf{x}$}, label style={font=\large},
+  axis line style={gray!60},
+]
+\addplot[name path=U, draw=none] coordinates {\gpupper};
+\addplot[name path=L, draw=none] coordinates {\gplower};
+\addplot[qbase!18] fill between[of=U and L];
+\addplot[very thick, qbase] coordinates {\gpmean};
+\addplot[only marks, mark=*, mark size=1.8pt, black!80] coordinates {\gpdata};
+\node[qbase!70!black, font=\normalsize, align=center] at (axis cs:0.555,1.35)
+  {grows where\\ data is absent};
+\end{axis}
+\begin{axis}[
+  at={(left.outer east)}, anchor=outer west, xshift=2mm,
+  width=8.6cm, height=6.8cm,
+  axis lines=left,
+  title={aleatoric: noise spread $\pm 2\sigma(\mathbf{x})$},
+  title style={font=\large, winner!80!black},
+  xmin=0, xmax=1, ymin=-1.75, ymax=1.75,
+  xticklabels={}, xtick style={draw=none},
+  yticklabels={}, ytick style={draw=none},
+  xlabel={$\mathbf{x}$}, label style={font=\large},
+  axis line style={gray!60},
+]
+\addplot[name path=U2, draw=none] coordinates {\alupper};
+\addplot[name path=L2, draw=none] coordinates {\allower};
+\addplot[winner!14] fill between[of=U2 and L2];
+\addplot[very thick, winner!85!black] coordinates {\almean};
+\addplot[only marks, mark=*, mark size=1.4pt, black!45] coordinates {\aldata};
+\node[winner!70!black, font=\normalsize, align=center] at (axis cs:0.555,1.35)
+  {indifferent to\\ data absence};
+\end{axis}
+\end{tikzpicture}
+\end{document}

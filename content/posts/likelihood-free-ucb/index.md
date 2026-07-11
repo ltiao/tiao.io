@@ -87,7 +87,7 @@ $$
 $$
 Fix $s$ and vary $\sigma$; the mean $\mu = s - \sqrt{\beta} \sigma$ adjusts to keep $s$ constant, so every $\sigma > 0$ is admissible. The right-hand side does not move. The left-hand side scales as $1/\sigma$. The only escape is $h'(s) = 0$, at every $s$: the readout is constant, and a constant acquisition function ranks nothing.
 
-{{< figure src="level-sets.png" caption="Level sets in the (σ, μ) half-plane. The level sets of a threshold utility's expectation form a fan through (0, τ); UCB's are parallel lines of slope −√β. A fan and a family of parallels agree on at most one line: the level set with value τ. PI at threshold τ impersonates UCB exactly there and nowhere else." >}}
+{{< figure src="figures/level-sets.png" caption="Level sets in the (σ, μ) half-plane. The level sets of a threshold utility's expectation form a fan through (0, τ); UCB's are parallel lines of slope −√β. A fan and a family of parallels agree on at most one line: the level set with value τ. PI at threshold τ impersonates UCB exactly there and nowhere else." >}}
 
 The argument is indifferent to every knob the recipe exposes. The threshold $\tau$ is a constant once the data are fixed, so it is absorbed into $u$. The choice of $f$-divergence in LFBO's general formulation changes the shape of the training objective but never the functional it elicits (the population optimum is $\mathbb{E}[u]$ for every admissible $f$). And the monotone readout is exactly the $h$ that the heat equation just killed. Within weighted classification, that is every door.
 
@@ -118,7 +118,7 @@ $$
 $$
 an absolute loss with asymmetric slopes. The derivation that it works is two lines: $\frac{\partial}{\partial z} \mathbb{E}_{y \sim p}\left[ \rho_q(y - z) \right] = F(z) - q$, which vanishes exactly at $z = F^{-1}(q)$.
 
-{{< figure src="pinball.png" caption="The pinball loss at q = 0.977. Underestimates cost 0.977 per unit and overestimates cost 0.023, so the minimizer settles where only 2.3 percent of the mass lies above." >}}
+{{< figure src="figures/pinball.png" caption="The pinball loss at q = 0.977. Underestimates cost 0.977 per unit and overestimates cost 0.023, so the minimizer settles where only 2.3 percent of the mass lies above." >}}
 
 That is the whole rescue. Fit a regressor $m_{\boldsymbol{\theta}}$ by minimizing $\sum_i \rho_q(y_i - m_{\boldsymbol{\theta}}(\mathbf{x}_i))$ at level $q = \Phi(\sqrt{\beta})$, and maximize its output: $m_{\boldsymbol{\theta}}(\mathbf{x})$ *is* the acquisition function, in the units of $y$. The readout is simpler than the classification recipe's $\hat{C} / (1 - \hat{C})$, and the threshold machinery disappears entirely, with no $\tau$ to recompute and no labels to flip between iterations. BORE's quantile fraction $\gamma$ and UCB's exploration parameter $\beta$, two knobs that looked unrelated, collapse into a single one: the level $q$. (For minimization problems, train the lower quantile $q = \Phi(-\sqrt{\beta})$ and minimize the output.)
 
@@ -128,7 +128,7 @@ There is also a quiet upgrade hiding in the swap. When the predictive is not Gau
 
 Honesty requires saying which $\sigma$ this recipe buys. The distribution a pinball regressor learns about is the data-generating conditional $p(y \mid \mathbf{x})$, so its spread is observation noise: aleatoric uncertainty. The $\sigma(\mathbf{x})$ in GP-UCB is a different animal wearing the same letter: posterior uncertainty about the latent function, which grows away from the data and shrinks wherever observations accumulate. That epistemic $\sigma$ is the one the phrase "optimism in the face of uncertainty" refers to, and no amount of quantile regression on raw pairs recovers it.
 
-{{< figure src="two-sigmas.png" caption="Two σ's wearing the same letter. The epistemic band of a GP posterior balloons where data is absent; the aleatoric band of the noise itself tracks σ(x) and does not care where you have looked." >}}
+{{< figure src="figures/two-sigmas.png" caption="Two σ's wearing the same letter. The epistemic band of a GP posterior balloons where data is absent; the aleatoric band of the noise itself tracks σ(x) and does not care where you have looked." >}}
 
 The consequence is easiest to see at the extreme. On a noiseless objective, $p(y \mid \mathbf{x})$ is a point mass, every quantile equals $f(\mathbf{x})$, and the level $q$ does nothing: the rule degenerates to greedy maximization of a fitted surface, which will happily sit in the first decent basin it finds, because nothing in the objective rewards leaving. Under noise, the rule does something meaningful: it seeks the input whose *upper tail* is best, a risk-seeking target that is exactly right when outcomes are stochastic and you care about the best draws. But its exploration is optimism about noise rather than optimism about ignorance.
 
@@ -138,7 +138,7 @@ To be fair to the recipe, this is not a new debt, and I am poorly placed to comp
 
 Step back far enough and the zoo collapses. PI fixes a threshold and reads out a probability: $\alpha_{\text{PI}}(\mathbf{x}) \triangleq 1 - F(\tau \mid \mathbf{x})$. UCB fixes a probability and reads out a threshold: $\alpha_{\text{UCB}}(\mathbf{x}) = F^{-1}(q \mid \mathbf{x})$. They are inverse readouts of the same conditional CDF, which suggests estimating the CDF once and reading it out however you please. A single threshold-conditioned classifier $C(\mathbf{x}, \tau) \approx P(y > \tau \mid \mathbf{x})$, trained on labels $\mathbb{1}(y_i > \tau)$ at sampled thresholds, contains every acquisition in this post: PI at every threshold by evaluation, EI by integration (since $\mathbb{E}[\max(y - \tau, 0)] = \int_\tau^\infty P(y > t) dt$) and UCB by inversion in $\tau$.
 
-{{< figure src="cdf-readouts.png" caption="One conditional CDF, three readouts. Fix a threshold τ and read off a probability (PI); fix a probability q and read off a threshold (UCB); integrate the gap above the CDF beyond τ (EI)." >}}
+{{< figure src="figures/cdf-readouts.png" caption="One conditional CDF, three readouts. Fix a threshold τ and read off a probability (PI); fix a probability q and read off a threshold (UCB); integrate the gap above the CDF beyond τ (EI)." >}}
 
 The pinball loss is secretly this same object. For any $q$,
 $$
@@ -158,7 +158,7 @@ $$
 $$
 Independent Thompson sampling over an $m$-point quantile grid is fixed-level quantile maximization over a randomly thinned candidate pool. The middle quantiles never decide a selection. With their pool of two thousand candidates, thinning by a quarter changes essentially nothing, and the sampled acquisition collapses onto its deterministic core: maximize $\hat{q}_{\alpha_m}$.
 
-{{< figure src="ts-collapse.png" caption="Independent Thompson sampling over four quantile curves: one dot per candidate, placed at its randomly drawn level. The winning draw sits on the top-level curve, at that curve's maximizer." >}}
+{{< figure src="figures/ts-collapse.png" caption="Independent Thompson sampling over four quantile curves: one dot per candidate, placed at its randomly drawn level. The winning draw sits on the top-level curve, at that curve's maximizer." >}}
 
 That core has a name. Under a Gaussian predictive, the $\alpha_m$-quantile is $\mu + \Phi^{-1}\left( \tfrac{m}{m+1} \right) \sigma$: UCB with $\beta = \Phi^{-1}\left( \tfrac{m}{m+1} \right)^2$, which at $m = 4$ gives $\beta \approx 0.71$. The grid size, chosen as a resolution parameter, has been a $\beta$ dial all along, and the future work the paper asks for is the method it already runs. The extension amounts to deleting the sampling step, which also frees $\beta$ from the grid. Two honest boundaries: separately fitted quantiles can cross (their own footnote concedes this), which adds slack to the monotonicity step; and in sparse pools the thinning genuinely bites, which is the high-dimensional regime where their limitations section already reports Thompson sampling weakening. The disguise slips exactly where they noticed something slipping.
 

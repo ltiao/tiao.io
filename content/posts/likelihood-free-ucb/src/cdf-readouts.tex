@@ -1,0 +1,49 @@
+\documentclass[border=8pt]{standalone}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\setmainfont{Source Serif 4}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\definecolor{qbase}{RGB}{31,86,160}
+\definecolor{winner}{RGB}{209,73,91}
+\definecolor{eigreen}{RGB}{42,130,110}
+\input{cdf_data.tex}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13.5cm, height=8.5cm,
+  axis lines=left,
+  xlabel={$t$}, ylabel={$F(t \mid \mathbf{x})$},
+  xmin=-2.2, xmax=4.6, ymin=0, ymax=1.09,
+  xtick={0, 3},
+  xticklabels={$\tau$, $F^{-1}(q)$},
+  ytick={0, 0.1587, 1},
+  yticklabels={$0$, $F(\tau)$, $1$},
+  label style={font=\large},
+  tick label style={font=\large},
+  axis line style={gray!60},
+  clip=false,
+]
+% EI: shaded area between the CDF and 1, right of tau
+\addplot[draw=none, fill=eigreen!22] coordinates {(0,1)} -- plot coordinates {\cdfshade} -- (axis cs:4.6,1) -- cycle;
+\node[eigreen!60!black, font=\large, align=center] at (axis cs:1.15,0.87)
+  {$\alpha_{\text{EI}}$: shaded area};
+% the CDF
+\addplot[very thick, qbase] coordinates {\cdfcurve};
+% top reference line
+\draw[gray!50] (axis cs:-2.2,1) -- (axis cs:4.6,1);
+% UCB readout: fix q, read threshold
+\draw[dashed, thick, winner] (axis cs:-2.2,0.977) -- (axis cs:3,0.977);
+\node[winner, font=\large, anchor=east] at (axis cs:-2.25,0.977) {$q$};
+\draw[->, thick, winner] (axis cs:3,0.977) -- (axis cs:3,0.02);
+\node[winner, font=\large, anchor=south west] at (axis cs:3.06,0.30)
+  {$\alpha_{\text{UCB}}$: fix $q$, read $t$};
+% PI readout: fix tau, read probability
+\draw[dashed, thick, black!70] (axis cs:0,0) -- (axis cs:0,0.1587);
+\draw[->, thick, black!70] (axis cs:0,0.1587) -- (axis cs:-2.15,0.1587);
+\node[black!70, font=\large, anchor=south west] at (axis cs:-2.1,0.19)
+  {$\alpha_{\text{PI}} = 1 - F(\tau)$: fix $\tau$, read probability};
+\end{axis}
+\end{tikzpicture}
+\end{document}
