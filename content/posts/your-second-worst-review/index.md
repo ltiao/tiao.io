@@ -23,7 +23,7 @@ Every ICLR 2024 paper with four reviewers, arranged by its two lowest scores (wh
 
 ![Grid of small heatmaps showing ICLR 2024 acceptance rate broken down by a paper's two lowest and two highest reviewer scores. The top-left panel, where both lowest scores are 3, is a wall of deep red near zero percent. Panels where the second-lowest score reaches 6 or higher run green.](coalition-heatmap.png)
 
-The red is what you notice first. That top-left corner is papers whose two lowest scores both landed on 3. It is a wall, and nothing to its right climbs out. Papers with just one 3 and a second-lowest of 6 or above accept at about $50\%$ ($n = 108$). Two 3s, no matter the top pair, accept at about $2\%$ ($n = 338$). The difference between one low score and two is the whole story.
+The red is what you notice first. That top-left corner is papers whose two lowest scores both landed on 3. It is a wall, and no combination of high scores on the other two reviews climbs out of it. Papers with just one 3 and a second-lowest of 6 or above accept at about $50\%$ ($n = 108$). Two 3s, no matter the top pair, accept at about $2\%$ ($n = 338$). The difference between one low score and two is the whole story.
 
 Your instinct might be to point out that the mean score predicts better. It does. Logistic regression on the mean gives a cross-validated AUC of $0.94$; the second-lowest alone gives $0.89$. The mean uses all four scores, so it has more to work with. But the question is which of the four scores the prediction leans on most, not which summary statistic wins.
 
