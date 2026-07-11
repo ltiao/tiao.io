@@ -20,7 +20,7 @@ image:
   preview_only: false
 ---
 
-The upper confidence bound is not the object it appears to be. Written as
+The upper confidence bound[^srinivas2010] is not the object it appears to be. Written as
 $$
 \alpha_{\text{UCB}}(\mathbf{x}) \triangleq \mu(\mathbf{x}) + \sqrt{\beta} \sigma(\mathbf{x}),
 $$
@@ -34,16 +34,16 @@ where $F^{-1}(\cdot \mid \mathbf{x})$ is the quantile function of the predictive
 
 ## Acquisition functions as loss functions
 
-The reason to care about rewriting UCB is a family of methods that replace the usual machinery of Bayesian optimization (fit a probabilistic surrogate, form its posterior predictive, integrate a utility against it) with a single supervised-learning step on the raw data. The opening move was ours. BORE[^tiao2021bore] thresholds the observed outcomes at a quantile of the $y$ values seen so far, labels each point by whether it beats the threshold, and trains a probabilistic classifier $\pi(\mathbf{x})$ on the resulting labels. The optimal classifier output is a monotone transform of probability of improvement, so maximizing the classifier maximizes PI. No predictive distribution is ever built. The acquisition function is estimated directly, by minimizing a familiar loss on $(\mathbf{x}_i, y_i)$ pairs, which means any classifier you like (gradient-boosted trees, neural networks) can play the role the Gaussian process usually plays.
+The reason to care about rewriting UCB is a family of methods that replace the usual machinery of Bayesian optimization (fit a probabilistic surrogate, form its posterior predictive, integrate a utility against it) with a single supervised-learning step on the raw data. The opening move was ours. BORE[^tiao2021bore] thresholds the observed outcomes at a quantile of the $y$ values seen so far, labels each point by whether it beats the threshold, and trains a probabilistic classifier $\pi(\mathbf{x})$ on the resulting labels. The quantile-thresholding device itself goes back to TPE[^bergstra2011], which worked with a ratio of densities rather than a classifier. The optimal classifier output is a monotone transform of probability of improvement, so maximizing the classifier maximizes PI. No predictive distribution is ever built. The acquisition function is estimated directly, by minimizing a familiar loss on $(\mathbf{x}_i, y_i)$ pairs, which means any classifier you like (gradient-boosted trees, neural networks) can play the role the Gaussian process usually plays.
 
-LFBO[^song2022general] turned this observation into a recipe, and the mechanism deserves a derivation rather than a citation.[^thesisexposition] Every convex function is the upper envelope of its tangent lines,
+LFBO[^song2022general] turned this observation into a recipe, and the mechanism deserves a derivation rather than a citation.[^thesisexposition] Every differentiable, strictly convex function is the upper envelope of its tangent lines,
 $$
 f(v) = \max_{s} \left\{ v f'(s) - f^{\star}\left( f'(s) \right) \right\},
 $$
 where $f^{\star}$ is the convex conjugate. Apply this pointwise to any target function $\alpha$ inside an expectation over candidates, and loosen the pointwise maximization to a single function $S$:
 $$
 \mathbb{E}_{p(\mathbf{x})}\left[ f(\alpha(\mathbf{x})) \right]
-\geq \max_{S : \mathcal{X} \to \mathbb{R}}
+\geq \max_{S : \mathcal{X} \to (0, \infty)}
 \mathbb{E}_{p(\mathbf{x})}\left[ \alpha(\mathbf{x}) f'(S(\mathbf{x})) - f^{\star}\left( f'(S(\mathbf{x})) \right) \right],
 $$
 with equality exactly at $S^{\ast} = \alpha$. So far this is a variational device for eliciting any function you can evaluate under an expectation. The likelihood-free step is a single application of the tower rule. Take the target to be the expected utility
@@ -55,7 +55,7 @@ $$
 \max_{\pi}\
 \mathbb{E}_{p(\mathbf{x}, y)}\left[ u(y; \tau) \log \pi(\mathbf{x}) + \log\left( 1 - \pi(\mathbf{x}) \right) \right],
 $$
-in which every observation participates as a negative with weight one and as a positive with weight $u(y_i; \tau)$, and the optimal classifier satisfies $\pi / (1 - \pi) = \alpha_u$ exactly. The indicator utility $u(y; \tau) \triangleq \mathbb{1}(y > \tau)$ gives PI and recovers BORE; the hinge utility $u(y; \tau) \triangleq \max(y - \tau, 0)$ gives EI. A single loss trains a single model whose output is the acquisition function. And the logistic choice was arbitrary: any strictly convex $f$ elicits the same $\alpha_u$, a freedom that will matter shortly.
+in which every observation participates as a negative with weight one and as a positive with weight $u(y_i; \tau)$, and the optimal classifier satisfies $\pi / (1 - \pi) = \alpha_u$ exactly. The indicator utility $u(y; \tau) \triangleq \mathbb{1}(y > \tau)$ gives PI and recovers BORE (the same population acquisition; the loss weighting differs); the hinge utility $u(y; \tau) \triangleq \max(y - \tau, 0)$ gives EI. A single loss trains a single model whose output is the acquisition function. And the logistic choice was arbitrary: any strictly convex $f$ elicits the same $\alpha_u$, a freedom that will matter shortly.
 
 PI and EI are where the LFBO paper's tables end. UCB appears nowhere in this family, and the omission is structural rather than an oversight.
 
@@ -94,7 +94,7 @@ for any $u$ for which the expectation exists (the smoothing makes $g$ infinitely
 $$
 \frac{\sqrt{\beta} h'(s)}{2 \sigma} = \frac{1}{2} h''(s).
 $$
-Fix $s$ and vary $\sigma$; the mean $\mu = s - \sqrt{\beta} \sigma$ adjusts to keep $s$ constant, so every $\sigma > 0$ is admissible. The right-hand side does not move. The left-hand side scales as $1/\sigma$. The only escape is $h'(s) = 0$, at every $s$: the readout is constant, and a constant acquisition function ranks nothing.
+Fix $s$ and vary $\sigma$; the mean $\mu = s - \sqrt{\beta} \sigma$ adjusts to keep $s$ constant, so every $\sigma > 0$ is admissible. The right-hand side does not move. The left-hand side scales as $1/\sigma$. The only escape is $h'(s) = 0$, at every $s$: the readout is constant, and a constant acquisition function ranks nothing. (At $\beta = 0$ the argument relents exactly as it should: the equation forces $h'' = 0$, an affine readout of $\mu$, and the mean is elicitable.)
 
 {{< figure src="figures/level-sets.png" caption="Level sets in the (σ, μ) half-plane. The level sets of a threshold utility's expectation form a fan through (0, τ); UCB's are parallel lines of slope −√β. A fan and a family of parallels agree on at most one line: the level set with value τ. PI at threshold τ impersonates UCB exactly there and nowhere else." >}}
 
@@ -111,11 +111,11 @@ $$
 \operatorname{Var}(p_\lambda)
 = \lambda \sigma_1^2 + (1 - \lambda) \sigma_2^2 + \lambda (1 - \lambda) (\mu_1 - \mu_2)^2,
 $$
-so any two members of a UCB level set with different means mix to a distribution that exits the set upward. Concretely: $\mathcal{N}(0, 2^2)$ and $\mathcal{N}(2, 1^2)$ both have $\mu + 2\sigma = 4$, yet their even mixture has mean $1$ and variance $3.5$, giving $\mu + 2\sigma \approx 4.74$. No loss whose minimizer is $\mu + \sqrt{\beta} \sigma$ exists, over Gaussians or anything containing them. This is the same obstruction that makes standard deviation and expected shortfall non-elicitable in the risk-forecasting literature. UCB is in known company.
+so any two members of a UCB level set with different means mix to a distribution that exits the set upward. Concretely: $\mathcal{N}(0, 2^2)$ and $\mathcal{N}(2, 1^2)$ both have $\mu + 2\sigma = 4$, yet their even mixture has mean $1$ and variance $3.5$, giving $\mu + 2\sigma \approx 4.74$. So no scalar loss has $\mu + \sqrt{\beta} \sigma$ as its pointwise minimizer over any family that is closed under mixtures and contains the Gaussians. This is the same obstruction that makes standard deviation and expected shortfall non-elicitable in the risk-forecasting literature, and both qualifiers earn their keep. Restricted to the Gaussians alone, the functional survives (the next section is about the loss that elicits it there). And pairs of losses escape: $(\mathbb{E}[y], \mathbb{E}[y^2])$ is jointly elicitable, $z_1 + \sqrt{\beta} \sqrt{z_2 - z_1^2}$ is a readout, and the result is the two-headed heteroscedastic regressor practitioners already fit — the same route by which expected shortfall becomes elicitable in a pair with VaR.[^fissler2016] What follows is the door that needs a single output.
 
 > **How close does classification get?** The family is not barren of optimism. Take $u(y) = e^{ky}$: its expectation under $\mathcal{N}(\mu, \sigma^2)$ is $e^{k\mu + k^2 \sigma^2 / 2}$, strictly increasing in $\mu + \tfrac{k}{2} \sigma^2$ — the entropic risk measure, a genuine mean-plus-spread acquisition sitting inside the recipe all along. What the impossibility forbids is specifically the *scale-equivariant* kind: double the units of $y$ and $\sqrt{\beta} \sigma$ doubles along with $\mu$, while $\tfrac{k}{2} \sigma^2$ does not — $k$ carries units of $1/y$, so the exponential utility must be re-tuned whenever the outputs are rescaled (and its weights make for a noisy estimator besides, but that belongs to the follow-up). Variance-style optimism is available. Standard-deviation-style optimism is what cannot be had.
 
-So the tombstone reads: within the classification recipe, no utility; outside it, no loss. What survives is the observation the post opened with.
+So the tombstone reads: within the classification recipe, no utility; outside it, no scalar loss. What survives is the observation the post opened with.
 
 ## Quantiles come with their own loss
 
@@ -138,7 +138,7 @@ Honesty requires saying which $\sigma$ this recipe buys. The distribution a pinb
 
 {{< figure src="figures/two-sigmas.png" caption="Two σ's wearing the same letter. The epistemic band of a GP posterior balloons where data is absent; the aleatoric band of the noise itself tracks σ(x) and does not care where you have looked." >}}
 
-The consequence is easiest to see at the extreme. On a noiseless objective, $p(y \mid \mathbf{x})$ is a point mass, every quantile equals $f(\mathbf{x})$, and the level $q$ does nothing: the rule degenerates to greedy maximization of a fitted surface, which will happily sit in the first decent basin it finds, because nothing in the objective rewards leaving. Under noise, the rule does something meaningful: it seeks the input whose *upper tail* is best, a risk-seeking target that is exactly right when outcomes are stochastic and you care about the best draws. But its exploration is optimism about noise rather than optimism about ignorance.
+The consequence is easiest to see at the extreme. On a noiseless objective, $p(y \mid \mathbf{x})$ is a point mass, every quantile equals the objective's value at $\mathbf{x}$, and the level $q$ does nothing: the rule degenerates to greedy maximization of a fitted surface, which will happily sit in the first decent basin it finds, because nothing in the objective rewards leaving. Under noise, the rule does something meaningful: it seeks the input whose *upper tail* is best, a risk-seeking target that is exactly right when outcomes are stochastic and you care about the best draws. But its exploration is optimism about noise rather than optimism about ignorance.
 
 To be fair to the recipe, this is not a new debt, and I am poorly placed to complain. BORE and LFBO carry the same one: their classifiers are point estimates too, and the exploration they exhibit comes from threshold updates and model misfit rather than from any represented uncertainty. But PI and EI never advertised an epistemic term, and UCB is nothing *but* its epistemic term — the gap bites hardest precisely here. Restoring it means putting uncertainty back at the level of the model parameters (ensembles of quantile regressors with randomized priors, or a Bayesian treatment of $\boldsymbol{\theta}$) and making optimism a statement about disagreement between plausible models rather than a fixed percentile of noise. That, along with the numerical evidence for everything claimed above, is a follow-up post.
 
@@ -156,7 +156,7 @@ a threshold-integral of cost-weighted misclassification, with false negatives ch
 
 ## Coda: the disguise, worn twice
 
-Now for the sentence you were asked to remember. The conformal quantile method fits $m$ gradient-boosted quantile regressors with pinball losses at equally spaced levels $\alpha_j \triangleq j / (m + 1)$, with $m = 4$ in their experiments, and conformalizes the predictions. Its acquisition step is *independent Thompson sampling*: draw a large uniform pool of candidates, hand each candidate one of its $m$ predicted quantiles uniformly at random as a pseudo-sample, and keep the best draw. The paper closes by suggesting UCB as a possible future extension.
+Now for the sentence you were asked to remember. The conformal quantile method fits $m$ gradient-boosted quantile regressors with pinball losses at equally spaced levels $\alpha_j \triangleq j / (m + 1)$, with $m = 4$ in their experiments, and conformalizes the predictions.[^romano2019] Its acquisition step is *independent Thompson sampling*: draw a large uniform pool of candidates, hand each candidate one of its $m$ predicted quantiles uniformly at random as a pseudo-sample, and keep the best draw. The paper closes by suggesting UCB as a possible future extension.
 
 Look at what the sampling step actually computes. The winning draw beats every other draw, including the draws of the candidates whose coin landed on the top level $\alpha_m$ (about a $1/m$ fraction of the pool, call it $\mathcal{D}_{\text{thin}}$), and each of those draws *is* a top-level quantile. Meanwhile the winner's own top-level quantile can only exceed whatever level it happened to draw, provided the fitted quantiles are pointwise monotone across levels. Chaining the three facts,
 $$
@@ -164,13 +164,13 @@ $$
 \geq \text{winning draw}
 \geq \max_{\mathbf{x} \in \mathcal{D}_{\text{thin}}} \hat{q}_{\alpha_m}(\mathbf{x}).
 $$
-Independent Thompson sampling over an $m$-point quantile grid is fixed-level quantile maximization over a randomly thinned candidate pool. The middle quantiles never decide a selection. With their pool of two thousand candidates, thinning by a quarter changes essentially nothing, and the sampled acquisition collapses onto its deterministic core: maximize $\hat{q}_{\alpha_m}$.
+Independent Thompson sampling over an $m$-point quantile grid is, at worst, fixed-level quantile maximization over a randomly thinned candidate pool. Whatever level the winner happened to draw, the sandwich holds, so the middle quantiles can lift the selection above thinned top-level maximization but never drop it below. With their pool of two thousand candidates, thinning to a quarter changes essentially nothing (the maximum over a random quarter of two thousand candidates is, in expectation, roughly the fourth-best of the full pool), and the sampled acquisition collapses onto its deterministic core: maximize $\hat{q}_{\alpha_m}$.
 
 {{< figure src="figures/ts-collapse.png" caption="Independent Thompson sampling over four quantile curves: one dot per candidate, placed at its randomly drawn level. The winning draw sits on the top-level curve, at that curve's maximizer. The dash-dotted line is the analytic UCB at the grid-equivalent level, μ + √β_eff σ with β_eff = Φ⁻¹(0.8)² ≈ 0.71; under this toy's Gaussian predictive it coincides exactly with the top quantile curve. That coincidence is the corollary: the collapse itself needs no Gaussianity, but when the predictive is Gaussian, the sampler's deterministic core has a name and a β." >}}
 
-That core has a name. Under a Gaussian predictive, the $\alpha_m$-quantile is $\mu + \Phi^{-1}\left( \tfrac{m}{m+1} \right) \sigma$: UCB with $\beta = \Phi^{-1}\left( \tfrac{m}{m+1} \right)^2$, which at $m = 4$ gives $\beta \approx 0.71$. The grid size, chosen as a resolution parameter, has been a $\beta$ dial all along, and the future work the paper asks for is the method it already runs. The extension amounts to deleting the sampling step, which also frees $\beta$ from the grid. Two honest boundaries: separately fitted quantiles can cross (their own footnote concedes this), which adds slack to the monotonicity step; and in sparse pools the thinning genuinely bites, which is the high-dimensional regime where their limitations section already reports Thompson sampling weakening. The disguise slips exactly where they noticed something slipping.
+That core has a name. Under a Gaussian predictive, the $\alpha_m$-quantile is $\mu + \Phi^{-1}\left( \tfrac{m}{m+1} \right) \sigma$: UCB with $\beta = \Phi^{-1}\left( \tfrac{m}{m+1} \right)^2$, which at $m = 4$ gives $\beta \approx 0.71$. The grid size, chosen as a resolution parameter, has been a $\beta$ dial all along, and the future work the paper asks for is the method it already runs. The extension amounts to deleting the sampling step, which also frees $\beta$ from the grid. Two honest boundaries: separately fitted quantiles can cross (a possibility their own footnote acknowledges), which adds slack to the monotonicity step; and in sparse pools the thinning genuinely bites, which is the high-dimensional regime their limitations section already flags as a concern for Thompson sampling. The disguise slips exactly where they sensed something slipping.
 
-So the title holds in both directions. UCB is a quantile in disguise, and the leading quantile method is UCB in disguise. Elicitability makes the coincidence unremarkable: once you go likelihood-free, there is exactly one door to scale-equivariant optimism, and whoever arrives (by derivation or by engineering) walks through the same one.[^doyle]
+So the title holds in both directions. UCB is a quantile in disguise, and the leading quantile method is UCB in disguise. Elicitability makes the coincidence unremarkable. Scalar doors to scale-equivariant optimism are scarce (the quantile, and its least-squares cousin the expectile), and on a Gaussian predictive every such functional collapses to $\mu + c \sigma$ for some constant $c$. Whoever goes likelihood-free and wants optimism, by derivation or by engineering, ends up in the same room.[^doyle]
 
 [^doyle]: The engineering arrivals are documented. ACHO ([Doyle, 2022](https://arxiv.org/abs/2207.03017)) guides conformal HPO by maximizing a conformalized upper quantile, the fixed-level rule adopted as a heuristic, and its follow-up ([Doyle, 2025](https://arxiv.org/abs/2509.17051)) benchmarks that rule alongside the Thompson sampling of Salinas et al. The derivation above upgrades the heuristic to the unique elicitable form of UCB, with the level pinned by $\beta$.
 
@@ -184,4 +184,12 @@ So the title holds in both directions. UCB is a quantile in disguise, and the le
 
 [^wilson2018maximizing]: Wilson, J. T., Hutter, F., & Deisenroth, M. P. (2018). [Maximizing Acquisition Functions for Bayesian Optimization](https://arxiv.org/abs/1805.10196). In *Advances in Neural Information Processing Systems 31 (NeurIPS)*.
 
-[^gneiting2011making]: Gneiting, T. (2011). [Making and Evaluating Point Forecasts](https://arxiv.org/abs/0912.0902). *Journal of the American Statistical Association*, 106(494), 746–762. Osband's principle originates in K. Osband's 1985 PhD thesis, *Providing Incentives for Better Cost Forecasting*.
+[^gneiting2011making]: Gneiting, T. (2011). [Making and Evaluating Point Forecasts](https://arxiv.org/abs/0912.0902). *Journal of the American Statistical Association*, 106(494), 746–762. The convex-level-sets condition is due to K. Osband's 1985 PhD thesis, *Providing Incentives for Better Cost Forecasting* (UC Berkeley).
+
+[^srinivas2010]: Srinivas, N., Krause, A., Kakade, S., & Seeger, M. (2010). [Gaussian Process Optimization in the Bandit Setting: No Regret and Experimental Design](https://arxiv.org/abs/0912.3995). In *Proceedings of the 27th International Conference on Machine Learning (ICML)*.
+
+[^bergstra2011]: Bergstra, J., Bardenet, R., Bengio, Y., & Kégl, B. (2011). [Algorithms for Hyper-Parameter Optimization](https://papers.nips.cc/paper_files/paper/2011/hash/86e8f7ab32cfd12577bc2619bc635690-Abstract.html). In *Advances in Neural Information Processing Systems 24 (NeurIPS)*.
+
+[^fissler2016]: Fissler, T., & Ziegel, J. F. (2016). [Higher Order Elicitability and Osband's Principle](https://arxiv.org/abs/1503.08123). *The Annals of Statistics*, 44(4), 1680–1707.
+
+[^romano2019]: Romano, Y., Patterson, E., & Candès, E. (2019). [Conformalized Quantile Regression](https://arxiv.org/abs/1905.03222). In *Advances in Neural Information Processing Systems 32 (NeurIPS)*.
