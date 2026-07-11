@@ -5,6 +5,8 @@ summary: What nine years of ICLR reviews say about which score carries the most 
 date: 2026-07-10
 authors:
   - me
+categories:
+  - technical
 tags:
   - Peer Review
   - Machine Learning
