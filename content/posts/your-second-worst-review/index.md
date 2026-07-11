@@ -13,11 +13,11 @@ tags:
   - Data Visualization
 ---
 
-Two low scores on your ICLR paper is a death sentence. One bad review you can survive. Two, and it is over: about a one-in-fifty chance, no matter how enthusiastic your other reviewers are. The score that carries the most weight is your *second*-worst. I know this because ICLR publishes its rejections, and nine years of them tell the same story.
+Two low scores on your ICLR paper is a death sentence. One savage review, on its own, you can survive. Two, and it is over: about a one-in-fifty shot, however enthusiastic your other reviewers are. The score that matters most is not your worst review. It is your *second*-worst. I know this because ICLR publishes its rejections, and nine years of them tell the same story.
 
 ## Only ICLR shows you the losses
 
-All three big ML conferences use OpenReview, so you might think all three publish their reviews. They do not. NeurIPS and ICML show the papers that got in and quietly remove the ones that did not, reviews included. Pull NeurIPS from OpenReview today and it looks like the conference accepts $95\%$ of what it receives, because the only rejections still visible are the few that authors chose to un-hide. ICLR is the exception. It leaves rejected papers up, scores and reviews intact, thousands a year going back to 2018. I can only say your second-worst review predicts your fate about ICLR, because ICLR is the only one of the three that will show you the papers that lost.
+All three big ML conferences use OpenReview, so you might assume all three make their reviews public. They do not. NeurIPS and ICML show the papers that got in and quietly remove the ones that did not, reviews included. Pull NeurIPS from OpenReview today and it looks like the conference accepts $95\%$ of what it receives, because the only rejections left standing are the handful of authors who chose to un-hide theirs. ICLR is the exception. It leaves rejected papers up, scores and reviews intact, thousands a year going back to 2018. I can only say your second-worst review predicts your fate about ICLR, because ICLR is the only one of the three that will show you the papers that lost.
 
 ## Four rubrics, one effect
 
@@ -43,7 +43,7 @@ Within those four, a decision tree splits at the root on the second-lowest score
 
 ## Why the second-lowest?
 
-Why might the second-lowest carry so much weight? A single low score is a dissent, and area chairs see dissents constantly. They have ways to dismiss them: a reviewer who skimmed, a mismatch in taste, an off day. A second low score is harder to dismiss. Two readers arriving at the same place stops looking like bad luck. The veto needs a second. (This is speculation about AC behavior, not something the data proves. Reviewers see each other's scores during discussion, so the second low score is not necessarily independent of the first.)
+Why might the second-lowest carry so much weight? A single low score is a dissent, and area chairs see dissents constantly. They have ways to dismiss them: a reviewer who skimmed, a mismatch in taste, an off day. A second low score is harder to dismiss. It is two independent readers arriving at the same conclusion, and that is much harder for an area chair to wave away. The veto, in other words, needs a second. (This is speculation about AC behavior, not something the data proves. Reviewers see each other's scores during discussion, so the second low score is not necessarily independent of the first.)
 
 ## The floor holds
 
