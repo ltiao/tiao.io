@@ -1,7 +1,7 @@
 ---
 draft: false
 title: Your second-worst review is probably all you need
-summary: We analyze nine years of ICLR reviews and find that Reviewer 2 is not the problem. Reviewer 3 is.
+summary: We analyze nine years of ICLR reviews and find that Reviewer 2 is not the problem.
 date: 2026-07-10
 authors:
   - me
