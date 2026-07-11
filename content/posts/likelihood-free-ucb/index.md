@@ -36,17 +36,26 @@ where $F^{-1}(\cdot \mid \mathbf{x})$ is the quantile function of the predictive
 
 The reason to care about rewriting UCB is a family of methods that replace the usual machinery of Bayesian optimization (fit a probabilistic surrogate, form its posterior predictive, integrate a utility against it) with a single supervised-learning step on the raw data. The opening move was ours. BORE[^tiao2021bore] thresholds the observed outcomes at a quantile of the $y$ values seen so far, labels each point by whether it beats the threshold, and trains a probabilistic classifier $\pi(\mathbf{x})$ on the resulting labels. The optimal classifier output is a monotone transform of probability of improvement, so maximizing the classifier maximizes PI. No predictive distribution is ever built. The acquisition function is estimated directly, by minimizing a familiar loss on $(\mathbf{x}_i, y_i)$ pairs, which means any classifier you like (gradient-boosted trees, neural networks) can play the role the Gaussian process usually plays.
 
-LFBO[^song2022general] turned this observation into a recipe. Any acquisition function of the expected-utility form
+LFBO[^song2022general] turned this observation into a recipe, and the mechanism deserves a derivation rather than a citation.[^thesisexposition] Every convex function is the upper envelope of its tangent lines,
 $$
-\alpha_u(\mathbf{x}) \triangleq \mathbb{E}_{p(y \mid \mathbf{x})}\left[ u(y; \tau) \right],
+f(v) = \max_{s} \left\{ v f'(s) - f^{\star}\left( f'(s) \right) \right\},
 $$
-for a nonnegative utility $u$ and threshold $\tau$, is recovered by a weighted classification problem,
+where $f^{\star}$ is the convex conjugate. Apply this pointwise to any target function $\alpha$ inside an expectation over candidates, and loosen the pointwise maximization to a single function $S$:
 $$
-\hat{C} \triangleq \operatorname*{arg max}_{C}
-\mathbb{E}_{(\mathbf{x}, y) \sim \mathcal{D}_N}
-\left[ u(y; \tau) \log C(\mathbf{x}) + \log \left( 1 - C(\mathbf{x}) \right) \right],
+\mathbb{E}_{p(\mathbf{x})}\left[ f(\alpha(\mathbf{x})) \right]
+\geq \max_{S : \mathcal{X} \to \mathbb{R}}
+\mathbb{E}_{p(\mathbf{x})}\left[ \alpha(\mathbf{x}) f'(S(\mathbf{x})) - f^{\star}\left( f'(S(\mathbf{x})) \right) \right],
 $$
-in which every observation participates as a negative with weight one and as a positive with weight $u(y_i; \tau)$. At the population optimum, $\hat{C}(\mathbf{x}) / (1 - \hat{C}(\mathbf{x})) = \alpha_u(\mathbf{x})$ exactly. The indicator utility $u(y; \tau) \triangleq \mathbb{1}(y > \tau)$ gives PI and recovers BORE; the hinge utility $u(y; \tau) \triangleq \max(y - \tau, 0)$ gives EI. A single loss trains a single model whose output is the acquisition function.
+with equality exactly at $S^{\ast} = \alpha$. So far this is a variational device for eliciting any function you can evaluate under an expectation. The likelihood-free step is a single application of the tower rule. Take the target to be the expected utility
+$$
+\alpha_u(\mathbf{x}) \triangleq \mathbb{E}_{p(y \mid \mathbf{x})}\left[ u(y; \tau) \right]
+$$
+for a nonnegative utility $u$ and threshold $\tau$. Since $f'(S(\mathbf{x}))$ does not depend on $y$, the conditional expectation defining $\alpha_u$ merges into the outer one, $\mathbb{E}_{p(\mathbf{x})}[\alpha_u(\mathbf{x}) f'(S(\mathbf{x}))] = \mathbb{E}_{p(\mathbf{x}, y)}[u(y; \tau) f'(S(\mathbf{x}))]$, and the intractable predictive integral dissolves into an average over the raw pairs. Choosing the logistic $f(v) \triangleq v \log v - (v + 1) \log (v + 1)$ and reparameterizing $S = \pi / (1 - \pi)$ lands the objective on weighted binary cross-entropy,
+$$
+\max_{\pi}\
+\mathbb{E}_{p(\mathbf{x}, y)}\left[ u(y; \tau) \log \pi(\mathbf{x}) + \log\left( 1 - \pi(\mathbf{x}) \right) \right],
+$$
+in which every observation participates as a negative with weight one and as a positive with weight $u(y_i; \tau)$, and the optimal classifier satisfies $\pi / (1 - \pi) = \alpha_u$ exactly. The indicator utility $u(y; \tau) \triangleq \mathbb{1}(y > \tau)$ gives PI and recovers BORE; the hinge utility $u(y; \tau) \triangleq \max(y - \tau, 0)$ gives EI. A single loss trains a single model whose output is the acquisition function. And the logistic choice was arbitrary: any strictly convex $f$ elicits the same $\alpha_u$, a freedom that will matter shortly.
 
 PI and EI are where the LFBO paper's tables end. UCB appears nowhere in this family, and the omission is structural rather than an oversight.
 
@@ -65,7 +74,7 @@ since $\mathbb{E}|\gamma| = \sqrt{\beta\pi/2} \sigma \cdot \sqrt{2/\pi} = \sqrt{
 
 Look closely, though, and neither ingredient conforms to the recipe. The integrand $\mu(\mathbf{x}) + |y - \mu(\mathbf{x})|$ is a different function at every $\mathbf{x}$: it contains $\mu(\mathbf{x})$, a functional of the very predictive distribution we are refusing to model. And the expectation runs over a variance-inflated law rather than over $p(y \mid \mathbf{x})$. Our observations are samples from the latter, and reweighting them toward the former requires knowing $\mu(\mathbf{x})$ and $\sigma(\mathbf{x})$, which is the same circle again. LFBO's theorem needs a fixed utility $u(y; \tau)$ and samples from the true conditional. This form supplies neither. The door is painted on.
 
-Still, it sharpens the question rather than settling it. UCB admits *some* expectation form; perhaps a cleverer identity produces a conforming one — a fixed utility, under the true measure, up to a monotone transform (the recipe's readout $\hat{C} / (1 - \hat{C})$ is already one such transform). The next section closes that possibility for good.
+Still, it sharpens the question rather than settling it. UCB admits *some* expectation form; perhaps a cleverer identity produces a conforming one — a fixed utility, under the true measure, up to a monotone transform (the recipe's readout $\pi / (1 - \pi)$ is already one such transform). The next section closes that possibility for good.
 
 ## No utility works
 
@@ -120,7 +129,7 @@ an absolute loss with asymmetric slopes. The derivation that it works is two lin
 
 {{< figure src="figures/pinball.png" caption="The pinball loss at q = 0.977. Underestimates cost 0.977 per unit and overestimates cost 0.023, so the minimizer settles where only 2.3 percent of the mass lies above." >}}
 
-That is the whole rescue. Fit a regressor $m_{\boldsymbol{\theta}}$ by minimizing $\sum_i \rho_q(y_i - m_{\boldsymbol{\theta}}(\mathbf{x}_i))$ at level $q = \Phi(\sqrt{\beta})$, and maximize its output: $m_{\boldsymbol{\theta}}(\mathbf{x})$ *is* the acquisition function, in the units of $y$. The readout is simpler than the classification recipe's $\hat{C} / (1 - \hat{C})$, and the threshold machinery disappears entirely, with no $\tau$ to recompute and no labels to flip between iterations. BORE's quantile fraction $\gamma$ and UCB's exploration parameter $\beta$, two knobs that looked unrelated, collapse into a single one: the level $q$. (For minimization problems, train the lower quantile $q = \Phi(-\sqrt{\beta})$ and minimize the output.)
+That is the whole rescue. Fit a regressor $m_{\boldsymbol{\theta}}$ by minimizing $\sum_i \rho_q(y_i - m_{\boldsymbol{\theta}}(\mathbf{x}_i))$ at level $q = \Phi(\sqrt{\beta})$, and maximize its output: $m_{\boldsymbol{\theta}}(\mathbf{x})$ *is* the acquisition function, in the units of $y$. The readout is simpler than the classification recipe's $\pi / (1 - \pi)$, and the threshold machinery disappears entirely, with no $\tau$ to recompute and no labels to flip between iterations. BORE's quantile fraction $\gamma$ and UCB's exploration parameter $\beta$, two knobs that looked unrelated, collapse into a single one: the level $q$. (For minimization problems, train the lower quantile $q = \Phi(-\sqrt{\beta})$ and minimize the output.)
 
 There is also a quiet upgrade hiding in the swap. When the predictive is not Gaussian, $\mu + \sqrt{\beta} \sigma$ and the $q$-quantile genuinely differ, and it is the quantile that keeps meaning what UCB was supposed to mean (the 97.7th percentile of what this candidate might return) while the moment formula drifts. The pinball regressor targets the right object under every noise distribution, which is more than can be said for the formula it replaces.
 
@@ -171,6 +180,8 @@ So the title holds in both directions. UCB is a quantile in disguise, and the le
 [^tiao2021bore]: Tiao, L. C., Klein, A., Seeger, M. W., Bonilla, E. V., Archambeau, C., & Ramos, F. (2021). [BORE: Bayesian Optimization by Density-Ratio Estimation](https://proceedings.mlr.press/v139/tiao21a.html). In *Proceedings of the 38th International Conference on Machine Learning (ICML)*.
 
 [^song2022general]: Song, J., Yu, L., Neiswanger, W., & Ermon, S. (2022). [A General Recipe for Likelihood-Free Bayesian Optimization](https://proceedings.mlr.press/v162/song22b.html). In *Proceedings of the 39th International Conference on Machine Learning (ICML)*.
+
+[^thesisexposition]: The derivation follows the presentation in Chapter 5 of [my PhD thesis](/publications/phd-thesis/), which rederives LFBO from the variational representation underlying $f$-divergence estimation.
 
 [^wilson2018maximizing]: Wilson, J. T., Hutter, F., & Deisenroth, M. P. (2018). [Maximizing Acquisition Functions for Bayesian Optimization](https://arxiv.org/abs/1805.10196). In *Advances in Neural Information Processing Systems 31 (NeurIPS)*.
 
