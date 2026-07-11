@@ -13,7 +13,7 @@ tags:
   - Data Visualization
 ---
 
-Two low scores on your ICLR paper is a death sentence. One bad review you can survive. Two, and it is over: about a one-in-fifty chance, no matter how enthusiastic your other reviewers are. The score that carries the most weight is your *second*-worst. I know this because ICLR publishes its rejections, and nine years of data say the same thing.
+Two low scores on your ICLR paper is a death sentence. One bad review you can survive. Two, and it is over: about a one-in-fifty chance, no matter how enthusiastic your other reviewers are. The score that carries the most weight is your *second*-worst. I know this because ICLR publishes its rejections, and nine years of them tell the same story.
 
 ## Only ICLR shows you the losses
 
