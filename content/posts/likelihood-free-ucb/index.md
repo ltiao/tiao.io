@@ -109,8 +109,7 @@ A functional $T(p)$ is *elicitable* if some loss $\ell(z, y)$ recovers it by min
 Not every functional has the property, and there is a clean necessary condition, due to Osband[^gneiting2011making]: an elicitable functional has convex level sets in distribution space. If $T(p_1) = T(p_2) = c$, then every mixture $p_\lambda = \lambda p_1 + (1 - \lambda) p_2$ must also satisfy $T(p_\lambda) = c$. Mean-plus-standard-deviation fails this test, and fails it strictly. Means mix linearly, but variances pick up a spread term,
 $$
 \operatorname{Var}(p_\lambda)
-= \lambda \sigma_1^2 + (1 - \lambda) \sigma_2^2
-+ \lambda (1 - \lambda) (\mu_1 - \mu_2)^2,
+= \lambda \sigma_1^2 + (1 - \lambda) \sigma_2^2 + \lambda (1 - \lambda) (\mu_1 - \mu_2)^2,
 $$
 so any two members of a UCB level set with different means mix to a distribution that exits the set upward. Concretely: $\mathcal{N}(0, 2^2)$ and $\mathcal{N}(2, 1^2)$ both have $\mu + 2\sigma = 4$, yet their even mixture has mean $1$ and variance $3.5$, giving $\mu + 2\sigma \approx 4.74$. No loss whose minimizer is $\mu + \sqrt{\beta} \sigma$ exists, over Gaussians or anything containing them. This is the same obstruction that makes standard deviation and expected shortfall non-elicitable in the risk-forecasting literature. UCB is in known company.
 
