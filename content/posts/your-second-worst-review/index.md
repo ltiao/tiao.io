@@ -21,7 +21,16 @@ All three big ML conferences use OpenReview, so you might assume all three make 
 
 ## Four rubrics, one effect
 
-The pattern holds across every version of the scoring rubric, and ICLR changed rubrics four times. Some years reviewers rated on a full 1-to-10 slider (2018, 2019, 2021). Other years it was a coarse ladder: 1, 3, 6, and 8 in 2020. From 2022 it was 1, 3, 5, 6, 8, and 10, with a single step of resolution between "marginally below the bar" and "marginally above." In 2026 the scale switched to even numbers, 0 through 10. Four score sheets in nine years. The second-worst effect shows up on all of them. It is not an artifact of the rubric, because the rubric kept changing and the effect did not.
+The pattern holds across every version of the scoring rubric, and ICLR changed rubrics four times:
+
+| Years | Scale | Type |
+|---|---|---|
+| 2018, 2019, 2021 | 1–10 | full integer slider |
+| 2020 | 1, 3, 6, 8 | 4-rung ladder |
+| 2022–2025 | 1, 3, 5, 6, 8, 10 | 6-rung ladder (one step between "marginally below" and "marginally above") |
+| 2026 | 0, 2, 4, 6, 8, 10 | even integers |
+
+Four score sheets in nine years. The second-worst effect shows up on all of them. It is not an artifact of the rubric, because the rubric kept changing and the effect did not.
 
 ## The wall
 
@@ -39,7 +48,16 @@ Your instinct might be to point out that the mean score predicts better. It does
 
 The four scores together predict acceptance at an AUC of $0.95$ in held-out folds. I added $44$ more features (soundness, presentation, contribution sub-scores, reviewer confidence, word count, question count, submission timing) and the AUC did not move. With ${\sim}3{,}700$ papers and correlated predictors, that is not proof those features carry zero signal, but it is worth noting.
 
-Within those four, a decision tree splits at the root on the second-lowest score (call it $s_{(2)}$, where $s_{(1)}$ is the min, $s_{(3)}$ the third, and $s_{(4)}$ the max), at the $5/6$ boundary. Logistic regression gives $s_{(2)}$ the largest standardized coefficient (about $2\times$ $s_{(1)}$, $3\times$ $s_{(4)}$). Permutation importance from random forest and gradient boosting agrees. Shapley values give $s_{(2)}$ a mean absolute contribution of $2.06$, compared to $1.17$ for $s_{(4)}$, $1.13$ for $s_{(3)}$, and $0.61$ for $s_{(1)}$. $s_{(2)}$ is the single most important score for $58\%$ of papers, $s_{(3)}$ for $25\%$, $s_{(4)}$ for $16\%$. The worst score, the one you are fixated on, is the most important for fewer than $2\%$. All four matter. $s_{(2)}$ is first and $s_{(1)}$ is last.
+Within those four, a decision tree splits at the root on the second-lowest score (call it $s_{(2)}$, where $s_{(1)}$ is the min, $s_{(3)}$ the third, and $s_{(4)}$ the max), at the $5/6$ boundary. Logistic regression gives $s_{(2)}$ the largest standardized coefficient (about $2\times$ $s_{(1)}$, $3\times$ $s_{(4)}$). Permutation importance from random forest and gradient boosting agrees. Shapley values tell the same story:
+
+| Score | mean $\lvert$SHAP$\rvert$ | most important for |
+|---|--:|--:|
+| $s_{(2)}$ (2nd-lowest) | $2.06$ | $58\%$ of papers |
+| $s_{(4)}$ (highest) | $1.17$ | $16\%$ |
+| $s_{(3)}$ (3rd) | $1.13$ | $25\%$ |
+| $s_{(1)}$ (lowest) | $0.61$ | $< 2\%$ |
+
+All four scores matter. $s_{(2)}$ is first and $s_{(1)}$ is last. The worst score, the one you are fixated on, is the most important for fewer than one in fifty papers.
 
 ![SHAP beeswarm plot showing each paper as a dot, colored by score value, spread along the x-axis by how much that score pushed the acceptance prediction. The 2nd-lowest row has the widest spread; the lowest row clusters near zero.](shap-beeswarm.png)
 
