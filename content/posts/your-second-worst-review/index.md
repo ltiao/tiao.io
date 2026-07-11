@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: Your second-worst review is probably all you need
 summary: What nine years of ICLR reviews say about which score carries the most weight in your paper's fate.
 date: 2026-07-10
