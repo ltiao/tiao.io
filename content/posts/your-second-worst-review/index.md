@@ -1,7 +1,7 @@
 ---
 draft: false
 title: Your second-worst review is probably all you need
-summary: We analyze nine years of ICLR reviews and find that a paper's second-lowest score, not its worst, carries the most weight in the acceptance decision.
+summary: We analyze nine years of ICLR reviews and find that Reviewer 2 is not the problem. Reviewer 3 is.
 date: 2026-07-10
 authors:
   - me
