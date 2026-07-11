@@ -35,4 +35,4 @@ Why might the second-lowest carry so much weight? A single low score is a dissen
 
 The wall is stubborn. In 2024, the best-case rescue (two 3s and two 8s, $n = 6$) stayed in the single digits. Across common score combinations with enough papers to measure, nothing with two floor-level scores climbs much higher. In 2026, on the new scale, two 2s with two 8s accepted at $25\%$ ($n = 91$), up from near-zero on older scales but still below the 2026 baseline of $39\%$. The wall shifts with the rubric but does not disappear.
 
-Next time your scores land, skip the lowest one. Look at the one above it. That is the number that probably already sealed your paper's fate.
+Next time your scores land, don't dwell on the lowest one. Look at the one above it. That is the number that probably already sealed your paper's fate.
