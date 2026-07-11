@@ -41,7 +41,7 @@
 \addplot[domain=0.02:0.98, samples=220, very thick, c4] {mmu(x) + 0.8416*ssg(x)};
 \addlegendentry{$\hat{q}_{0.8}$ (top level)}
 % analytic UCB at the grid-equivalent beta: coincides exactly (Gaussian predictive)
-\addplot[domain=0.02:0.98, samples=220, thick, densely dashdotted, black!80] {mmu(x) + 0.8416*ssg(x)};
+\addplot[domain=0.02:0.98, samples=220, line width=1.6pt, dash pattern=on 5pt off 7pt, black!85] {mmu(x) + 0.8416*ssg(x)};
 \addlegendentry{$\mu + \sqrt{\beta_{\mathrm{eff}}}\sigma$,\ $\beta_{\mathrm{eff}} = \Phi^{-1}(0.8)^2 \approx 0.71$}
 % candidates, one dot per candidate at its drawn quantile (seed=1)
 \addplot[only marks, mark=*, mark size=1.6pt, c1, opacity=0.55] coordinates { (0.3231,0.5149) (0.1560,0.2425) (0.4089,0.3412) (0.7353,0.0959) (0.7113,0.0914) (0.9417,0.0086) (0.1389,0.1981) (0.6161,0.0569) };
