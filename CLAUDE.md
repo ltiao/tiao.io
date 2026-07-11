@@ -206,3 +206,40 @@ deleting or rewriting this destroys it.
 This bio surfaces on author profile pages (e.g. `/authors/me/`), not the
 homepage — the homepage About block uses a `text:` override that
 supersedes this field. The easter egg is for readers who dig deeper.
+
+## Build toolchain: keep the `postinstall` symlink
+
+This repo uses **pnpm**, but Hugo's Tailwind integration wants an **npm**-style
+bin, so `package.json` carries a `postinstall` that bridges the two. Removing it
+breaks every build (`hugo` and `hugo server` both fail on the CSS step).
+
+Hugo's `css.TailwindCSS` (invoked by the HugoBlox `blox` module in its
+`layouts/_partials/css.html`) runs the Tailwind npm CLI by reading
+`node_modules/.bin/tailwindcss` directly and requiring it to be a Node.js
+script. It ignores `$PATH`, so a Homebrew or standalone `tailwindcss` is
+irrelevant (Hugo dropped support for the standalone binary regardless).
+
+pnpm writes that bin as a `#!/bin/sh` shim, because its isolated store layout
+needs a wrapper that sets `NODE_PATH`. Hugo reads the shebang, sees `/bin/sh`,
+and aborts:
+
+```
+binary "tailwindcss" is not a Node.js script
+```
+
+npm would instead symlink the bin straight to `@tailwindcss/cli/dist/index.mjs`
+(a real `#!/usr/bin/env node` script), which Hugo runs happily. We stay on pnpm
+and reproduce that with:
+
+```json
+"postinstall": "ln -sf ../@tailwindcss/cli/dist/index.mjs node_modules/.bin/tailwindcss"
+```
+
+It re-points the bin after every `pnpm install`, `pnpm add`, fresh clone, and CI
+build. If Tailwind ever moves its CLI entry point, update the symlink target to
+match the `bin` field of `@tailwindcss/cli`.
+
+Related: `pnpm-workspace.yaml` sets `allowBuilds: { '@parcel/watcher': false }`.
+That transitive dependency ships a build script pnpm blocks by default. Hugo
+never exercises it (Hugo watches files itself and calls `tailwindcss` one-shot),
+so declining the build is deliberate and only silences pnpm's approval prompt.
