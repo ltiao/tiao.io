@@ -22,26 +22,28 @@
   extra y ticks={2},
   extra y tick labels={$\tau$},
   extra y tick style={tick label style={font=\large, winner!85!black}},
-  legend style={at={(0.97,0.97)}, anchor=north east, font=\normalsize, draw=none,
-                fill=white, fill opacity=1, text opacity=1},
-  legend cell align=left,
   clip=true,
 ]
 % UCB level sets: mu = s - 2*sigma (parallel, slope -2)
 \addplot[domain=0:3, samples=2, thick, qbase] {-1 - 2*x};
-\addlegendentry{level sets of $\mu + \sqrt{\beta}\sigma$ (parallel)}
-\addplot[domain=0:3, samples=2, thick, qbase, forget plot] {0.5 - 2*x};
-\addplot[domain=0:3, samples=2, thick, qbase, forget plot] {3.5 - 2*x};
+\addplot[domain=0:3, samples=2, thick, qbase] {0.5 - 2*x};
+\addplot[domain=0:3, samples=2, thick, qbase] {3.5 - 2*x};
 % PI(tau=2) level sets: mu = 2 + c*sigma (fan through (0,2))
 \addplot[domain=0:3, samples=2, thick, winner!85] {2 - 3.4*x};
-\addlegendentry{level sets of $\mathbb{E}[\mathbbm{1}(y > \tau)]$ (a fan through $(0, \tau)$)}
-\addplot[domain=0:1.55, samples=2, thick, winner!85, forget plot] {2 + 0.6*x};
-\addplot[domain=0:0.85, samples=2, thick, winner!85, forget plot] {2 + 1.6*x};
+\addplot[domain=0:3, samples=2, thick, winner!85] {2 - 1*x};
+\addplot[domain=0:3, samples=2, thick, winner!85] {2 + 0.6*x};
+\addplot[domain=0:3, samples=2, thick, winner!85] {2 + 1.4*x};
 % the one shared line: c = -2 coincides with s = 2
 \addplot[domain=0:3, samples=2, very thick, dash pattern=on 5pt off 3pt, black!75] {2 - 2*x};
-\addlegendentry{the only line they share}
 % fan apex
-\addplot[only marks, mark=*, mark size=2.2pt, winner!85!black, forget plot] coordinates {(0,2)};
+\addplot[only marks, mark=*, mark size=2.2pt, winner!85!black] coordinates {(0,2)};
+% labels, placed in line-free regions
+\node[winner!85!black, font=\small, anchor=north west, align=left] at (axis cs:0.06,4.5)
+  {level sets of $\mathbb{E}[\mathbbm{1}(y > \tau)]$\\ a fan through $(0, \tau)$};
+\node[qbase, font=\small, anchor=north west, align=left] at (axis cs:0.06,-3.15)
+  {level sets of\\ $\mu + \sqrt{\beta}\sigma$ (parallel)};
+\node[black!75, font=\small, anchor=center, rotate=-26] at (axis cs:2.05,-2.95)
+  {the only line they share};
 \end{axis}
 \end{tikzpicture}
 \end{document}
