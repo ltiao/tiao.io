@@ -1,5 +1,5 @@
 ---
-title: UCB in Disguise
+title: The Upper Confidence Bound in Disguise
 subtitle: Likelihood-free Bayesian optimization beyond expected utilities, by quantile regression
 summary: We show that UCB is a quantile of the predictive distribution in disguise, elicitable by the pinball loss even though no scalar loss can elicit the moment formula directly. The conformal quantile method for hyperparameter optimization turns out to have been optimizing UCB all along.
 authors:
