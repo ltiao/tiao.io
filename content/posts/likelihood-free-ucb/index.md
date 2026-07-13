@@ -72,7 +72,7 @@ and the verification is one line: $\frac{\partial}{\partial z} \mathbb{E}\left[\
 
 At $q = \Phi(\sqrt{\beta}) \approx 0.977$ for $\beta = 4$, underestimates cost roughly 42 times more than overestimates, so the minimizer parks itself at the 97.7th percentile: exactly the UCB level. Fit a regressor $m_{\boldsymbol{\theta}}$ by minimizing $\sum_i \rho_q(y_i - m_{\boldsymbol{\theta}}(\mathbf{x}_i))$ at that level and maximize its output. The output is the acquisition function, in the units of $y$. No threshold to recompute, no labels to flip. BORE's quantile fraction $\gamma$ and UCB's exploration parameter $\beta$, two knobs that looked unrelated, collapse into one: the level $q$.
 
-And there is a quiet upgrade in the swap. When the predictive is not Gaussian, $\mu + \sqrt{\beta}\,\sigma$ and the $q$-quantile genuinely differ, and it is the quantile that keeps meaning what UCB was supposed to mean (the 97.7th percentile of what this candidate might return) while the moment formula drifts. The pinball regressor targets the right object regardless of the noise distribution.
+And there is a subtle upgrade in the swap. When the predictive is not Gaussian, $\mu + \sqrt{\beta}\,\sigma$ and the $q$-quantile genuinely differ, and it is the quantile that keeps meaning what UCB was supposed to mean (the 97.7th percentile of what this candidate might return) while the moment formula drifts. The pinball regressor targets the right object regardless of the noise distribution.
 
 ## The catch
 
