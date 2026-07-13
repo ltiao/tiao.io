@@ -6,7 +6,8 @@
 #   uv run --with numpy python3 gen_two_sigmas_data.py > two_sigmas_data.tex
 #   uv run --with numpy python3 gen_ts_collapse_data.py  # prints pgfplots blocks
 #                                                        # embedded in ts-collapse.tex
-FIGURES = pinball pinball-tilt recipe-schematic ts-collapse level-sets cdf-readouts two-sigmas
+FIGURES = pinball pinball-tilt recipe-schematic ts-collapse level-sets cdf-readouts two-sigmas \
+          tangent-envelope heat-smoothing marginal-divide
 
 all: $(FIGURES:%=../figures/%.png) ../featured.png
 

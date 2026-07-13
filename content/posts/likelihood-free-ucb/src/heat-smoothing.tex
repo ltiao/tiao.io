@@ -1,0 +1,37 @@
+\documentclass[border=8pt]{standalone}
+\usepackage{amsmath}
+\usepackage{fontspec}
+\setmainfont{Source Serif 4}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\definecolor{qbase}{RGB}{31,86,160}
+\definecolor{winner}{RGB}{209,73,91}
+\input{heat_data.tex}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12.5cm, height=7.6cm,
+  axis lines=left,
+  xlabel={$\mu$}, ylabel={$g(\mu, \sigma^2)$},
+  xmin=-4, xmax=4, ymin=-0.04, ymax=1.08,
+  xtick={-4,-2,2,4},
+  extra x ticks={0},
+  extra x tick labels={$\tau$},
+  extra x tick style={tick label style={font=\large, winner!85!black}},
+  label style={font=\large},
+  tick label style={font=\small},
+  legend style={at={(0.03,0.97)}, anchor=north west, font=\normalsize, draw=none,
+                fill=white, fill opacity=1, text opacity=1},
+  legend cell align=left,
+  axis line style={gray!60},
+]
+\addplot[very thick, black!75] coordinates {\heatA};
+\addplot[very thick, qbase] coordinates {\heatB};
+\addplot[very thick, qbase!65] coordinates {\heatC};
+\addplot[very thick, qbase!40] coordinates {\heatD};
+\legend{{$\sigma \rightarrow 0$: the utility $u$},
+        {$\sigma = 0.35$}, {$\sigma = 0.9$}, {$\sigma = 1.8$}}
+\end{axis}
+\end{tikzpicture}
+\end{document}

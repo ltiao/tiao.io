@@ -145,6 +145,8 @@ $$
 $$
 in which every observation participates as a negative with weight one and as a positive with weight $u(y_i; \tau)$.[^thesisexposition] The logistic choice is arbitrary: any strictly convex $f$ elicits the same $\alpha_u$ at the population optimum, so the choice of divergence changes the training objective but never the functional it recovers. No choice of $f$ reaches beyond expected utilities.
 
+{{< figure src="figures/tangent-envelope.png" caption="The variational representation. A differentiable, strictly convex f is the upper envelope of its tangent lines; the tangent with slope f′(s₀) has intercept −f⋆(f′(s₀)), and maximizing over tangents recovers f." >}}
+
 ### A second proof: the heat equation
 
 There is a second route to the impossibility, with a complementary scope. The level-set argument in the main text rules out every scalar loss but needs mixtures in the family; this one stays inside the Gaussian family, where mixtures are unavailable, and rules out the classification recipe specifically. What it excludes is a utility $u$ and a strictly increasing readout $h$ satisfying $\mathbb{E}_{y \sim \mathcal{N}(\mu, \sigma^2)}[u(y)] = h(\mu + \sqrt{\beta}\,\sigma)$ on the whole half-plane, which is the form any variant of the recipe would have to take. Write $g(\mu, t) \triangleq \mathbb{E}_{y \sim \mathcal{N}(\mu, t)}[u(y)]$ with $t \triangleq \sigma^2$. As a convolution of $u$ with the Gaussian kernel, $g$ solves
@@ -152,6 +154,8 @@ $$
 \frac{\partial g}{\partial t} = \frac{1}{2} \frac{\partial^2 g}{\partial \mu^2}.
 $$
 Substituting the hypothesis $g = h(s)$ with $s = \mu + \sqrt{\beta}\sqrt{t}$, the two sides become $\sqrt{\beta}\,h'(s) / (2\sigma) = h''(s) / 2$. Fix $s$ and vary $\sigma$ (adjusting $\mu = s - \sqrt{\beta}\,\sigma$ to keep $s$ constant). The right-hand side does not move. The left-hand side scales as $1/\sigma$. The only escape is $h'(s) = 0$ at every $s$: the readout is constant, and a constant acquisition function ranks nothing. (At $\beta = 0$ the argument relents exactly as it should: the equation forces $h'' = 0$, an affine readout of $\mu$, and the mean is elicitable.)
+
+{{< figure src="figures/heat-smoothing.png" caption="Expected utilities are heat evolutions. g(μ, σ²) = E[u] under N(μ, σ²) starts at the step utility u = 𝟙(y > τ) and diffuses as σ grows. The proof says no such evolution is constant along the lines μ + √β σ = s unless it is constant everywhere." >}}
 
 ### What classification can reach
 
@@ -166,3 +170,5 @@ The acquisition functions in the main text share a premise: each is a functional
 The rest of the acquisition zoo lives on the other side of that line. The knowledge gradient[^frazier2018] scores an observation by how much it improves the maximum of the posterior mean over the whole domain; entropy search and its descendants[^entropysearch] score it by the mutual information between $y(\mathbf{x})$ and the location or value of the global optimum. These are functionals of the posterior over $f$, the joint object with its correlation structure, rather than of any single marginal. For these acquisitions the likelihood-free wall is not elicitability but ontology: there is no loss to design, because the quantity being scored does not exist until a posterior is posited.
 
 What the marginal world retains are the residues. Sever every cross-input correlation in the posterior, so that observing $y(\mathbf{x})$ informs only $\mathbf{x}$ itself, and the knowledge gradient collapses to $\mathbb{E}[\max(m(y) - \mu^{\ast}, 0)]$: expected improvement, computed on the distribution of the updated mean. Sever the same correlations in Thompson sampling, so that each candidate's value is drawn from its marginal rather than from one function draw, and you get independent Thompson sampling: the variant the main text dismantles. The adjective was doing the work all along.
+
+{{< figure src="figures/marginal-divide.png" caption="The dividing line. PI, EI, UCB, and the entropic score are functionals of the marginal p(y | x); knowledge gradient, entropy search, and Thompson sampling are functionals of the posterior over f. Severing every cross-input correlation sends KG to EI and Thompson sampling to its independent variant, which the main text collapses onto UCB. Entropy search leaves no marginal residue." >}}
