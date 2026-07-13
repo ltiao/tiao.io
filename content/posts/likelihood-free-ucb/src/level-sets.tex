@@ -18,27 +18,30 @@
   label style={font=\large},
   tick label style={font=\normalsize},
   axis line style={gray!60},
+  ytick={-4,-3,-2,-1,0,1,3,4},
+  extra y ticks={2},
+  extra y tick labels={$\tau$},
+  extra y tick style={tick label style={font=\large, winner!85!black}},
+  legend style={at={(0.97,0.97)}, anchor=north east, font=\normalsize, draw=none,
+                fill=white, fill opacity=1, text opacity=1},
+  legend cell align=left,
   clip=true,
 ]
 % UCB level sets: mu = s - 2*sigma (parallel, slope -2)
-\foreach \s in {-1, 0.5, 3.5} {
-  \addplot[domain=0:3, samples=2, thick, qbase] {\s - 2*x};
-}
+\addplot[domain=0:3, samples=2, thick, qbase] {-1 - 2*x};
+\addlegendentry{level sets of $\mu + \sqrt{\beta}\sigma$ (parallel)}
+\addplot[domain=0:3, samples=2, thick, qbase, forget plot] {0.5 - 2*x};
+\addplot[domain=0:3, samples=2, thick, qbase, forget plot] {3.5 - 2*x};
 % PI(tau=2) level sets: mu = 2 + c*sigma (fan through (0,2))
-\foreach \c in {-3.4, -1, 0.6, 1.4} {
-  \addplot[domain=0:3, samples=2, thick, winner!85] {2 + \c*x};
-}
+\addplot[domain=0:3, samples=2, thick, winner!85] {2 - 3.4*x};
+\addlegendentry{level sets of $\mathbb{E}[\mathbbm{1}(y > \tau)]$ (a fan through $(0, \tau)$)}
+\addplot[domain=0:1.55, samples=2, thick, winner!85, forget plot] {2 + 0.6*x};
+\addplot[domain=0:0.85, samples=2, thick, winner!85, forget plot] {2 + 1.6*x};
 % the one shared line: c = -2 coincides with s = 2
 \addplot[domain=0:3, samples=2, very thick, dash pattern=on 5pt off 3pt, black!75] {2 - 2*x};
+\addlegendentry{the only line they share}
 % fan apex
-\addplot[only marks, mark=*, mark size=2.2pt, winner!85!black] coordinates {(0,2)};
-% annotations
-\node[qbase, font=\normalsize, anchor=west] at (axis cs:1.05,-3.55)
-  {level sets of $\mu + \sqrt{\beta}\sigma$: parallel};
-\node[winner!85!black, font=\normalsize, anchor=west] at (axis cs:0.55,4.25)
-  {level sets of $\mathbb{E}[u]$, $u = \mathbbm{1}(y > \tau)$: a fan through $(0, \tau)$};
-\node[black!75, font=\normalsize, anchor=south west, rotate=-26] at (axis cs:0.75,0.55)
-  {the only line they share};
+\addplot[only marks, mark=*, mark size=2.2pt, winner!85!black, forget plot] coordinates {(0,2)};
 \end{axis}
 \end{tikzpicture}
 \end{document}

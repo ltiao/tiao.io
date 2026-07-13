@@ -94,7 +94,7 @@ $$
 $$
 Independent Thompson sampling over an $m$-point quantile grid is, at worst, fixed-level quantile maximization over a randomly thinned candidate pool. With their pool of two thousand candidates and $m = 4$, thinning to a quarter changes essentially nothing, and the sampled acquisition collapses onto its deterministic core: maximize $\hat{q}_{\alpha_m}$.
 
-{{< figure src="figures/ts-collapse.png" caption="Independent Thompson sampling over four quantile curves: one dot per candidate, placed at its randomly drawn level. The winning draw sits on the top-level curve, at that curve's maximizer. The dash-dotted line is the analytic UCB at the grid-equivalent level, μ + √β_eff σ with β_eff = Φ⁻¹(0.8)² ≈ 0.71; under this toy's Gaussian predictive it coincides exactly with the top quantile curve." >}}
+{{< figure src="figures/ts-collapse.png" caption="Independent Thompson sampling over four quantile curves: one dot per candidate, placed at its randomly drawn level. The winning draw sits on the top-level curve, at that curve's maximizer. The black dashes riding the top curve show the analytic UCB at the grid-equivalent level, μ + √β_eff σ with β_eff = Φ⁻¹(0.8)² ≈ 0.71; under this toy's Gaussian predictive it coincides exactly with the top quantile curve." >}}
 
 With $m = 4$, the top level is $\alpha_4 = 4/5 = 0.8$, and under a Gaussian predictive the 0.8-quantile is $\mu + \Phi^{-1}(0.8)\,\sigma \approx \mu + 0.84\,\sigma$: UCB with $\beta_{\text{eff}} = \Phi^{-1}\!\left(\tfrac{m}{m+1}\right)^{\!2} \approx 0.71$. That is the acquisition function CQR optimizes at its shipped defaults, an exploration bonus of less than one standard deviation. The grid size, chosen as a resolution parameter, has been a $\beta$ dial all along.[^doyle]
 
