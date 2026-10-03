@@ -1,0 +1,101 @@
+% Expected improvement as a function of the threshold y, and the two ways to
+% EI is the height of each curve at the incumbent; the index is where each curve crosses the cost level.
+% Self-contained: curves are evaluated in pgfmath, no external data.
+\documentclass[border=3pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ---- colours ------------------------------------------------------------
+\definecolor{oiblue}{HTML}{0072B2}    % Okabe-Ito blue
+\definecolor{oiorange}{HTML}{E69F00}  % Okabe-Ito orange
+\definecolor{axisgray}{gray}{0.40}
+\definecolor{annotgray}{gray}{0.45}
+\definecolor{faintgray}{gray}{0.72}
+
+% ---- normal cdf via Abramowitz & Stegun 7.1.26 --------------------------
+% erf(x) ~ 1 - (a1 t + a2 t^2 + ... + a5 t^5) e^{-x^2},  t = 1/(1+p|x|)
+\pgfmathdeclarefunction{aserf}{1}{%
+  \pgfmathparse{((#1)<0 ? -1 : 1)*(1-(1/(1+0.3275911*abs(#1)))*(0.254829592+(1/(1+0.3275911*abs(#1)))*(-0.284496736+(1/(1+0.3275911*abs(#1)))*(1.421413741+(1/(1+0.3275911*abs(#1)))*(-1.453152027+(1/(1+0.3275911*abs(#1)))*1.061405429))))*exp(-(#1)*(#1)))}%
+}
+\pgfmathdeclarefunction{normpdf}{1}{\pgfmathparse{exp(-0.5*(#1)*(#1))/sqrt(2*pi)}}
+\pgfmathdeclarefunction{normcdf}{1}{\pgfmathparse{0.5*(1+aserf((#1)/sqrt(2)))}}
+% h(z) = phi(z) + z Phi(z);  EI_y = sigma h((mu-y)/sigma)
+\pgfmathdeclarefunction{eih}{1}{\pgfmathparse{normpdf(#1)+(#1)*normcdf(#1)}}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12.05cm, height=7.28cm,
+  xmin=-0.5, xmax=4.3, ymin=-0.07, ymax=1.68,
+  enlargelimits=false,
+  axis lines=left,
+  axis on top=true,
+  tick align=outside,
+  axis line style={thin, color=axisgray, -},
+  tick style={thin, color=axisgray},
+  xtick={0,1,2,3,4},
+  ytick={0,0.5,1,1.5},
+  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=1},
+  tick label style={font=\footnotesize, color=axisgray},
+  label style={font=\small, color=black},
+  xlabel={threshold $\tau$},
+  ylabel={$\mathrm{EI}_\tau(x) = \mathbb{E}\big[\max(y-\tau,\,0)\mid x\big]$},
+  every axis x label/.style={at={(ticklabel cs:0.5)}, anchor=near ticklabel},
+  every axis y label/.style={at={(ticklabel cs:0.5)}, rotate=90, anchor=near ticklabel},
+]
+
+% ---- stopping region: incumbent above every index -----------------------
+\fill[black!5] ({axis cs:2.17,0}|-{rel axis cs:0,0}) rectangle (rel axis cs:1,1);
+\node[anchor=west, font=\scriptsize, text=annotgray, inner sep=2pt]
+  at (axis cs:2.30,1.45) {stop at cost $\lambda c$};
+
+% ---- guide line at lambda c / 10 ----------------------------------------
+\draw[faintgray, thin, dashed, dash pattern=on 1.6pt off 1.6pt]
+  ({rel axis cs:0,0}|-{axis cs:0,0.01}) -- ({rel axis cs:1,0}|-{axis cs:0,0.01});
+\node[anchor=east, font=\scriptsize, text=faintgray, inner sep=1pt]
+  at (axis cs:4.26,0.055) {$\lambda c/10$};
+
+% ---- guide line at the cost lambda c ------------------------------------
+\draw[annotgray, thin, dashed, dash pattern=on 2.5pt off 2pt]
+  ({rel axis cs:0,0}|-{axis cs:0,0.1}) -- ({rel axis cs:1,0}|-{axis cs:0,0.1});
+\node[anchor=south west, font=\scriptsize, text=annotgray, inner sep=1pt]
+  at (axis cs:-0.45,0.125) {$\lambda c$};
+\node[anchor=south east, font=\scriptsize, text=annotgray, inner sep=1pt]
+  at (axis cs:4.26,0.25) {index $\rho$: where each curve crosses $\lambda c$};
+
+% ---- guide line at the incumbent y* --------------------------------------
+\draw[annotgray, thin, dashed, dash pattern=on 2.5pt off 2pt]
+  ({axis cs:0,0}|-{rel axis cs:0,0}) -- ({axis cs:0,0}|-{rel axis cs:0,1});
+\node[anchor=west, font=\scriptsize, text=annotgray, inner sep=1pt]
+  at (axis cs:0.10,1.55) {EI: height of each curve at $\tau = y^*$};
+
+% ---- the two candidates --------------------------------------------------
+\addplot[oiblue, thick, domain=-0.5:4.3, samples=401] {0.3*eih((1-x)/0.3)};
+\addplot[oiorange, thick, domain=-0.5:4.3, samples=401] {1.5*eih((0.5-x)/1.5)};
+
+\node[anchor=west, font=\footnotesize, text=oiblue, inner sep=1pt]
+  at (axis cs:0.12,1.17) {narrow $(\mu,\sigma)=(1,\,0.3)$};
+\node[anchor=west, font=\footnotesize, text=oiorange, inner sep=1pt]
+  at (axis cs:1.05,0.49) {wide $(0.5,\,1.5)$};
+
+% ---- values at the incumbent and crossings with the cost lines ------------------------------------------------------------
+\addplot[only marks, mark=*, mark size=1.7pt, oiblue]
+  coordinates {(0,1.000) (1.04,0.1)};
+\addplot[only marks, mark=*, mark size=1.7pt, oiorange]
+  coordinates {(0,0.881) (2.17,0.1)};
+\addplot[only marks, mark=o, mark size=1.7pt, thin, oiblue]
+  coordinates {(1.43,0.01)};
+\addplot[only marks, mark=o, mark size=1.7pt, thin, oiorange]
+  coordinates {(3.63,0.01)};
+
+\node[anchor=south west, font=\scriptsize, text=oiblue, inner sep=1pt]
+  at (axis cs:1.09,0.14) {$\rho_{\text{narrow}}$};
+\node[anchor=south west, font=\scriptsize, text=oiorange, inner sep=1pt]
+  at (axis cs:2.22,0.14) {$\rho_{\text{wide}}$};
+
+\end{axis}
+\end{tikzpicture}
+\end{document}

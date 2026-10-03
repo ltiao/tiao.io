@@ -4,3 +4,14 @@
     margin-top: 1.5rem !important;
   }
 </style>
+
+{{ if eq .RelPermalink "/posts/gittins-acquisition-functions/" }}
+<style>
+  .equation-narrow { display: none; }
+  @media (max-width: 767px) {
+    .equation-wide { display: none; }
+    .equation-narrow { display: block; }
+    .katex-display { font-size: 0.85em; }
+  }
+</style>
+{{ end }}

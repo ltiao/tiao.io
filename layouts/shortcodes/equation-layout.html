@@ -1,0 +1,4 @@
+{{- $versions := split .Inner "<!-- narrow -->" -}}
+{{- if ne (len $versions) 2 -}}{{- errorf "equation-layout requires wide and narrow versions" -}}{{- end -}}
+<div class="equation-wide">{{ $.Page.RenderString (dict "display" "block") (index $versions 0) }}</div>
+<div class="equation-narrow">{{ $.Page.RenderString (dict "display" "block") (index $versions 1) }}</div>

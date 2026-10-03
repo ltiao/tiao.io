@@ -1,0 +1,8 @@
+{{- $resource := resources.Get (printf "diagrams/gittins/%s" (.Get 0)) -}}
+{{- if not $resource -}}{{- errorf "Missing policy diagram %s" (.Get 0) -}}{{- end -}}
+{{- $svg := index (findRE `(?s)<svg\b.*?</svg>` $resource.Content 1) 0 -}}
+<style>.policy-tree{margin:2rem auto;max-width:640px}.policy-tree figcaption{padding:0 12px}@media(max-width:480px){.policy-tree{width:calc(100% + 48px);max-width:none;margin-left:-24px;margin-right:-24px}}</style>
+<figure class="policy-tree">
+{{ $svg | safeHTML }}
+<figcaption>{{ .Inner | markdownify }}</figcaption>
+</figure>
